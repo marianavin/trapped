@@ -10,6 +10,7 @@ import {
   MAX_MISTAKES,
 } from './data.js'
 import { play, stopSiren } from '../../audio/sounds.js'
+import PhoneHousing from './PhoneHousing.jsx'
 
 // Act 2 — automaticity. The keypad is physically scrambled: 1 and 2 no
 // longer live where a phone keypad puts them. Nothing on screen says this.
@@ -64,50 +65,56 @@ export default function Act2Keypad({ onDone }) {
   }, [])
 
   return (
-    <div className="h-full w-full flex flex-col items-center bg-l3-bg px-5 py-6 sm:px-10">
-      <PulsingVoice text={BG_VOICE_LOOP} />
+    <div className="relative h-full w-full flex flex-col items-center bg-l3-bg px-5 py-6 sm:px-10 overflow-hidden">
+      <PhoneHousing />
+      {/* dims the booth dressing so the dial grid stays the clear focal point */}
+      <div className="absolute inset-0 bg-l3-bg/45" aria-hidden="true" />
 
-      <p className="font-pixel text-white text-xs sm:text-sm mt-4">{KEYPAD_PROMPT}</p>
+      <div className="relative z-10 flex flex-col items-center w-full">
+        <PulsingVoice text={BG_VOICE_LOOP} />
 
-      <div className="font-mono text-l3-prompt text-lg h-8 mt-2 tracking-[0.4em]">
-        {'•'.repeat(dialed.length)}
+        <p className="font-pixel text-white text-xs sm:text-sm mt-4">{KEYPAD_PROMPT}</p>
+
+        <div className="font-mono text-l3-prompt text-lg h-8 mt-2 tracking-[0.4em]">
+          {'•'.repeat(dialed.length)}
+        </div>
+
+        <p
+          className={`font-mono text-xs sm:text-sm h-6 mt-1 ${
+            flash === 'error' ? 'text-l3-error' : flash === 'success' ? 'text-l3-success' : 'text-transparent'
+          }`}
+        >
+          {message || '·'}
+        </p>
+
+        <motion.div
+          key={shakeKey}
+          animate={flash === 'error' ? { x: [0, -6, 6, -4, 4, 0] } : {}}
+          transition={{ duration: 0.25 }}
+          className="grid grid-cols-3 gap-3 mt-4 w-full max-w-xs"
+        >
+          {SCRAMBLED_LAYOUT.map((digit, i) =>
+            digit === '' ? (
+              <div key={i} />
+            ) : (
+              <button
+                key={i}
+                type="button"
+                onClick={() => handlePress(digit)}
+                disabled={locked}
+                className={`font-pixel text-lg sm:text-xl aspect-square border-2 border-l3-face bg-l3-face text-white
+                  active:bg-white active:text-black disabled:opacity-40 transition-colors duration-75`}
+              >
+                {digit}
+              </button>
+            )
+          )}
+        </motion.div>
+
+        <p className="font-mono text-[10px] sm:text-xs text-l3-prompt/70 mt-6">
+          MISTAKES: {mistakes}/{MAX_MISTAKES}
+        </p>
       </div>
-
-      <p
-        className={`font-mono text-xs sm:text-sm h-6 mt-1 ${
-          flash === 'error' ? 'text-l3-error' : flash === 'success' ? 'text-l3-success' : 'text-transparent'
-        }`}
-      >
-        {message || '·'}
-      </p>
-
-      <motion.div
-        key={shakeKey}
-        animate={flash === 'error' ? { x: [0, -6, 6, -4, 4, 0] } : {}}
-        transition={{ duration: 0.25 }}
-        className="grid grid-cols-3 gap-3 mt-4 w-full max-w-xs"
-      >
-        {SCRAMBLED_LAYOUT.map((digit, i) =>
-          digit === '' ? (
-            <div key={i} />
-          ) : (
-            <button
-              key={i}
-              type="button"
-              onClick={() => handlePress(digit)}
-              disabled={locked}
-              className={`font-pixel text-lg sm:text-xl aspect-square border-2 border-l3-face bg-l3-face text-white
-                active:bg-white active:text-black disabled:opacity-40 transition-colors duration-75`}
-            >
-              {digit}
-            </button>
-          )
-        )}
-      </motion.div>
-
-      <p className="font-mono text-[10px] sm:text-xs text-l3-prompt/70 mt-6">
-        MISTAKES: {mistakes}/{MAX_MISTAKES}
-      </p>
     </div>
   )
 }

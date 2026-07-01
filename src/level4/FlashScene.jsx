@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { play } from '../audio/sounds.js'
+import { Building } from '../components/PixelArtKit.jsx'
 
 // An 8-second, unpausable, unreplayable scene. No controls of any kind.
 // This is the only ground truth the player ever gets — everything the
@@ -32,14 +33,33 @@ export default function FlashScene({ onDone }) {
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-l4bg select-none">
+      {/* hand-drawn night skyline — flat pixel-art buildings with a window
+          grid, replacing the old blurred/rounded CSS glow so this matches
+          the same hard-edged style as Level 1/2's art. */}
+      <svg
+        viewBox="0 0 360 640"
+        preserveAspectRatio="none"
+        shapeRendering="crispEdges"
+        className="absolute inset-0 h-full w-full"
+        aria-hidden="true"
+      >
+        <rect x="0" y="0" width="360" height="640" fill="#0A0E1A" />
+        <Building x={0} y={200} width={70} height={280} body="#1E2A3A" bodyDark="#141C28" litColor="#FFD166" dimColor="#E8E8E8" seed={0} />
+        <Building x={72} y={140} width={54} height={340} body="#22304A" bodyDark="#141C28" litColor="#FFD166" dimColor="#E8E8E8" seed={1} />
+        <Building x={128} y={230} width={64} height={250} body="#1E2A3A" bodyDark="#141C28" litColor="#FFD166" dimColor="#E8E8E8" seed={2} />
+        <Building x={250} y={170} width={58} height={310} body="#22304A" bodyDark="#141C28" litColor="#FFD166" dimColor="#E8E8E8" seed={1} />
+        <Building x={306} y={220} width={54} height={260} body="#1E2A3A" bodyDark="#141C28" litColor="#FFD166" dimColor="#E8E8E8" seed={3} />
+
+        {/* streetlamp glow — stepped squares, no blur */}
+        <rect x="164" y="200" width="32" height="32" fill="#FFD166" opacity="0.06" />
+        <rect x="172" y="208" width="16" height="16" fill="#FFD166" opacity="0.16" />
+      </svg>
+
       {/* street sign — the one honest clue, easy to miss in 8 seconds */}
       <div className="absolute top-4 left-4 font-pixel text-[9px] text-l4street/80 flex items-center gap-1">
         <span>N</span>
         <span className="text-base leading-none">↑</span>
       </div>
-
-      {/* streetlight glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full bg-l4street opacity-10 blur-2xl" />
 
       {/* sidewalk */}
       <div className="absolute bottom-24 left-0 right-0 h-2 bg-l4text/20" />
@@ -59,7 +79,7 @@ export default function FlashScene({ onDone }) {
 
       {/* the car — silver, moderate speed, small hatchback silhouette. Ground truth. */}
       <motion.div
-        className="absolute bottom-16 h-6 w-14 bg-l4text rounded-sm"
+        className="absolute bottom-16 h-6 w-14 bg-l4text"
         initial={{ right: '-10%', bottom: '4rem' }}
         animate={
           phase === 'establish'

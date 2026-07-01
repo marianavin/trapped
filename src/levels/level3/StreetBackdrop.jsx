@@ -6,11 +6,17 @@
 // and window detail. The crosswalk nods directly at the copy spec's "NEAR
 // THE CROSSING" line. Purely decorative — sits behind the dialogue box and
 // sign button, z-0, so none of Act1Location's interaction logic changes.
+//
+// Trees/streetlamp glow are stepped rectangles, not circles/blur, to match
+// the hard-edged pixel-art brief — shape-rendering="crispEdges" enforces it.
+import { PixelTree, StreetLamp } from '../../components/PixelArtKit.jsx'
+
 export default function StreetBackdrop() {
   return (
     <svg
       viewBox="0 0 480 270"
       preserveAspectRatio="xMidYMax slice"
+      shapeRendering="crispEdges"
       className="absolute inset-0 h-full w-full"
       aria-hidden="true"
     >
@@ -84,27 +90,17 @@ export default function StreetBackdrop() {
         </g>
       ))}
 
-      {/* trees */}
+      {/* trees — stepped-mound canopy, no circles */}
       {[
         { x: 160, y: 170 },
         { x: 420, y: 170 },
       ].map((t, ti) => (
-        <g key={ti}>
-          <rect x={t.x - 3} y={t.y - 18} width="6" height="18" fill="#3A3A4A" />
-          <circle cx={t.x} cy={t.y - 32} r="16" fill="#3A3A4A" opacity="0.9" />
-          <circle cx={t.x - 8} cy={t.y - 24} r="11" fill="#3A3A4A" opacity="0.7" />
-          <circle cx={t.x + 9} cy={t.y - 22} r="10" fill="#3A3A4A" opacity="0.7" />
-        </g>
+        <PixelTree key={ti} x={t.x} y={t.y} trunkColor="#3A3A4A" canopyColor="#3A3A4A" scale={1.1} />
       ))}
 
-      {/* streetlamps */}
+      {/* streetlamps — stepped-square glow, no circle/blur */}
       {[80, 340].map((x, li) => (
-        <g key={li}>
-          <rect x={x - 2} y="120" width="4" height="50" fill="#E8E8E8" opacity="0.6" />
-          <rect x={x - 10} y="116" width="20" height="4" fill="#E8E8E8" opacity="0.6" />
-          <circle cx={x} cy="112" r="10" fill="#A8C8E8" opacity="0.55" />
-          <circle cx={x} cy="112" r="4" fill="#A8C8E8" />
-        </g>
+        <StreetLamp key={li} x={x} y={120} poleColor="#E8E8E8" glowColor="#A8C8E8" poleHeight={50} />
       ))}
     </svg>
   )

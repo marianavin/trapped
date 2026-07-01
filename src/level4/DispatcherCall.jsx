@@ -4,6 +4,7 @@ import { QUESTIONS, DISPATCHER_INTRO } from '../data/level4.js'
 import PixelButton from '../components/PixelButton.jsx'
 import Typewriter from '../components/Typewriter.jsx'
 import { play } from '../audio/sounds.js'
+import DispatcherBackdrop from './DispatcherBackdrop.jsx'
 
 export default function DispatcherCall({ onComplete }) {
   const [stage, setStage] = useState('ringing') // ringing -> intro -> q0..q4 -> done
@@ -54,11 +55,16 @@ export default function DispatcherCall({ onComplete }) {
       : ''
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center bg-l4bg text-l4text px-6 gap-6">
+    <div className="relative h-full w-full flex flex-col items-center justify-center bg-l4bg text-l4text px-6 gap-6 overflow-hidden">
+      <DispatcherBackdrop />
+      {/* dims the window/skyline dressing so the dialogue stays the focal point */}
+      <div className="absolute inset-0 bg-l4bg/55" aria-hidden="true" />
+
       <p role="status" aria-live="polite" className="sr-only">
         {srAnnouncement}
       </p>
 
+      <div className="relative z-10 w-full flex flex-col items-center gap-6">
       <AnimatePresence mode="wait">
         {stage === 'ringing' && (
           <motion.p
@@ -119,6 +125,7 @@ export default function DispatcherCall({ onComplete }) {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   )
 }
