@@ -128,3 +128,22 @@ body {
 .glitch-shift {
   animation: glitchShift 4s infinite;
 }
+
+@keyframes phoneChassisGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 12px #ff4500,
+      0 0 28px rgba(255, 69, 0, 0.53),
+      0 0 48px rgba(255, 69, 0, 0.27);
+  }
+  50% {
+    box-shadow:
+      0 0 20px #ff6622,
+      0 0 42px rgba(255, 69, 0, 0.72),
+      0 0 68px rgba(255, 69, 0, 0.42);
+  }
+}
+
+.phone-chassis-glow {
+  animation: phoneChassisGlow 3.5s ease-in-out infinite;
+}
