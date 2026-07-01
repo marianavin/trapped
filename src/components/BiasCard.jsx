@@ -1,6 +1,14 @@
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { play } from '../audio/sounds.js'
 
 export default function BiasCard({ name, fellFor, lines, index }) {
+  useEffect(() => {
+    const t = setTimeout(() => play(fellFor ? 'biasCaught' : 'biasEscaped'), index * 300 + 150)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <motion.div
       initial={{ opacity: 0, rotateY: -90 }}

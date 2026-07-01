@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { QUESTIONS, DISPATCHER_INTRO } from '../data/level4.js'
 import PixelButton from '../components/PixelButton.jsx'
 import Typewriter from '../components/Typewriter.jsx'
-import { play, SFX } from '../sound/sounds.js'
+import { play } from '../audio/sounds.js'
 
 export default function DispatcherCall({ onComplete }) {
   const [stage, setStage] = useState('ringing') // ringing -> intro -> q0..q4 -> done
@@ -12,7 +12,7 @@ export default function DispatcherCall({ onComplete }) {
   const [answers, setAnswers] = useState({})
 
   useEffect(() => {
-    play(SFX.dispatcherRing)
+    play('dispatcherRing')
     const t = setTimeout(() => setStage('intro'), 1400)
     return () => clearTimeout(t)
   }, [])
@@ -21,7 +21,7 @@ export default function DispatcherCall({ onComplete }) {
     if (stage === 'intro') {
       const t = setTimeout(() => {
         setStage('question')
-        play(SFX.questionArrive)
+        play('questionArrive')
       }, 1200)
       return () => clearTimeout(t)
     }
@@ -35,18 +35,35 @@ export default function DispatcherCall({ onComplete }) {
     if (qIndex + 1 < QUESTIONS.length) {
       setLineTyped(false)
       setQIndex(qIndex + 1)
-      play(SFX.questionArrive)
+      play('questionArrive')
     } else {
       onComplete(next)
     }
   }
 
+  // Screen readers get the full line/question the instant it arrives,
+  // separately from the visual typewriter effect below — otherwise a live
+  // region on the animated text would announce every character increment.
+  const srAnnouncement =
+    stage === 'ringing'
+      ? 'Incoming call...'
+      : stage === 'intro'
+      ? DISPATCHER_INTRO
+      : stage === 'question'
+      ? QUESTIONS[qIndex].line
+      : ''
+
   return (
     <div className="h-full w-full flex flex-col items-center justify-center bg-l4bg text-l4text px-6 gap-6">
+      <p role="status" aria-live="polite" className="sr-only">
+        {srAnnouncement}
+      </p>
+
       <AnimatePresence mode="wait">
         {stage === 'ringing' && (
           <motion.p
             key="ringing"
+            aria-hidden="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="font-pixel text-xs sm:text-sm animate-pulse"
@@ -58,6 +75,7 @@ export default function DispatcherCall({ onComplete }) {
         {stage === 'intro' && (
           <motion.p
             key="intro"
+            aria-hidden="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="font-pixel text-xs sm:text-sm"
@@ -75,7 +93,7 @@ export default function DispatcherCall({ onComplete }) {
             transition={{ duration: 0.2 }}
             className="w-full max-w-md flex flex-col gap-5"
           >
-            <div className="pixel-border bg-l4panel p-4">
+            <div className="pixel-border bg-l4panel p-4" aria-hidden="true">
               <Typewriter
                 text={QUESTIONS[qIndex].line}
                 speed={18}
@@ -92,7 +110,7 @@ export default function DispatcherCall({ onComplete }) {
                 className="flex flex-col gap-3"
               >
                 {QUESTIONS[qIndex].options.map((opt) => (
-                  <PixelButton key={opt.id} full onClick={() => selectOption(opt.id)}>
+                  <PixelButton key={opt.id} className="w-full" onClick={() => selectOption(opt.id)}>
                     {opt.label}
                   </PixelButton>
                 ))}

@@ -13,7 +13,14 @@ export default function HubScreen({ progress, onPlay }) {
   return (
     <div className="h-full w-full flex flex-col bg-l4bg text-l4text overflow-y-auto">
       <HubBar tab={tab} onTabChange={setTab} points={totals.points} />
-      <div className="flex-1 py-6">
+      <div
+        id={`panel-${tab}`}
+        role="tabpanel"
+        aria-labelledby={`tab-${tab}`}
+        tabIndex={-1}
+        className="flex-1 py-6"
+      >
+        <h1 className="sr-only">{tab === 'levels' ? 'Level select' : 'Your progress'}</h1>
         {tab === 'levels' && <LevelSelect progress={progress} onPlay={onPlay} />}
         {tab === 'progress' && <ProgressView progress={progress} />}
       </div>

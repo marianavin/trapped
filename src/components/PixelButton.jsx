@@ -14,6 +14,7 @@ export default function PixelButton({
   onClick,
   variant = 'default',
   disabled = false,
+  full = false,
   className = '',
 }) {
   return (
@@ -21,10 +22,13 @@ export default function PixelButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
+      aria-disabled={disabled}
       className={[
         'font-pixel text-[10px] sm:text-xs px-4 py-3 border-2 transition-colors duration-100',
         'active:translate-x-[2px] active:translate-y-[2px] active:shadow-none',
+        'focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300',
         disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
+        full ? 'w-full' : '',
         VARIANTS[variant] || VARIANTS.default,
         className,
       ].join(' ')}

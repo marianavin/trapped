@@ -17,6 +17,12 @@ export default {
         wrong: '#FF4444',
         correct: '#44FF88',
 
+        // Level 2 — The Bomb (cold terminal green/black bomb panel)
+        'l2-bg': '#04120A',
+        'l2-panel': '#0C2A1B',
+        'l2-text': '#B8FFC9',
+        'l2-accent': '#00FF41',
+
         // Level 3 — The Scrambled Keypad (Clinical)
         // NOTE: reconstructed from TRAPPED_Visual_Sound_Reference.md after an
         // accidental overwrite of this file — l3-label wasn't in the doc's

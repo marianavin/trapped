@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { TRUTH, BIAS_CARDS, buildReport } from '../data/level4.js'
 import BiasCard from '../components/BiasCard.jsx'
 import PixelButton from '../components/PixelButton.jsx'
-import { play, SFX } from '../sound/sounds.js'
+import { play } from '../audio/sounds.js'
 
 const BIAS_ORDER = ['misinformation', 'anchoring', 'authority', 'confirmation']
 
@@ -13,14 +13,17 @@ function Row({ label, truth, reported, wrong }) {
       <div className="text-revealtext/70">{label}</div>
       <div />
       <div className="text-escaped">{truth}</div>
-      <div className={wrong ? 'text-caught' : 'text-escaped'}>{reported}</div>
+      <div className={wrong ? 'text-caught' : 'text-escaped'}>
+        {wrong ? '✗ ' : '✓ '}
+        {reported}
+      </div>
     </div>
   )
 }
 
 export default function RevealScreen({ answers, results, onContinue }) {
   useEffect(() => {
-    play(SFX.revealTone)
+    play('revealLoad')
   }, [])
 
   const report = buildReport(answers)
@@ -61,7 +64,7 @@ export default function RevealScreen({ answers, results, onContinue }) {
       </div>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}>
-        <PixelButton tone="dark" onClick={onContinue}>
+        <PixelButton variant="dark" onClick={onContinue}>
           NEXT
         </PixelButton>
       </motion.div>
