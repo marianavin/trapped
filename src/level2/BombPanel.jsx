@@ -1,9 +1,11 @@
-// A hand-built (no image asset) bomb-panel scene: dynamite sticks, a
-// circuit board, an embedded LED countdown, and physical wires the player
-// clicks directly to cut — matching the rest of the codebase's convention
-// of pure CSS/Tailwind shapes instead of raster art (see the QA report on
-// Levels 3-4), but with enough distinct silhouettes that it reads as a bomb
-// panel rather than a wireframe.
+// A hand-built (no image asset) pixel-art bomb device: a flat-color blue
+// chassis with red/black hazard-stripe end caps, corner rivets, a battery
+// cell, an LED countdown, and status lights — styled like a retro
+// platformer prop rather than a photoreal illustration. The player still
+// cuts the physical wires running across the chassis; the flavor pieces
+// (battery, lights) are decoration that sells the "device" silhouette.
+const STRIPE_BG = 'repeating-linear-gradient(90deg, #C81E1E 0 9%, #141414 9% 13%)'
+
 export default function BombPanel({
   wires,
   currentWireId,
@@ -21,55 +23,38 @@ export default function BombPanel({
   onCutNow,
 }) {
   return (
-    <div
-      className="relative w-full mx-auto select-none"
-      style={{ maxWidth: 560, aspectRatio: '16 / 10' }}
-    >
-      {/* scene backdrop */}
+    <div className="relative w-full mx-auto select-none" style={{ maxWidth: 620, aspectRatio: '16 / 10' }}>
+      {/* chassis */}
       <div
-        className="absolute inset-0 rounded-lg"
-        style={{ background: 'linear-gradient(180deg, #1A211C 0%, #060A07 75%)', border: '2px solid #000' }}
-      />
-
-      {/* dynamite bundle */}
-      <div className="absolute flex gap-[3%]" style={{ left: '6%', top: '6%', width: '48%', height: '26%' }}>
-        {[0, 1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="flex-1 rounded-full"
-            style={{
-              background: 'linear-gradient(180deg, #E85D5D 0%, #8A1F1F 65%, #4A0F0F 100%)',
-              border: '2px solid #2A0A0A',
-            }}
-          />
-        ))}
-      </div>
-
-      {/* circuit board panel */}
-      <div
-        className="absolute rounded-md"
+        className="absolute inset-x-0"
         style={{
-          left: '6%',
-          top: '32%',
-          width: '88%',
-          height: '58%',
-          background: 'linear-gradient(155deg, #123B23 0%, #0A2617 100%)',
-          border: '3px solid #04150C',
-          boxShadow: 'inset 0 0 18px rgba(0,0,0,0.65)',
+          top: '16%',
+          bottom: '16%',
+          background: '#2E6DA8',
+          border: '4px solid #0A0A0A',
+          boxShadow: '6px 6px 0 rgba(0,0,0,0.55)',
         }}
       >
-        {/* decorative chips */}
-        <div className="absolute rounded-sm" style={{ left: '5%', top: '8%', width: '13%', height: '16%', background: '#0B1F13', border: '1px solid #000' }} />
-        <div className="absolute rounded-sm" style={{ left: '5%', top: '28%', width: '13%', height: '16%', background: '#0B1F13', border: '1px solid #000' }} />
+        {/* corner rivets */}
+        {[
+          { top: 6, left: 6 },
+          { top: 6, right: 6 },
+          { bottom: 6, left: 6 },
+          { bottom: 6, right: 6 },
+        ].map((corner, i) => (
+          <span
+            key={i}
+            className="absolute rounded-full"
+            style={{ width: 10, height: 10, background: '#B8B8B8', border: '2px solid #0A0A0A', ...corner }}
+          />
+        ))}
 
-        {/* LED countdown */}
+        {/* battery cell */}
         <div
-          className="absolute rounded flex items-center justify-center"
-          style={{ right: '5%', top: '7%', width: '38%', height: '20%', background: '#020A04', border: '2px solid #000' }}
+          className="absolute flex flex-col-reverse overflow-hidden"
+          style={{ left: '3%', top: '14%', width: '13%', height: '60%', background: '#333', border: '3px solid #0A0A0A' }}
         >
-          <span className="font-pixel text-l2-accent tabular-nums" style={{ fontSize: 'clamp(10px, 3.4vw, 20px)' }}>
-            {mm}:{ss}
-          </span>
+          <div style={{ height: '55%', background: '#4CD137', borderTop: '2px solid #2E8B1F' }} />
         </div>
 
         {/* wires */}
@@ -87,25 +72,25 @@ export default function BombPanel({
                 'absolute flex items-center focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300',
                 wiresClickable ? 'cursor-pointer' : 'cursor-default',
               ].join(' ')}
-              style={{ left: '4%', top: `${44 + i * 16}%`, width: '58%', height: '10%' }}
+              style={{ left: '20%', top: `${20 + i * 22}%`, width: '46%', height: '12%' }}
             >
               <span
-                className="block h-[38%] rounded-sm"
+                className="block h-[45%]"
                 style={{
                   width: nicked ? '55%' : '100%',
                   background: w.color,
-                  border: '2px solid #0A0A0A',
+                  border: '3px solid #0A0A0A',
                   transition: 'width 120ms ease-out',
                 }}
               />
               {nicked && (
                 <span
-                  className="block h-[38%] rounded-sm origin-left"
+                  className="block h-[45%] origin-left"
                   style={{
                     width: '40%',
                     background: w.color,
-                    border: '2px solid #0A0A0A',
-                    transform: 'rotate(20deg) translateY(35%)',
+                    border: '3px solid #0A0A0A',
+                    transform: 'rotate(22deg) translateY(45%)',
                     transition: 'transform 160ms ease-out',
                   }}
                 />
@@ -119,42 +104,61 @@ export default function BombPanel({
           )
         })}
 
-        {/* final-stage confirm button, styled like a detonator control */}
+        {/* LED countdown + status lights */}
+        <div className="absolute flex flex-col gap-1" style={{ right: '3%', top: '10%', width: '26%' }}>
+          <div
+            className="flex items-center justify-center"
+            style={{ background: '#0A0A0A', border: '3px solid #0A0A0A', padding: '4px 0' }}
+          >
+            <span className="font-pixel text-l2-accent tabular-nums" style={{ fontSize: 'clamp(9px, 3vw, 18px)' }}>
+              {mm}:{ss}
+            </span>
+          </div>
+          <div className="flex flex-col gap-1 p-1" style={{ background: '#4A4A4A', border: '3px solid #0A0A0A' }}>
+            <div className="flex items-center gap-1">
+              <span className="rounded-full" style={{ width: 6, height: 6, background: '#3DDC5C' }} />
+              <span className="font-pixel text-white leading-none" style={{ fontSize: 6 }}>
+                DEFUSED
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="rounded-full animate-pulse" style={{ width: 6, height: 6, background: '#FF4444' }} />
+              <span className="font-pixel text-white leading-none" style={{ fontSize: 6 }}>
+                ARMED
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* final-stage confirm control */}
         {showCutNow && (
           <button
             type="button"
             onClick={onCutNow}
-            className="absolute rounded-full flex items-center justify-center font-pixel text-white text-[9px] sm:text-[10px] active:scale-95 transition-transform focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
-            style={{
-              right: '5%',
-              bottom: '6%',
-              width: '20%',
-              aspectRatio: '1 / 1',
-              background: 'radial-gradient(circle at 35% 30%, #ff8a8a 0%, #e02424 45%, #6b1010 100%)',
-              border: '2px solid #1a1a1a',
-              boxShadow: 'inset 0 -4px 8px rgba(0,0,0,0.5), inset 0 3px 6px rgba(255,255,255,0.3)',
-            }}
+            className="absolute font-pixel text-white text-[8px] sm:text-[9px] px-2 py-2 active:translate-y-[2px] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
+            style={{ right: '3%', bottom: '6%', background: '#C81E1E', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.5)' }}
           >
             CUT NOW
           </button>
         )}
       </div>
 
+      {/* hazard-stripe end caps */}
+      <div className="absolute inset-x-0" style={{ top: '13%', height: '5%', background: STRIPE_BG, border: '3px solid #0A0A0A' }} />
+      <div className="absolute inset-x-0" style={{ bottom: '13%', height: '5%', background: STRIPE_BG, border: '3px solid #0A0A0A' }} />
+
       {/* instruction speech bubble */}
       {message && (
-        <div
-          className="absolute rounded bg-white text-black p-2 sm:p-3"
-          style={{ right: '3%', top: '2%', width: '52%' }}
-        >
-          <p className="font-mono text-[9px] sm:text-xs leading-snug">{message}</p>
+        <div className="absolute p-2 sm:p-3" style={{ right: '2%', top: '0%', width: '54%', background: '#FFFFFF', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.4)' }}>
+          <p className="font-mono text-[9px] sm:text-xs leading-snug text-black">{message}</p>
         </div>
       )}
 
       {/* legend card */}
       {showLegend && (
         <div
-          className="absolute rounded p-2 sm:p-3"
-          style={{ left: '2%', bottom: '2%', width: '42%', background: '#F5F5F0', color: '#1A1A1A' }}
+          className="absolute p-2 sm:p-3"
+          style={{ left: '1%', bottom: '0%', width: '44%', background: '#F5F5F0', color: '#1A1A1A', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.4)' }}
         >
           <p className="font-pixel text-[6px] sm:text-[7px] tracking-wide text-gray-500 mb-1">{legendLabel}</p>
           {legendRows.map((row) => (

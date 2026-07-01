@@ -15,6 +15,21 @@ export default {
         'l1-correct': '#5A5A5A',
         'l1-text': '#FFB347',
         'l1-overlay': '#CCCCCC',
+        // Illustrated escape-room scene palette (Act1/Act2 backdrops) — an
+        // extension of the above, added so the level reads as a real room
+        // instead of flat color blocks. Deliberately still low-count and
+        // high-contrast per the visual reference's "3-4 colors" rule; the
+        // teal wall replaces the near-black background only inside the
+        // illustrated scenes, worth reconciling with
+        // TRAPPED_Visual_Sound_Reference.md if this direction sticks.
+        'l1-wall': '#1B4A46',
+        'l1-wall-dark': '#123433',
+        'l1-floor': '#2E3436',
+        'l1-metal': '#9AA1A7',
+        'l1-metal-dark': '#4B5257',
+        'l1-panel': '#20262B',
+        'l1-sign': '#1F7A4C',
+        'l1-glass': '#3E7C82',
 
         // Level 4 — The Witness (Night Street)
         l4bg: '#0A0E1A',
