@@ -1,10 +1,64 @@
-// A hand-built (no image asset) pixel-art bomb device: a flat-color blue
-// chassis with red/black hazard-stripe end caps, corner rivets, a battery
-// cell, an LED countdown, and status lights — styled like a retro
-// platformer prop rather than a photoreal illustration. The player still
-// cuts the physical wires running across the chassis; the flavor pieces
-// (battery, lights) are decoration that sells the "device" silhouette.
-const STRIPE_BG = 'repeating-linear-gradient(90deg, #C81E1E 0 9%, #141414 9% 13%)'
+// Hand-drawn pixel-art bomb device, built as a grid-aligned SVG (flat fills,
+// hard edges, shape-rendering="crispEdges", no gradients or smooth curves —
+// "rounded" bits like the bolts and battery cap are stepped rectangles, the
+// way real pixel-art sprites fake curvature) rather than CSS shapes. The
+// switches / logic-gate boxes / side wiring are decorative flavor matching
+// the reference composition; the three colored wires between the battery
+// and the switch stack are the actual clickable "cut this wire" mechanic.
+const C = {
+  bodyLight: '#4F8FCB',
+  body: '#2E6DA8',
+  bodyDark: '#1F4E7D',
+  black: '#0A0A0A',
+  stripeRed: '#C81E1E',
+  bolt: '#C4C4C4',
+  boltDark: '#7A7A7A',
+  batteryBody: '#3A3A3A',
+  batteryGreen: '#4CD137',
+  batteryGreenDark: '#2E8B1F',
+  wireYellow: '#F2C230',
+  wireTip: '#D8362B',
+  switchBody: '#3F3F3F',
+  gateBox: '#EDEDE6',
+  gateText: '#1A1A1A',
+  ledBg: '#050505',
+  led: '#3DFF6E',
+  indicatorGreen: '#3DDC5C',
+  indicatorRed: '#FF4444',
+  bezel: '#5A5A5A',
+  bezelDark: '#3F3F3F',
+  warnYellow: '#F5C518',
+}
+
+// A stripe cap made of alternating red/black blocks with pixel-stepped
+// (staircase) rounded ends instead of a smooth border-radius.
+function StripeCap({ y }) {
+  const blocks = []
+  const blockW = 18
+  for (let x = 44; x < 308; x += blockW) {
+    blocks.push(<rect key={x} x={x} y={y} width={blockW - 3} height={10} fill={C.stripeRed} />)
+  }
+  return (
+    <g>
+      <rect x={40} y={y} width={272} height={10} fill={C.black} />
+      {blocks}
+      {/* pixel-stepped rounded end caps */}
+      <rect x={36} y={y + 2} width={4} height={6} fill={C.black} />
+      <rect x={312} y={y + 2} width={4} height={6} fill={C.black} />
+    </g>
+  )
+}
+
+function PixelBolt({ x, y }) {
+  return (
+    <g>
+      <rect x={x} y={y} width={8} height={8} fill={C.boltDark} />
+      <rect x={x + 1} y={y + 1} width={6} height={6} fill={C.bolt} />
+      <rect x={x + 3} y={y + 1} width={2} height={6} fill={C.boltDark} />
+      <rect x={x + 1} y={y + 3} width={6} height={2} fill={C.boltDark} />
+    </g>
+  )
+}
 
 export default function BombPanel({
   wires,
@@ -22,143 +76,203 @@ export default function BombPanel({
   showCutNow,
   onCutNow,
 }) {
+  const wireY = [72, 98, 124]
+
   return (
-    <div className="relative w-full mx-auto select-none" style={{ maxWidth: 620, aspectRatio: '16 / 10' }}>
-      {/* chassis */}
-      <div
-        className="absolute inset-x-0"
-        style={{
-          top: '16%',
-          bottom: '16%',
-          background: '#2E6DA8',
-          border: '4px solid #0A0A0A',
-          boxShadow: '6px 6px 0 rgba(0,0,0,0.55)',
-        }}
-      >
-        {/* corner rivets */}
-        {[
-          { top: 6, left: 6 },
-          { top: 6, right: 6 },
-          { bottom: 6, left: 6 },
-          { bottom: 6, right: 6 },
-        ].map((corner, i) => (
-          <span
-            key={i}
-            className="absolute rounded-full"
-            style={{ width: 10, height: 10, background: '#B8B8B8', border: '2px solid #0A0A0A', ...corner }}
-          />
-        ))}
+    <div className="relative w-full mx-auto select-none" style={{ maxWidth: 640, aspectRatio: '352 / 200' }}>
+      <svg viewBox="0 0 352 200" className="absolute inset-0 w-full h-full" shapeRendering="crispEdges">
+        {/* chassis body */}
+        <rect x={40} y={44} width={272} height={112} fill={C.body} stroke={C.black} strokeWidth={3} />
+        {/* top-left highlight edge + bottom-right shadow edge, pixel-art shading */}
+        <rect x={40} y={44} width={272} height={4} fill={C.bodyLight} />
+        <rect x={40} y={44} width={4} height={112} fill={C.bodyLight} />
+        <rect x={40} y={152} width={272} height={4} fill={C.bodyDark} />
+        <rect x={308} y={44} width={4} height={112} fill={C.bodyDark} />
+        {/* section dividers */}
+        <rect x={136} y={48} width={4} height={104} fill={C.bodyDark} />
+        <rect x={232} y={48} width={4} height={104} fill={C.bodyDark} />
+
+        <StripeCap y={34} />
+        <StripeCap y={156} />
+
+        <PixelBolt x={46} y={50} />
+        <PixelBolt x={298} y={50} />
+        <PixelBolt x={46} y={142} />
+        <PixelBolt x={298} y={142} />
 
         {/* battery cell */}
-        <div
-          className="absolute flex flex-col-reverse overflow-hidden"
-          style={{ left: '3%', top: '14%', width: '13%', height: '60%', background: '#333', border: '3px solid #0A0A0A' }}
-        >
-          <div style={{ height: '55%', background: '#4CD137', borderTop: '2px solid #2E8B1F' }} />
-        </div>
+        <rect x={64} y={44} width={6} height={8} fill={C.wireTip} />
+        <rect x={78} y={44} width={6} height={8} fill={C.wireTip} />
+        <rect x={64} y={50} width={6} height={10} fill={C.wireYellow} />
+        <rect x={78} y={50} width={6} height={10} fill={C.wireYellow} />
+        <rect x={60} y={60} width={24} height={8} fill={C.batteryBody} stroke={C.black} strokeWidth={2} />
+        <rect x={52} y={68} width={40} height={64} fill={C.batteryBody} stroke={C.black} strokeWidth={2} />
+        <rect x={52} y={104} width={40} height={4} fill={C.batteryGreenDark} />
+        <rect x={52} y={108} width={40} height={24} fill={C.batteryGreen} />
 
-        {/* wires */}
+        {/* switch stack + gate boxes (decorative wiring flavor) */}
+        {wireY.map((y, i) => (
+          <g key={`switch-${i}`}>
+            <path
+              d={`M 148 ${y + 4} L 168 ${y + 4}`}
+              stroke={C.black}
+              strokeWidth={3}
+              fill="none"
+            />
+            <rect x={148} y={y - 4} width={20} height={16} fill={C.switchBody} stroke={C.black} strokeWidth={2} />
+            <text x={158} y={y + 8} textAnchor="middle" className="font-pixel" fontSize={5} fill="#fff">
+              IO
+            </text>
+          </g>
+        ))}
+        {/* traces from switches into gates, converging right */}
+        <path d="M 168 76 L 180 76 L 180 76" stroke={C.black} strokeWidth={3} fill="none" />
+        <path d="M 180 76 L 196 76" stroke={C.black} strokeWidth={3} fill="none" />
+        <path d="M 168 102 L 176 102 L 176 90 L 196 90" stroke={C.black} strokeWidth={3} fill="none" />
+        <path d="M 168 128 L 220 128" stroke={C.black} strokeWidth={3} fill="none" />
+        <path d="M 240 76 L 250 76 L 250 128 L 220 128" stroke={C.black} strokeWidth={3} fill="none" />
+        <path d="M 240 90 L 246 90 L 246 76" stroke={C.black} strokeWidth={3} fill="none" />
+        <path d="M 250 102 L 260 102 L 260 148 L 236 148" stroke={C.black} strokeWidth={3} fill="none" />
+
+        <rect x={196} y={68} width={44} height={16} fill={C.gateBox} stroke={C.black} strokeWidth={2} />
+        <text x={218} y={79} textAnchor="middle" className="font-pixel" fontSize={5} fill={C.gateText}>
+          AND
+        </text>
+        <rect x={196} y={94} width={44} height={16} fill={C.gateBox} stroke={C.black} strokeWidth={2} />
+        <text x={218} y={105} textAnchor="middle" className="font-pixel" fontSize={5} fill={C.gateText}>
+          AND
+        </text>
+        <rect x={196} y={120} width={44} height={16} fill={C.gateBox} stroke={C.black} strokeWidth={2} />
+        <text x={218} y={131} textAnchor="middle" className="font-pixel" fontSize={5} fill={C.gateText}>
+          NAND
+        </text>
+
+        {/* display bezel */}
+        <rect x={244} y={52} width={64} height={96} fill={C.bezel} stroke={C.black} strokeWidth={3} />
+        <rect x={244} y={52} width={64} height={4} fill="#8A8A8A" />
+        <rect x={250} y={58} width={52} height={22} fill={C.ledBg} stroke={C.black} strokeWidth={2} />
+        <text x={276} y={74} textAnchor="middle" className="font-pixel tabular-nums" fontSize={13} fill={C.led}>
+          {mm}:{ss}
+        </text>
+
+        <rect x={250} y={86} width={6} height={6} fill={C.indicatorGreen} />
+        <text x={260} y={92} className="font-pixel" fontSize={5} fill="#fff">
+          DEFUSED
+        </text>
+        <rect x={250} y={98} width={6} height={6} fill={C.indicatorRed} className="animate-pulse" />
+        <text x={260} y={104} className="font-pixel" fontSize={5} fill="#fff">
+          ARMED
+        </text>
+
+        <rect x={250} y={110} width={30} height={14} fill={C.ledBg} stroke={C.black} strokeWidth={2} />
+        <text x={265} y={120} textAnchor="middle" className="font-pixel tabular-nums" fontSize={7} fill={C.led}>
+          {mm}:{ss}
+        </text>
+        <polygon points="290,124 297,136 283,136" fill={C.warnYellow} stroke={C.black} strokeWidth={1.5} />
+        <text x={290} y={134} textAnchor="middle" className="font-pixel" fontSize={6} fill={C.black}>
+          !
+        </text>
+
+        {/* the three functional wires — click to cut */}
         {wires.map((w, i) => {
+          const y = wireY[i]
           const isCurrent = w.id === currentWireId
-          const nicked = isCurrent
           return (
-            <button
-              key={w.id}
-              type="button"
-              disabled={!wiresClickable}
-              onClick={() => onWireClick(w.id)}
-              aria-label={`Cut ${w.label}`}
-              className={[
-                'absolute flex items-center focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300',
-                wiresClickable ? 'cursor-pointer' : 'cursor-default',
-              ].join(' ')}
-              style={{ left: '20%', top: `${20 + i * 22}%`, width: '46%', height: '12%' }}
-            >
-              <span
-                className="block h-[45%]"
-                style={{
-                  width: nicked ? '55%' : '100%',
-                  background: w.color,
-                  border: '3px solid #0A0A0A',
-                  transition: 'width 120ms ease-out',
-                }}
+            <g key={w.id}>
+              <rect
+                x={96}
+                y={y - 4}
+                width={isCurrent ? 26 : 52}
+                height={8}
+                fill={w.color}
+                stroke={C.black}
+                strokeWidth={2}
               />
-              {nicked && (
-                <span
-                  className="block h-[45%] origin-left"
-                  style={{
-                    width: '40%',
-                    background: w.color,
-                    border: '3px solid #0A0A0A',
-                    transform: 'rotate(22deg) translateY(45%)',
-                    transition: 'transform 160ms ease-out',
-                  }}
+              {isCurrent && (
+                <rect
+                  x={130}
+                  y={y + 3}
+                  width={20}
+                  height={8}
+                  fill={w.color}
+                  stroke={C.black}
+                  strokeWidth={2}
+                  transform={`rotate(24 130 ${y + 3})`}
                 />
               )}
               {isCurrent && (
-                <span className="absolute -top-4 left-[52%] text-xs" aria-hidden="true">
+                <text x={122} y={y - 10} textAnchor="middle" fontSize={9} aria-hidden="true">
                   ✂️
-                </span>
+                </text>
               )}
-            </button>
+              <rect
+                x={92}
+                y={y - 8}
+                width={60}
+                height={16}
+                fill="transparent"
+                stroke="none"
+                onClick={() => wiresClickable && onWireClick(w.id)}
+                style={{ cursor: wiresClickable ? 'pointer' : 'default', pointerEvents: 'all' }}
+                aria-label={`Cut ${w.label}`}
+                role="button"
+                tabIndex={wiresClickable ? 0 : -1}
+                onKeyDown={(e) => {
+                  if (wiresClickable && (e.key === 'Enter' || e.key === ' ')) onWireClick(w.id)
+                }}
+              />
+            </g>
           )
         })}
 
-        {/* LED countdown + status lights */}
-        <div className="absolute flex flex-col gap-1" style={{ right: '3%', top: '10%', width: '26%' }}>
-          <div
-            className="flex items-center justify-center"
-            style={{ background: '#0A0A0A', border: '3px solid #0A0A0A', padding: '4px 0' }}
-          >
-            <span className="font-pixel text-l2-accent tabular-nums" style={{ fontSize: 'clamp(9px, 3vw, 18px)' }}>
-              {mm}:{ss}
-            </span>
-          </div>
-          <div className="flex flex-col gap-1 p-1" style={{ background: '#4A4A4A', border: '3px solid #0A0A0A' }}>
-            <div className="flex items-center gap-1">
-              <span className="rounded-full" style={{ width: 6, height: 6, background: '#3DDC5C' }} />
-              <span className="font-pixel text-white leading-none" style={{ fontSize: 6 }}>
-                DEFUSED
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="rounded-full animate-pulse" style={{ width: 6, height: 6, background: '#FF4444' }} />
-              <span className="font-pixel text-white leading-none" style={{ fontSize: 6 }}>
-                ARMED
-              </span>
-            </div>
-          </div>
-        </div>
+        {/* side wire loops, purely decorative */}
+        {[64, 88, 112].map((y) => (
+          <path
+            key={`left-${y}`}
+            d={`M 40 ${y} Q 24 ${y + 6} 40 ${y + 12}`}
+            stroke={C.bodyLight}
+            strokeWidth={4}
+            fill="none"
+          />
+        ))}
+        {[64, 88, 112].map((y) => (
+          <path
+            key={`right-${y}`}
+            d={`M 312 ${y} Q 328 ${y + 6} 312 ${y + 12}`}
+            stroke={C.wireYellow}
+            strokeWidth={4}
+            fill="none"
+          />
+        ))}
+      </svg>
 
-        {/* final-stage confirm control */}
-        {showCutNow && (
-          <button
-            type="button"
-            onClick={onCutNow}
-            className="absolute font-pixel text-white text-[8px] sm:text-[9px] px-2 py-2 active:translate-y-[2px] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
-            style={{ right: '3%', bottom: '6%', background: '#C81E1E', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.5)' }}
-          >
-            CUT NOW
-          </button>
-        )}
-      </div>
+      {/* final-stage confirm control */}
+      {showCutNow && (
+        <button
+          type="button"
+          onClick={onCutNow}
+          className="absolute font-pixel text-white text-[8px] sm:text-[9px] px-2 py-2 active:translate-y-[2px] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
+          style={{ right: '10%', bottom: '4%', background: '#C81E1E', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.5)' }}
+        >
+          CUT NOW
+        </button>
+      )}
 
-      {/* hazard-stripe end caps */}
-      <div className="absolute inset-x-0" style={{ top: '13%', height: '5%', background: STRIPE_BG, border: '3px solid #0A0A0A' }} />
-      <div className="absolute inset-x-0" style={{ bottom: '13%', height: '5%', background: STRIPE_BG, border: '3px solid #0A0A0A' }} />
-
-      {/* instruction speech bubble */}
+      {/* instruction speech bubble — sits in the SVG's own top margin (device body starts at y=44/200=22%) */}
       {message && (
-        <div className="absolute p-2 sm:p-3" style={{ right: '2%', top: '0%', width: '54%', background: '#FFFFFF', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.4)' }}>
+        <div
+          className="absolute p-2 sm:p-3"
+          style={{ right: '1%', top: '1%', width: '52%', background: '#FFFFFF', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.4)' }}
+        >
           <p className="font-mono text-[9px] sm:text-xs leading-snug text-black">{message}</p>
         </div>
       )}
 
-      {/* legend card */}
+      {/* legend card — sits in the SVG's own bottom margin (device body ends at y=156/200=78%) */}
       {showLegend && (
         <div
           className="absolute p-2 sm:p-3"
-          style={{ left: '1%', bottom: '0%', width: '44%', background: '#F5F5F0', color: '#1A1A1A', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.4)' }}
+          style={{ left: '0%', bottom: '1%', width: '44%', background: '#F5F5F0', color: '#1A1A1A', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.4)' }}
         >
           <p className="font-pixel text-[6px] sm:text-[7px] tracking-wide text-gray-500 mb-1">{legendLabel}</p>
           {legendRows.map((row) => (

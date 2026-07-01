@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { play } from '../../audio/sounds.js'
+import { LeftPathArt, RightPathArt, ExtinguisherArt } from './Artwork.jsx'
 
 const FORK_TIMEOUT_MS = 3200
 const EXTINGUISHER_TIMEOUT_MS = 2800
@@ -51,7 +52,7 @@ export default function Act1Corridor({ onProceed }) {
   }, [step])
 
   return (
-    <div className="h-full w-full relative bg-l1-bg overflow-hidden">
+    <div className="h-full w-full relative bg-l1-wall-dark overflow-hidden">
       <SmokeCreep />
 
       <AnimatePresence mode="wait">
@@ -66,18 +67,18 @@ export default function Act1Corridor({ onProceed }) {
             <button
               type="button"
               onClick={() => chooseFork('empty')}
-              className="flex-1 h-full flex items-center justify-center border-r border-l1-smoke"
+              className="relative flex-1 h-full border-r-2 border-l1-wall-dark overflow-hidden"
               aria-label="left path"
             >
-              <div className="w-2 h-16 bg-l1-correct opacity-60" />
+              <LeftPathArt />
             </button>
             <button
               type="button"
               onClick={() => chooseFork('crowd')}
-              className="flex-1 h-full flex items-center justify-center gap-2"
+              className="relative flex-1 h-full overflow-hidden"
               aria-label="right path"
             >
-              <CrowdFigures />
+              <RightPathArt />
             </button>
           </motion.div>
         )}
@@ -88,26 +89,28 @@ export default function Act1Corridor({ onProceed }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="relative z-10 h-full w-full flex flex-col items-center justify-center gap-10"
+            className="relative z-10 h-full w-full overflow-hidden"
           >
+            <ExtinguisherArt />
+
+            {/* extinguisher hotspot — art group sits around (80-125, 275-395)
+                in the 360x640 viewBox */}
             <button
               type="button"
               onClick={() => chooseExtinguisher('pickedUp')}
-              className="flex flex-col items-center gap-2"
               aria-label="pick up extinguisher"
-            >
-              <div className="w-6 h-10 bg-l1-danger" />
-              <div className="w-8 h-2 bg-l1-smoke" />
-            </button>
+              className="absolute z-20 bg-transparent"
+              style={{ left: '18%', top: '42%', width: '20%', height: '20%' }}
+            />
 
+            {/* far doorway glow — "keep moving", art at (240-300, 260-400) */}
             <button
               type="button"
               onClick={() => chooseExtinguisher('left')}
-              className="font-pixel text-[10px] text-l1-correct border-2 border-l1-correct px-4 py-3"
               aria-label="keep moving"
-            >
-              →
-            </button>
+              className="absolute z-20 bg-transparent"
+              style={{ left: '64%', top: '38%', width: '20%', height: '24%' }}
+            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -115,26 +118,11 @@ export default function Act1Corridor({ onProceed }) {
   )
 }
 
-function CrowdFigures() {
-  return (
-    <div className="flex gap-1.5">
-      {[0, 1, 2].map((i) => (
-        <motion.div
-          key={i}
-          className="w-3 h-8 bg-l1-overlay"
-          animate={{ y: [0, -3, 0] }}
-          transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
-        />
-      ))}
-    </div>
-  )
-}
-
 function SmokeCreep() {
   return (
     <motion.div
-      className="absolute inset-x-0 bottom-0 bg-l1-smoke"
-      style={{ opacity: 0.2 }}
+      className="absolute inset-x-0 bottom-0 z-10 bg-l1-smoke pointer-events-none"
+      style={{ opacity: 0.22 }}
       initial={{ height: '0%' }}
       animate={{ height: '18%' }}
       transition={{ duration: 2.6, ease: 'easeOut' }}

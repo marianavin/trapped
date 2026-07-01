@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { CONSEQUENCE_WIN, CONSEQUENCE_FAIL } from './data.js'
 import { play } from '../../audio/sounds.js'
+import { HallwayBackdrop } from './Artwork.jsx'
 
 // Immediate, unambiguous result of the player's decisions. No commentary yet -
 // that's what the reveal screen is for.
@@ -16,9 +17,15 @@ export default function Consequence({ success, onDone }) {
 
   return (
     <div className={`relative h-full w-full flex flex-col items-center justify-center px-6 text-center overflow-hidden ${
-      success ? 'bg-l1-bg' : 'bg-black'
+      success ? 'bg-l1-wall-dark' : 'bg-black'
     }`}
     >
+      {success && (
+        <>
+          <HallwayBackdrop />
+          <div className="absolute inset-0 bg-black/40" />
+        </>
+      )}
       {!success && <SmokeFill />}
 
       {lines.map((line, i) => (

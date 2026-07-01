@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { EMERGENCY_LABEL, KEYPAD_LABEL, SOCIAL_PROOF_TEXT, COUNTDOWN_START } from './data.js'
 import { play, stopAlarm } from '../../audio/sounds.js'
+import { RoomScene } from './Artwork.jsx'
 
 // The door panel. Three elements render in scan order - Emergency Release
 // (large, pulsing, first), Keypad ("authorised only", middle), Push-bar
@@ -59,57 +60,70 @@ export default function Act2Panel({ smoky, onDone }) {
       key={shakeKey}
       animate={shakeKey > 0 ? { x: [0, -6, 6, -4, 4, 0] } : {}}
       transition={{ duration: 0.25 }}
-      className="relative h-full w-full flex flex-col items-center bg-l1-bg px-6 py-6 overflow-hidden"
+      className="relative h-full w-full overflow-hidden bg-l1-wall-dark"
     >
+      <RoomScene />
+
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 bg-l1-smoke transition-[height] duration-500"
-        style={{ opacity: 0.22, height: smoky ? '38%' : '18%' }}
+        style={{ opacity: 0.28, height: smoky ? '42%' : '20%' }}
       />
 
+      {/* countdown */}
       <p
-        className={`relative z-10 font-pixel text-2xl sm:text-3xl mt-2 ${
+        className={`absolute top-3 left-0 right-0 text-center z-20 font-pixel text-2xl sm:text-3xl drop-shadow-[0_2px_0_rgba(0,0,0,0.8)] ${
           seconds <= 1 ? 'text-l1-danger animate-pulse' : 'text-l1-text'
         }`}
       >
         {seconds}
       </p>
 
-      <div className="relative z-10 flex-1 w-full max-w-xs flex flex-col items-stretch justify-center gap-6">
-        <div className="relative">
-          {showSocialProof && (
-            <p className="absolute -top-4 left-0 right-0 text-center font-mono text-[10px] text-l1-overlay">
-              {SOCIAL_PROOF_TEXT}
-            </p>
-          )}
-          <motion.button
-            type="button"
-            onClick={() => resolve('emergency')}
-            disabled={locked}
-            animate={{ boxShadow: ['0 0 0px #FF2D2D', '0 0 22px #FF2D2D', '0 0 0px #FF2D2D'] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-full py-6 bg-l1-danger text-white font-pixel text-sm sm:text-base border-4 border-white disabled:opacity-50"
-          >
-            {EMERGENCY_LABEL}
-          </motion.button>
-        </div>
-
-        <button
+      {/* Emergency Release — large, pulsing, sits over the panel cut-out
+          drawn in RoomScene at (297,400) r38 / viewBox 360x640. */}
+      <div className="absolute z-20 flex flex-col items-center" style={{ left: '68%', top: '54%', width: '30%' }}>
+        {showSocialProof && (
+          <p className="absolute -top-4 left-1/2 -translate-x-1/2 w-32 text-center font-mono text-[8px] sm:text-[9px] text-l1-overlay leading-tight">
+            {SOCIAL_PROOF_TEXT}
+          </p>
+        )}
+        <motion.button
           type="button"
-          onClick={() => resolve('keypad')}
+          onClick={() => resolve('emergency')}
           disabled={locked}
-          className="w-full py-4 bg-transparent border-2 border-l1-overlay text-l1-overlay font-pixel text-[9px] sm:text-[10px] disabled:opacity-50"
-        >
-          {KEYPAD_LABEL}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => resolve('pushbar')}
-          disabled={locked}
-          className="self-end w-24 py-2 bg-transparent border border-l1-correct text-l1-correct disabled:opacity-50"
-          aria-label="push bar"
+          animate={{ boxShadow: ['0 0 0px #FF2D2D', '0 0 26px #FF2D2D', '0 0 0px #FF2D2D'] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          aria-label={EMERGENCY_LABEL}
+          className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-l1-danger border-4 border-l1-metal disabled:opacity-50"
         />
+        <p className="mt-1 font-pixel text-[7px] sm:text-[8px] text-white text-center leading-tight">
+          {EMERGENCY_LABEL}
+        </p>
       </div>
+
+      {/* Keypad — "authorised only", framing trap, sits over the keypad
+          grid drawn in RoomScene at (262,222,70,52). */}
+      <button
+        type="button"
+        onClick={() => resolve('keypad')}
+        disabled={locked}
+        className="absolute z-20 flex flex-col items-center justify-end bg-transparent disabled:opacity-50"
+        style={{ left: '68%', top: '32%', width: '30%', height: '15%' }}
+      >
+        <p className="font-pixel text-[6px] sm:text-[7px] text-l1-overlay text-center leading-tight">
+          {KEYPAD_LABEL}
+        </p>
+      </button>
+
+      {/* Push-bar — the door handle. Small, unlabeled, no visual weight at
+          all. Correct answer, invisible by design. */}
+      <button
+        type="button"
+        onClick={() => resolve('pushbar')}
+        disabled={locked}
+        aria-label="door handle"
+        className="absolute z-20 bg-transparent disabled:opacity-50"
+        style={{ left: '41%', top: '47%', width: '18%', height: '18%' }}
+      />
     </motion.div>
   )
 }
