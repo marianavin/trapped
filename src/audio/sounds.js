@@ -48,3 +48,33 @@ export function stopSiren() {
   sirenHowl?.stop()
   sirenHowl = null
 }
+
+// Level 1's fire alarm — same lazy/looping approach as the siren above, kept
+// separate so both could theoretically run at once without stepping on
+// each other's timers.
+let alarmHowl = null
+let alarmTimer = null
+
+export function startAlarm() {
+  if (alarmTimer) return
+  const loop = () => {
+    try {
+      alarmHowl?.stop()
+      alarmHowl = new Howl({ src: [gen.alarmBlip()], format: ['wav'] })
+      alarmHowl.play()
+    } catch {
+      // ignore
+    }
+  }
+  loop()
+  alarmTimer = setInterval(loop, 900)
+}
+
+export function stopAlarm() {
+  if (alarmTimer) {
+    clearInterval(alarmTimer)
+    alarmTimer = null
+  }
+  alarmHowl?.stop()
+  alarmHowl = null
+}

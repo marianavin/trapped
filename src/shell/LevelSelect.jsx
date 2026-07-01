@@ -43,8 +43,8 @@ function LevelCard({ level, result, onPlay }) {
   )
 }
 
-// Grid of all 4 levels. Levels 1 and 2 render locked until they're built
-// (see levels.js) — the blueprint's level order still shows end-to-end so
+// Grid of all 4 levels. Any level not yet built renders locked (see
+// levels.js) — the blueprint's level order still shows end-to-end so
 // players understand the full arc, per the Progression design lens.
 export default function LevelSelect({ progress, onPlay }) {
   return (

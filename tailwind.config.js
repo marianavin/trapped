@@ -8,6 +8,14 @@ export default {
         mono: ['"Courier New"', 'monospace'],
       },
       colors: {
+        // Level 1 — The Escape (Fire)
+        'l1-bg': '#0D0D0D',
+        'l1-smoke': '#2A2A2A',
+        'l1-danger': '#FF2D2D',
+        'l1-correct': '#5A5A5A',
+        'l1-text': '#FFB347',
+        'l1-overlay': '#CCCCCC',
+
         // Level 4 — The Witness (Night Street)
         l4bg: '#0A0E1A',
         l4street: '#FFD166',

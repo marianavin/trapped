@@ -152,6 +152,27 @@ export const sounds = {
   biasEscaped: () => makeUrl(tone({ freq: 990, duration: 0.12, type: 'square', volume: 0.2 })),
   sirenWail: () => makeUrl(sweep({ freqStart: 480, freqEnd: 740, duration: 1.4, volume: 0.1 })),
 
+  // Level 1 — The Escape. Repeating pixel alarm blip, distinct from the
+  // ambulance/phone siren wail used elsewhere — a short flat double-beep
+  // that loops underneath play, per TRAPPED_Visual_Sound_Reference.md.
+  alarmBlip: () =>
+    makeUrl(
+      sequence(
+        [
+          { freq: 740, duration: 0.11, type: 'square', volume: 0.22 },
+          { freq: 740, duration: 0.11, type: 'square', volume: 0.22 },
+        ],
+        0.08
+      )
+    ),
+  doorLock: () =>
+    makeUrl(
+      concat(
+        tone({ freq: 130, duration: 0.12, type: 'square', volume: 0.26 }),
+        tone({ freq: 90, duration: 0.22, type: 'square', volume: 0.24 })
+      )
+    ),
+
   // Level 4 — The Witness
   dispatcherRing: () =>
     makeUrl(

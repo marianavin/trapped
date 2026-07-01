@@ -1,19 +1,21 @@
+import Level1 from '../levels/level1/Level1.jsx'
 import Level2 from '../level2/Level2.jsx'
 import Level3 from '../levels/level3/Level3.jsx'
 import Level4 from '../level4/Level4.jsx'
 
 // Single source of truth for the level-select grid and progress view.
 // Titles are copy-spec exact (TRAPPED_Content_Copy_Spec.md section headers).
-// Level 1 isn't built yet — it renders as locked/"coming soon" until its
-// code exists, per TRAPPED_Game_Design_Blueprint.md.
 export const LEVELS = [
   {
     id: 'level1',
     index: 1,
     title: 'THE ESCAPE',
     accent: '#FFB347',
-    built: false,
+    built: true,
     totalBiases: 3,
+    Component: Level1,
+    // Level1's onComplete already emits the normalized shape directly.
+    normalizeResult: (payload) => payload,
   },
   {
     id: 'level2',
