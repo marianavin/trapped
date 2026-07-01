@@ -8,65 +8,73 @@ export default {
         mono: ['"Courier New"', 'monospace'],
       },
       colors: {
-        // Level 1 — The Escape (Fire)
-        'l1-bg': '#0D0D0D',
-        'l1-smoke': '#2A2A2A',
-        'l1-danger': '#FF2D2D',
-        'l1-correct': '#5A5A5A',
-        'l1-text': '#FFB347',
-        'l1-overlay': '#CCCCCC',
-        // Illustrated escape-room scene palette (Act1/Act2 backdrops) — an
-        // extension of the above, added so the level reads as a real room
-        // instead of flat color blocks. Deliberately still low-count and
-        // high-contrast per the visual reference's "3-4 colors" rule; the
-        // teal wall replaces the near-black background only inside the
-        // illustrated scenes, worth reconciling with
-        // TRAPPED_Visual_Sound_Reference.md if this direction sticks.
-        'l1-wall': '#1B4A46',
-        'l1-wall-dark': '#123433',
-        'l1-floor': '#2E3436',
-        'l1-metal': '#9AA1A7',
-        'l1-metal-dark': '#4B5257',
-        'l1-panel': '#20262B',
-        'l1-sign': '#1F7A4C',
-        'l1-glass': '#3E7C82',
+        // --- Unified "glitchwave" system (2026 redesign) ---------------
+        // Every level used to carry its own unrelated palette (amber fire,
+        // green terminal, cool grey clinical, navy streetlight), which is
+        // why the app read as four different apps stitched together. Per
+        // design direction, there is now exactly one palette, reused by
+        // every level and the shell: deep navy/grid background, cyan as
+        // the single primary/interactive/success accent, magenta-red as
+        // the single danger/fail accent. Token *names* below are left
+        // untouched (dozens of components already reference l1-text,
+        // l3-prompt, etc.) — only the hex values move, so every consumer
+        // repaints for free without a find-and-replace across components.
+        // The two shared brand accents also get their own generic names
+        // for new code: `accent-cyan` / `accent-magenta`.
+        'accent-cyan': '#2DE8FF',
+        'accent-magenta': '#FF4477',
 
-        // Level 4 — The Witness (Night Street)
-        l4bg: '#0A0E1A',
-        l4street: '#FFD166',
-        l4panel: '#1E2A3A',
-        l4text: '#E8E8E8',
-        l4flash: '#FFF8E7',
-        wrong: '#FF4444',
-        correct: '#44FF88',
+        // Level 1 — The Escape
+        'l1-bg': '#12132B',
+        'l1-smoke': '#20223A',
+        'l1-danger': '#FF4477',
+        'l1-correct': '#4A5A8A',
+        'l1-text': '#EAF7FF',
+        'l1-overlay': '#B8D4E8',
+        'l1-wall': '#1B1D45',
+        'l1-wall-dark': '#0B0C1F',
+        'l1-floor': '#14162E',
+        'l1-metal': '#4A5A8A',
+        'l1-metal-dark': '#2E3660',
+        'l1-panel': '#1B1D45',
+        'l1-sign': '#2DE8FF',
+        'l1-glass': '#2DE8FF',
 
-        // Level 2 — The Bomb (cold terminal green/black bomb panel)
-        'l2-bg': '#04120A',
-        'l2-panel': '#0C2A1B',
-        'l2-text': '#B8FFC9',
-        'l2-accent': '#00FF41',
+        // Level 4 — The Witness
+        l4bg: '#12132B',
+        l4street: '#2DE8FF',
+        l4panel: '#1B1D45',
+        l4text: '#EAF7FF',
+        l4flash: '#F5FBFF',
+        wrong: '#FF4477',
+        correct: '#2DE8FF',
 
-        // Level 3 — The Scrambled Keypad (Clinical)
-        // NOTE: reconstructed from TRAPPED_Visual_Sound_Reference.md after an
-        // accidental overwrite of this file — l3-label wasn't in the doc's
-        // table explicitly, so it's a best-effort pale tint alongside l3-prompt.
-        // Worth a quick visual diff against intent.
-        'l3-bg': '#1A1A2E',
-        'l3-face': '#3A3A4A',
-        'l3-prompt': '#A8C8E8',
-        'l3-label': '#D8E8F5',
-        'l3-error': '#FF4444',
-        'l3-success': '#44FF88',
+        // Level 2 — The Bomb
+        'l2-bg': '#12132B',
+        'l2-panel': '#1B1D45',
+        'l2-text': '#CFEFFF',
+        'l2-accent': '#2DE8FF',
 
-        // Reveal screen (shared across all levels)
+        // Level 3 — The Scrambled Keypad
+        'l3-bg': '#12132B',
+        'l3-face': '#1B1D45',
+        'l3-prompt': '#2DE8FF',
+        'l3-label': '#CFEFFF',
+        'l3-error': '#FF4477',
+        'l3-success': '#2DE8FF',
+
+        // Reveal screen — the one deliberately light "printed document"
+        // surface (matches the reference's white system-alert/search
+        // windows sitting on the dark grid), left as near-white/near-black
+        // rather than folded into the dark palette.
         revealbg: '#F5F5F5',
         revealtext: '#1A1A1A',
-        escaped: '#2ECC71',
-        caught: '#E74C3C',
+        escaped: '#2DE8FF',
+        caught: '#FF4477',
         'reveal-bg': '#F5F5F5',
         'reveal-text': '#1A1A1A',
-        'reveal-escaped': '#2ECC71',
-        'reveal-caught': '#E74C3C',
+        'reveal-escaped': '#0E8FA6',
+        'reveal-caught': '#C0392B',
       },
     },
   },

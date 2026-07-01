@@ -36,11 +36,11 @@ export default function Reveal({ success, results, onNext, onRetry }) {
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
         {success ? (
-          <PixelButton variant="dark" onClick={onNext}>
+          <PixelButton variant="primary" onClick={onNext}>
             NEXT
           </PixelButton>
         ) : (
-          <PixelButton variant="dark" onClick={onRetry}>
+          <PixelButton variant="danger" onClick={onRetry}>
             TRY AGAIN
           </PixelButton>
         )}

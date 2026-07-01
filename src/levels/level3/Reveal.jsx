@@ -28,11 +28,11 @@ export default function Reveal({ results, connected, onNext, onRetry }) {
 
       <div className="mt-10 mb-6">
         {connected ? (
-          <PixelButton className="!border-white !text-white" onClick={onNext}>
+          <PixelButton variant="primary" onClick={onNext}>
             NEXT
           </PixelButton>
         ) : (
-          <PixelButton className="!border-white !text-white" onClick={onRetry}>
+          <PixelButton variant="danger" onClick={onRetry}>
             TRY AGAIN
           </PixelButton>
         )}
@@ -45,7 +45,7 @@ export default function Reveal({ results, connected, onNext, onRetry }) {
 // kept as a local component because this screen's data shape (data.escaped
 // / data.fell keyed by outcome string) differs slightly from the shared
 // component's (fellFor boolean + lines array).
-const GLOW = { escaped: '#44FF88', caught: '#FF4D4D' }
+const GLOW = { escaped: '#2DE8FF', caught: '#FF4477' }
 
 function BiasCard({ data, outcome, delay }) {
   const escaped = outcome === 'escaped'
@@ -69,10 +69,16 @@ function BiasCard({ data, outcome, delay }) {
       <div className="flex items-center justify-between mb-2 gap-3">
         <span className="font-pixel text-[11px] sm:text-xs">{data.name}</span>
         <span
-          className="font-pixel text-[9px] sm:text-[10px] px-2 py-1 rounded-md border shrink-0"
+          className="font-pixel text-[9px] sm:text-[10px] px-2 py-1 rounded-md border shrink-0 inline-flex items-center gap-1.5"
           style={{ color: glow, borderColor: glow }}
         >
-          {escaped ? '✓ ESCAPED' : '✗ FELL FOR IT'}
+          {/* icon split out of the pixel font — Press Start 2P has no ✗/✓
+              glyphs so it fell back to a tiny thin symbol; sized/weighted
+              on its own, aria-hidden since the label text is redundant */}
+          <span aria-hidden="true" className="font-sans text-sm sm:text-base font-bold leading-none">
+            {escaped ? '✓' : '✗'}
+          </span>
+          {escaped ? 'ESCAPED' : 'FELL FOR IT'}
         </span>
       </div>
       {lines.map((line) => (

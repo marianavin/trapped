@@ -54,8 +54,7 @@ export default function Play({ onDone }) {
     if (secondsLeft <= 0) {
       finish({ firstCut, authorityChoice, finalAction: null })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [secondsLeft])
+  }, [secondsLeft, firstCut, authorityChoice])
 
   function finish(payload) {
     if (doneRef.current) return

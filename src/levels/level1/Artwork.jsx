@@ -14,7 +14,7 @@ import { Bolt, Mound } from '../../components/PixelArtKit.jsx'
 
 const PIXEL_FONT = "'Press Start 2P'"
 
-function WallTexture({ tone = '#1B4A46', dark = '#123433' }) {
+function WallTexture({ tone = '#1B1D45', dark = '#0A0A16' }) {
   return (
     <>
       <rect width="360" height="640" fill={tone} />
@@ -25,10 +25,10 @@ function WallTexture({ tone = '#1B4A46', dark = '#123433' }) {
   )
 }
 
-function Floor({ dark = '#123433' }) {
+function Floor({ dark = '#0A0A16' }) {
   return (
     <>
-      <rect x="0" y="560" width="360" height="80" fill="#2E3436" />
+      <rect x="0" y="560" width="360" height="80" fill="#14162E" />
       {Array.from({ length: 9 }).map((_, i) => (
         <rect key={i} x={i * 40} y="560" width="1" height="80" fill={dark} opacity="0.6" />
       ))}
@@ -42,21 +42,21 @@ function Floor({ dark = '#123433' }) {
 function CeilingLight({ cx, glow = true }) {
   return (
     <g>
-      <rect x={cx - 2} y="10" width="4" height="24" fill="#123433" />
+      <rect x={cx - 2} y="10" width="4" height="24" fill="#0A0A16" />
       {glow && (
         <>
-          <rect x={cx - 26} y="24" width="52" height="52" fill="#FF2D2D" opacity="0.08" />
-          <rect x={cx - 16} y="30" width="32" height="32" fill="#FF2D2D" opacity="0.18" />
+          <rect x={cx - 26} y="24" width="52" height="52" fill="#FF4477" opacity="0.08" />
+          <rect x={cx - 16} y="30" width="32" height="32" fill="#FF4477" opacity="0.18" />
         </>
       )}
-      <rect x={cx - 11} y="39" width="22" height="22" fill={glow ? '#FF2D2D' : '#4B5257'} stroke="#123433" strokeWidth="2" />
+      <rect x={cx - 11} y="39" width="22" height="22" fill={glow ? '#FF4477' : '#3A3D6B'} stroke="#0A0A16" strokeWidth="2" />
       <rect x={cx - 6} y="44" width="6" height="6" fill="#FFFFFF" opacity={glow ? 0.5 : 0.25} />
     </g>
   )
 }
 
-function Sign({ x, y, w, h, fill = '#1F7A4C' }) {
-  return <rect x={x} y={y} width={w} height={h} fill={fill} stroke="#123433" strokeWidth="1.5" opacity="0.9" />
+function Sign({ x, y, w, h, fill = '#2DE8FF' }) {
+  return <rect x={x} y={y} width={w} height={h} fill={fill} stroke="#0A0A16" strokeWidth="1.5" opacity="0.9" />
 }
 
 // The door-panel room. Emergency Release / Keypad / Push-bar hotspots are
@@ -75,31 +75,31 @@ export function RoomScene() {
       <Floor />
 
       {/* left-wall dressing — purely atmospheric, never interactive */}
-      <Sign x={10} y={92} w={72} h={26} fill="#1F7A4C" />
-      <Sign x={10} y={126} w={72} h={22} fill="#4B5257" />
-      <Sign x={10} y={156} w={72} h={22} fill="#4B5257" />
+      <Sign x={10} y={92} w={72} h={26} fill="#2DE8FF" />
+      <Sign x={10} y={126} w={72} h={22} fill="#3A3D6B" />
+      <Sign x={10} y={156} w={72} h={22} fill="#3A3D6B" />
 
       {/* fish tank — fish are small blocky rects, not circles */}
       <g opacity="0.9">
-        <rect x="6" y="430" width="90" height="56" fill="#3E7C82" opacity="0.55" stroke="#123433" strokeWidth="2" />
-        <rect x="0" y="486" width="102" height="10" fill="#4B5257" />
-        <rect x="14" y="510" width="72" height="46" fill="#4B5257" />
-        <rect x="34" y="452" width="8" height="6" fill="#FFB347" />
-        <rect x="60" y="462" width="8" height="6" fill="#FFB347" />
+        <rect x="6" y="430" width="90" height="56" fill="#2DE8FF" opacity="0.55" stroke="#0A0A16" strokeWidth="2" />
+        <rect x="0" y="486" width="102" height="10" fill="#3A3D6B" />
+        <rect x="14" y="510" width="72" height="46" fill="#3A3D6B" />
+        <rect x="34" y="452" width="8" height="6" fill="#2DE8FF" />
+        <rect x="60" y="462" width="8" height="6" fill="#2DE8FF" />
       </g>
 
       {/* potted plant — blocky stepped-mound leaves instead of bezier curves */}
       <g>
-        <rect x="90" y="500" width="34" height="38" fill="#4B5257" />
-        <Mound x={78} y={452} width={30} color="#1F7A4C" />
-        <Mound x={100} y={444} width={26} color="#1F7A4C" />
+        <rect x="90" y="500" width="34" height="38" fill="#3A3D6B" />
+        <Mound x={78} y={452} width={30} color="#2DE8FF" />
+        <Mound x={100} y={444} width={26} color="#2DE8FF" />
       </g>
 
       <CeilingLight cx={56} />
 
       {/* exit sign — straight-line pictogram only, no curves */}
       <g>
-        <rect x="126" y="22" width="108" height="34" fill="#1F7A4C" stroke="#123433" strokeWidth="2" />
+        <rect x="126" y="22" width="108" height="34" fill="#2DE8FF" stroke="#0A0A16" strokeWidth="2" />
         <path
           d="M139 30 v18 M139 30 h8 M139 39 h6 M139 48 h8 M151 30 l8 18 M167 30 l-8 18"
           stroke="#F5F5F5"
@@ -113,26 +113,26 @@ export function RoomScene() {
       </g>
 
       {/* door */}
-      <rect x="114" y="96" width="130" height="442" fill="#4B5257" />
-      <rect x="122" y="104" width="114" height="426" fill="#9AA1A7" />
-      <rect x="177" y="104" width="2" height="426" fill="#4B5257" />
-      <rect x="138" y="128" width="52" height="42" fill="#3E7C82" opacity="0.55" />
-      <rect x="196" y="128" width="52" height="42" fill="#3E7C82" opacity="0.55" />
+      <rect x="114" y="96" width="130" height="442" fill="#3A3D6B" />
+      <rect x="122" y="104" width="114" height="426" fill="#8FA3C7" />
+      <rect x="177" y="104" width="2" height="426" fill="#3A3D6B" />
+      <rect x="138" y="128" width="52" height="42" fill="#2DE8FF" opacity="0.55" />
+      <rect x="196" y="128" width="52" height="42" fill="#2DE8FF" opacity="0.55" />
       {/* door handle — this IS the push-bar hotspot's art. Small, grey,
           unlabeled, blending straight into the door. */}
-      <rect x="171" y="318" width="8" height="72" fill="#D8DDE1" stroke="#4B5257" strokeWidth="1" />
-      <Bolt x={126} y={108} size={8} light="#D8DDE1" dark="#4B5257" />
-      <Bolt x={226} y={108} size={8} light="#D8DDE1" dark="#4B5257" />
-      <Bolt x={126} y={522} size={8} light="#D8DDE1" dark="#4B5257" />
-      <Bolt x={226} y={522} size={8} light="#D8DDE1" dark="#4B5257" />
+      <rect x="171" y="318" width="8" height="72" fill="#B8D4E8" stroke="#3A3D6B" strokeWidth="1" />
+      <Bolt x={126} y={108} size={8} light="#B8D4E8" dark="#3A3D6B" />
+      <Bolt x={226} y={108} size={8} light="#B8D4E8" dark="#3A3D6B" />
+      <Bolt x={126} y={522} size={8} light="#B8D4E8" dark="#3A3D6B" />
+      <Bolt x={226} y={522} size={8} light="#B8D4E8" dark="#3A3D6B" />
 
       {/* side control-panel housing */}
-      <rect x="250" y="148" width="94" height="366" fill="#20262B" stroke="#123433" strokeWidth="2" />
-      <rect x="260" y="160" width="30" height="22" fill="#3E7C82" opacity="0.7" />
-      <rect x="304" y="160" width="30" height="22" fill="#4B5257" />
+      <rect x="250" y="148" width="94" height="366" fill="#20262B" stroke="#0A0A16" strokeWidth="2" />
+      <rect x="260" y="160" width="30" height="22" fill="#2DE8FF" opacity="0.7" />
+      <rect x="304" y="160" width="30" height="22" fill="#3A3D6B" />
 
       {/* keypad body art (label + hit area rendered by Act2Panel on top) */}
-      <rect x="262" y="222" width="70" height="52" fill="#123433" stroke="#4B5257" strokeWidth="2" />
+      <rect x="262" y="222" width="70" height="52" fill="#0A0A16" stroke="#3A3D6B" strokeWidth="2" />
       {Array.from({ length: 9 }).map((_, i) => (
         <rect
           key={i}
@@ -140,19 +140,19 @@ export function RoomScene() {
           y={228 + Math.floor(i / 3) * 15}
           width="14"
           height="10"
-          fill="#4B5257"
+          fill="#3A3D6B"
         />
       ))}
 
       {/* decorative sector lights */}
-      <rect x="262" y="470" width="16" height="12" fill="#4B5257" />
-      <rect x="284" y="470" width="16" height="12" fill="#4B5257" />
-      <rect x="306" y="470" width="16" height="12" fill="#4B5257" />
+      <rect x="262" y="470" width="16" height="12" fill="#3A3D6B" />
+      <rect x="284" y="470" width="16" height="12" fill="#3A3D6B" />
+      <rect x="306" y="470" width="16" height="12" fill="#3A3D6B" />
 
       {/* emergency button plate — the pulsing red button itself is rendered
           as an HTML element on top so it can animate; this is just the
           panel cut-out behind it (a square recess, not a circle). */}
-      <rect x="259" y="362" width="76" height="76" fill="#171B1E" stroke="#123433" strokeWidth="2" />
+      <rect x="259" y="362" width="76" height="76" fill="#171B1E" stroke="#0A0A16" strokeWidth="2" />
       <Bolt x={263} y={366} size={8} light="#3A3A3A" dark="#171B1E" />
       <Bolt x={327} y={366} size={8} light="#3A3A3A" dark="#171B1E" />
       <Bolt x={263} y={430} size={8} light="#3A3A3A" dark="#171B1E" />
@@ -172,10 +172,10 @@ export function LeftPathArt() {
       className="absolute inset-0 h-full w-full"
       aria-hidden="true"
     >
-      <WallTexture tone="#163E3B" />
+      <WallTexture tone="#14162E" />
       <Floor />
       <CeilingLight cx={90} glow={false} />
-      <rect x="66" y="420" width="48" height="140" fill="#123433" opacity="0.85" />
+      <rect x="66" y="420" width="48" height="140" fill="#0A0A16" opacity="0.85" />
     </svg>
   )
 }
@@ -193,13 +193,13 @@ export function RightPathArt() {
       className="absolute inset-0 h-full w-full"
       aria-hidden="true"
     >
-      <WallTexture tone="#1B4A46" />
+      <WallTexture tone="#1B1D45" />
       <Floor />
       <CeilingLight cx={90} />
       {figures.map((i) => (
         <g key={i} transform={`translate(${58 + i * 26}, ${470 - i * 10})`}>
-          <rect x="0" y="10" width="14" height="24" fill="#CCCCCC" />
-          <rect x="1" y="0" width="12" height="12" fill="#CCCCCC" />
+          <rect x="0" y="10" width="14" height="24" fill="#B8D4E8" />
+          <rect x="1" y="0" width="12" height="12" fill="#B8D4E8" />
         </g>
       ))}
     </svg>
@@ -224,14 +224,14 @@ export function ExtinguisherArt() {
       {/* extinguisher bracket + cylinder (art only — the tap target sits on
           top, sized generously by the screen that uses this art) */}
       <g transform="translate(96, 300)">
-        <rect x="-16" y="0" width="32" height="10" fill="#4B5257" />
-        <rect x="-13" y="10" width="26" height="70" fill="#FF2D2D" stroke="#123433" strokeWidth="2" />
+        <rect x="-16" y="0" width="32" height="10" fill="#3A3D6B" />
+        <rect x="-13" y="10" width="26" height="70" fill="#FF4477" stroke="#0A0A16" strokeWidth="2" />
         <rect x="-13" y="10" width="26" height="6" fill="#FFFFFF" opacity="0.25" />
-        <rect x="-6" y="-10" width="12" height="12" fill="#9AA1A7" />
+        <rect x="-6" y="-10" width="12" height="12" fill="#8FA3C7" />
         {/* hose, drawn as a blocky right-angle path instead of a smooth curve */}
         <path
           d="M13 26 h10 v10 h8 v10 h6"
-          stroke="#4B5257"
+          stroke="#3A3D6B"
           strokeWidth="4"
           fill="none"
           strokeLinecap="square"
@@ -242,9 +242,9 @@ export function ExtinguisherArt() {
       {/* far doorway glow, standing in for "keep moving" — stepped squares
           instead of a gradient fill */}
       <g transform="translate(240, 260)">
-        <rect x="0" y="0" width="60" height="140" fill="#123433" />
-        <rect x="8" y="8" width="44" height="124" fill="#FF2D2D" opacity="0.12" />
-        <rect x="16" y="40" width="28" height="60" fill="#FF2D2D" opacity="0.2" />
+        <rect x="0" y="0" width="60" height="140" fill="#0A0A16" />
+        <rect x="8" y="8" width="44" height="124" fill="#FF4477" opacity="0.12" />
+        <rect x="16" y="40" width="28" height="60" fill="#FF4477" opacity="0.2" />
       </g>
     </svg>
   )
@@ -262,7 +262,7 @@ export function HallwayBackdrop() {
       className="absolute inset-0 h-full w-full"
       aria-hidden="true"
     >
-      <WallTexture tone="#123433" dark="#0D0D0D" />
+      <WallTexture tone="#0A0A16" dark="#0A0A16" />
       <Floor />
       <CeilingLight cx={110} />
       <CeilingLight cx={280} />

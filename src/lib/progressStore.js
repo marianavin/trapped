@@ -81,7 +81,15 @@ export async function saveLevelResult(userId, levelId, normalizedResult) {
   )
 
   if (error) {
-    console.error('saveLevelResult failed:', error.message)
+    // Don't let a network/DB hiccup erase the result the player just earned:
+    // cache it locally (merged with whatever we can still load from the
+    // server) so the hub reflects it, and it can sync up on a future save.
+    console.error('saveLevelResult failed, caching locally instead:', error.message)
+    const cached = loadLocal(userId)
+    cached[levelId] = record
+    saveLocal(userId, cached)
+    const serverProgress = await loadProgress(userId)
+    return { ...serverProgress, ...cached }
   }
 
   return loadProgress(userId)

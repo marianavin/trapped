@@ -7,8 +7,8 @@ import { play } from '../audio/sounds.js'
 // the border color is set inline rather than via a currentColor trick so
 // the glow always matches the status regardless of surrounding text color.
 const GLOW = {
-  escaped: '#44FF88',
-  caught: '#FF4D4D',
+  escaped: '#2DE8FF',
+  caught: '#FF4477',
 }
 
 export default function BiasCard({ name, fellFor, lines, index }) {
@@ -31,10 +31,17 @@ export default function BiasCard({ name, fellFor, lines, index }) {
       <div className="flex items-center justify-between gap-3">
         <h3 className="font-pixel text-[11px] sm:text-xs">{name}</h3>
         <span
-          className="font-pixel text-[9px] sm:text-[10px] px-2 py-1 rounded-md border shrink-0"
+          className="font-pixel text-[9px] sm:text-[10px] px-2 py-1 rounded-md border shrink-0 inline-flex items-center gap-1.5"
           style={{ color: glow, borderColor: glow }}
         >
-          {fellFor ? '✗ FELL FOR IT' : '✓ ESCAPED'}
+          {/* Press Start 2P has no ✗/✓ glyphs, so the browser fell back to a
+              thin default-font symbol that read as near-invisible next to
+              the bold pixel label — sized and weighted independently here,
+              and hidden from screen readers since the text already says it. */}
+          <span aria-hidden="true" className="font-sans text-sm sm:text-base font-bold leading-none">
+            {fellFor ? '✗' : '✓'}
+          </span>
+          {fellFor ? 'FELL FOR IT' : 'ESCAPED'}
         </span>
       </div>
       <div className="font-mono text-xs sm:text-sm leading-relaxed text-white/85">

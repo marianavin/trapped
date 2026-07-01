@@ -6,27 +6,27 @@
 // the reference composition; the three colored wires between the battery
 // and the switch stack are the actual clickable "cut this wire" mechanic.
 const C = {
-  bodyLight: '#4F8FCB',
-  body: '#2E6DA8',
-  bodyDark: '#1F4E7D',
+  bodyLight: '#3A5A9A',
+  body: '#232659',
+  bodyDark: '#12132B',
   black: '#0A0A0A',
-  stripeRed: '#C81E1E',
-  bolt: '#C4C4C4',
-  boltDark: '#7A7A7A',
+  stripeRed: '#FF4477',
+  bolt: '#B8D4E8',
+  boltDark: '#4A5A8A',
   batteryBody: '#3A3A3A',
-  batteryGreen: '#4CD137',
-  batteryGreenDark: '#2E8B1F',
+  batteryGreen: '#2DE8FF',
+  batteryGreenDark: '#0E8FA6',
   wireYellow: '#F2C230',
-  wireTip: '#D8362B',
-  switchBody: '#3F3F3F',
+  wireTip: '#FF4477',
+  switchBody: '#232659',
   gateBox: '#EDEDE6',
   gateText: '#1A1A1A',
   ledBg: '#050505',
-  led: '#3DFF6E',
-  indicatorGreen: '#3DDC5C',
-  indicatorRed: '#FF4444',
-  bezel: '#5A5A5A',
-  bezelDark: '#3F3F3F',
+  led: '#2DE8FF',
+  indicatorGreen: '#2DE8FF',
+  indicatorRed: '#FF4477',
+  bezel: '#3A3D6B',
+  bezelDark: '#232659',
   warnYellow: '#F5C518',
 }
 
@@ -149,7 +149,7 @@ export default function BombPanel({
 
         {/* display bezel */}
         <rect x={244} y={52} width={64} height={96} fill={C.bezel} stroke={C.black} strokeWidth={3} />
-        <rect x={244} y={52} width={64} height={4} fill="#8A8A8A" />
+        <rect x={244} y={52} width={64} height={4} fill="#5A5E9E" />
         <rect x={250} y={58} width={52} height={22} fill={C.ledBg} stroke={C.black} strokeWidth={2} />
         <text x={276} y={74} textAnchor="middle" className="font-pixel tabular-nums" fontSize={13} fill={C.led}>
           {mm}:{ss}
@@ -252,7 +252,7 @@ export default function BombPanel({
           type="button"
           onClick={onCutNow}
           className="absolute font-pixel text-white text-[8px] sm:text-[9px] px-2 py-2 active:translate-y-[2px] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
-          style={{ right: '10%', bottom: '4%', background: '#C81E1E', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.5)' }}
+          style={{ right: '10%', bottom: '4%', background: '#FF4477', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.5)' }}
         >
           CUT NOW
         </button>
@@ -272,11 +272,14 @@ export default function BombPanel({
       {showLegend && (
         <div
           className="absolute p-2 sm:p-3"
-          style={{ left: '0%', bottom: '1%', width: '44%', background: '#F5F5F0', color: '#1A1A1A', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.4)' }}
+          style={{ left: '0%', bottom: '1%', width: '46%', background: '#F5F5F0', color: '#1A1A1A', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.4)' }}
         >
-          <p className="font-pixel text-[6px] sm:text-[7px] tracking-wide text-gray-500 mb-1">{legendLabel}</p>
+          {/* was text-gray-500 (~4.4:1 on this bg) at 6-7px — failed WCAG for
+              normal text and was unreadable at pixel-font size; text-gray-700
+              gets ~9.9:1 and the bump to 8-9px keeps it legible on a phone */}
+          <p className="font-pixel text-[8px] sm:text-[9px] tracking-wide text-gray-700 mb-1">{legendLabel}</p>
           {legendRows.map((row) => (
-            <p key={row} className="font-mono text-[8px] sm:text-[10px] leading-tight">
+            <p key={row} className="font-mono text-[10px] sm:text-xs leading-tight font-bold">
               {row}
             </p>
           ))}
@@ -284,7 +287,7 @@ export default function BombPanel({
             <button
               type="button"
               onClick={onRecheck}
-              className="mt-1 font-pixel text-[7px] sm:text-[8px] underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
+              className="mt-1 font-pixel text-[9px] sm:text-[10px] underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
             >
               🔍 RE-CHECK THE KEY
             </button>

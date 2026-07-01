@@ -90,7 +90,7 @@ export default function Act2Panel({ smoky, onDone }) {
           type="button"
           onClick={() => resolve('emergency')}
           disabled={locked}
-          animate={{ boxShadow: ['0 0 0px #FF2D2D', '0 0 26px #FF2D2D', '0 0 0px #FF2D2D'] }}
+          animate={{ boxShadow: ['0 0 0px #FF4477', '0 0 26px #FF4477', '0 0 0px #FF4477'] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           aria-label={EMERGENCY_LABEL}
           className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-l1-danger border-4 border-l1-metal disabled:opacity-50"

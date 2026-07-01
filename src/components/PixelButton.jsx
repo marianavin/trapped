@@ -5,8 +5,16 @@
 // variant covers the palettes each level/screen needs; className is always
 // appended last so a caller (e.g. Reveal screens) can override with `!`
 // utilities for a one-off palette without needing a new variant.
+//
+// `primary` / `danger` are the two the reveal screens should standardize
+// on (cyan = proceed/NEXT, magenta = retry/TRY AGAIN) — previously every
+// level rolled its own one-off (`variant="dark"` for both outcomes in some
+// screens, `!border-white !text-white` overrides in others), which is why
+// the same button meant something different on every level.
 const VARIANTS = {
   default: 'border-white text-white bg-black/30 hover:bg-white/10',
+  primary: 'border-accent-cyan text-accent-cyan bg-black/30 hover:bg-accent-cyan/10',
+  danger: 'border-accent-magenta text-accent-magenta bg-black/30 hover:bg-accent-magenta/10',
   prompt: 'border-l3-prompt text-l3-prompt bg-black/30 hover:bg-l3-prompt/10',
   dark: 'border-l4text text-l4text bg-l4panel hover:bg-l4text/10',
   light: 'border-l4text text-l4text bg-black/20 hover:bg-l4text/10',

@@ -71,6 +71,36 @@ export function PixelTree({ x, y, trunkColor, canopyColor, scale = 1 }) {
   )
 }
 
+// A moon (or sun): a stepped-circle disc built from horizontal rows of
+// decreasing width, the classic pixel-art way to fake a circle without an
+// actual <circle> element. `rows` controls how chunky/smooth it reads —
+// low numbers (5-7) look deliberately blocky, matching this game's low-fi
+// pixel-art brief better than a "smooth" 20-row approximation would.
+export function PixelMoon({ cx, cy, radius, color, rows = 6 }) {
+  const bands = []
+  for (let i = 0; i < rows; i++) {
+    const t = (i + 0.5) / rows - 0.5 // -0.5..0.5 across the disc
+    const bandY = cy - radius + (i * (2 * radius)) / rows
+    const bandH = (2 * radius) / rows
+    const halfW = Math.sqrt(Math.max(0, 0.25 - t * t)) * radius * 2
+    bands.push(
+      <rect key={i} x={cx - halfW} y={bandY} width={halfW * 2} height={bandH + 0.5} fill={color} />
+    )
+  }
+  return <g>{bands}</g>
+}
+
+// A small 4-point "+" star sprite — flat rects forming a plus, not a glow.
+export function Starburst({ x, y, size = 4, color }) {
+  const s = size
+  return (
+    <g fill={color}>
+      <rect x={x - s / 2} y={y - 1} width={s} height={2} />
+      <rect x={x - 1} y={y - s / 2} width={2} height={s} />
+    </g>
+  )
+}
+
 // A streetlamp with a stepped-opacity glow halo instead of a blurred circle.
 export function StreetLamp({ x, y, poleColor, glowColor, poleHeight = 50 }) {
   return (

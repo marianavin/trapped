@@ -38,9 +38,15 @@ export function AuthProvider({ children }) {
 
     let unsub = () => {}
 
-    supabase.auth.getSession().then(({ data }) => {
-      applySession(data.session)
-    })
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        applySession(data.session)
+      })
+      .catch((err) => {
+        console.error('Failed to get session:', err.message)
+        setStatus('signedOut')
+      })
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       applySession(session)
@@ -62,7 +68,7 @@ export function AuthProvider({ children }) {
     const email = sessionUser.email
     if (ALLOWED_EMAIL_DOMAIN && domainOf(email) !== ALLOWED_EMAIL_DOMAIN.toLowerCase()) {
       setAuthError(`Use your ${ALLOWED_EMAIL_DOMAIN} account to sign in.`)
-      supabase.auth.signOut()
+      supabase.auth.signOut().catch((err) => console.error('Failed to sign out:', err.message))
       setUser(null)
       setStatus('signedOut')
       return
@@ -108,7 +114,11 @@ export function AuthProvider({ children }) {
 
   async function signOut() {
     if (isSupabaseConfigured) {
-      await supabase.auth.signOut()
+      try {
+        await supabase.auth.signOut()
+      } catch (err) {
+        console.error('Failed to sign out:', err.message)
+      }
     } else {
       localStorage.removeItem(MOCK_USER_KEY)
       setUser(null)

@@ -20,7 +20,7 @@ export default function StreetBackdrop() {
       className="absolute inset-0 h-full w-full"
       aria-hidden="true"
     >
-      <rect x="0" y="0" width="480" height="270" fill="#1A1A2E" />
+      <rect x="0" y="0" width="480" height="270" fill="#12132B" />
 
       {/* distant skyline — blurred-perception buildings, low contrast on purpose */}
       <g opacity="0.35">
@@ -47,7 +47,7 @@ export default function StreetBackdrop() {
       </g>
 
       {/* sidewalk */}
-      <rect x="0" y="170" width="480" height="20" fill="#3A3A4A" opacity="0.55" />
+      <rect x="0" y="170" width="480" height="20" fill="#1B1D45" opacity="0.55" />
       {/* road */}
       <rect x="0" y="190" width="480" height="80" fill="#000000" opacity="0.45" />
       {/* dashed center line */}
@@ -69,8 +69,8 @@ export default function StreetBackdrop() {
         { x: 272, w: 58, h: 80 },
       ].map((b, bi) => (
         <g key={bi}>
-          <rect x={b.x} y={170 - b.h} width={b.w} height={b.h} fill="#3A3A4A" />
-          <rect x={b.x} y={170 - b.h} width={b.w} height="4" fill="#1A1A2E" />
+          <rect x={b.x} y={170 - b.h} width={b.w} height={b.h} fill="#1B1D45" />
+          <rect x={b.x} y={170 - b.h} width={b.w} height="4" fill="#12132B" />
           {Array.from({ length: Math.floor(b.w / 16) }).map((_, wi) =>
             Array.from({ length: Math.floor((b.h - 16) / 20) }).map((_, hi) => {
               const lit = (bi + wi + hi) % 5 === 0
@@ -81,7 +81,7 @@ export default function StreetBackdrop() {
                   y={170 - b.h + 12 + hi * 20}
                   width="8"
                   height="10"
-                  fill={lit ? '#A8C8E8' : '#FFFFFF'}
+                  fill={lit ? '#2DE8FF' : '#FFFFFF'}
                   opacity={lit ? 0.9 : 0.2}
                 />
               )
@@ -95,12 +95,12 @@ export default function StreetBackdrop() {
         { x: 160, y: 170 },
         { x: 420, y: 170 },
       ].map((t, ti) => (
-        <PixelTree key={ti} x={t.x} y={t.y} trunkColor="#3A3A4A" canopyColor="#3A3A4A" scale={1.1} />
+        <PixelTree key={ti} x={t.x} y={t.y} trunkColor="#1B1D45" canopyColor="#1B1D45" scale={1.1} />
       ))}
 
       {/* streetlamps — stepped-square glow, no circle/blur */}
       {[80, 340].map((x, li) => (
-        <StreetLamp key={li} x={x} y={120} poleColor="#E8E8E8" glowColor="#A8C8E8" poleHeight={50} />
+        <StreetLamp key={li} x={x} y={120} poleColor="#CFEFFF" glowColor="#2DE8FF" poleHeight={50} />
       ))}
     </svg>
   )

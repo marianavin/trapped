@@ -18,7 +18,11 @@ function LevelCard({ level, result, onPlay }) {
       className={[
         'pixel-border text-left p-4 flex flex-col gap-2 transition-colors',
         'focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300',
-        locked ? 'bg-l4panel/40 text-l4text/30 cursor-not-allowed' : 'bg-l4panel text-l4text hover:bg-l4text hover:text-l4panel cursor-pointer',
+        // was text-l4text/30 on bg-l4panel/40 — the two stacked opacities
+        // compressed the actual rendered contrast to ~2.4:1 (fails WCAG's
+        // 4.5:1) at an 8-10px pixel font, per user report. /70 on a single
+        // layer keeps the "disabled" look but lands ~7.5:1.
+        locked ? 'bg-l4panel/40 text-l4text/70 cursor-not-allowed' : 'bg-l4panel text-l4text hover:bg-l4text hover:text-l4panel cursor-pointer',
       ].join(' ')}
       style={
         !locked

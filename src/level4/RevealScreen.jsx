@@ -13,8 +13,10 @@ function Row({ label, truth, reported, wrong }) {
       <div className="text-l4text/70">{label}</div>
       <div />
       <div className="text-escaped">{truth}</div>
-      <div className={wrong ? 'text-caught' : 'text-escaped'}>
-        {wrong ? '✗ ' : '✓ '}
+      <div className={`${wrong ? 'text-caught' : 'text-escaped'} inline-flex items-center gap-1`}>
+        <span aria-hidden="true" className="font-sans text-base font-bold leading-none">
+          {wrong ? '✗' : '✓'}
+        </span>
         {reported}
       </div>
     </div>
@@ -64,7 +66,7 @@ export default function RevealScreen({ answers, results, onContinue }) {
       </div>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}>
-        <PixelButton variant="dark" onClick={onContinue}>
+        <PixelButton variant="primary" onClick={onContinue}>
           NEXT
         </PixelButton>
       </motion.div>

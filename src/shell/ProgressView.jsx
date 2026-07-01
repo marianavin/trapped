@@ -19,8 +19,11 @@ function LevelRow({ level, result }) {
       <div className="text-right shrink-0">
         {completed ? (
           <>
-            <div className={result.outcomeSuccess ? 'text-escaped' : 'text-caught'}>
-              {result.outcomeSuccess ? '✓ SURVIVED' : '✗ DID NOT SURVIVE'}
+            <div className={`${result.outcomeSuccess ? 'text-escaped' : 'text-caught'} inline-flex items-center gap-1`}>
+              <span aria-hidden="true" className="font-sans text-base font-bold leading-none">
+                {result.outcomeSuccess ? '✓' : '✗'}
+              </span>
+              {result.outcomeSuccess ? 'SURVIVED' : 'DID NOT SURVIVE'}
             </div>
             <div className="text-l4text/70">
               {result.escapedCount}/{result.totalBiases} BIASES ESCAPED

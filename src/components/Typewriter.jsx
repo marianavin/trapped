@@ -1,7 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function Typewriter({ text, speed = 28, onDone, className = '' }) {
   const [shown, setShown] = useState('')
+  // Keep latest onDone/speed available to the interval without restarting
+  // the typewriter on every parent re-render (callers often pass inline
+  // onDone functions that get a new reference each render).
+  const onDoneRef = useRef(onDone)
+  const speedRef = useRef(speed)
+  useEffect(() => {
+    onDoneRef.current = onDone
+    speedRef.current = speed
+  })
 
   useEffect(() => {
     setShown('')
@@ -11,9 +20,9 @@ export default function Typewriter({ text, speed = 28, onDone, className = '' })
       setShown(text.slice(0, i))
       if (i >= text.length) {
         clearInterval(id)
-        onDone && onDone()
+        onDoneRef.current && onDoneRef.current()
       }
-    }, speed)
+    }, speedRef.current)
     return () => clearInterval(id)
   }, [text])
 

@@ -66,7 +66,12 @@ function AppShell() {
   // signedIn
   if (activeLevelId) {
     return (
-      <LevelRunner key={playKey} levelId={activeLevelId} onDone={handleLevelDone} />
+      <LevelRunner
+        key={playKey}
+        levelId={activeLevelId}
+        onDone={handleLevelDone}
+        onExit={() => setActiveLevelId(null)}
+      />
     )
   }
 

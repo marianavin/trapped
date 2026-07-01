@@ -9,7 +9,14 @@
 html, body, #root {
   height: 100%;
   margin: 0;
-  background: #0A0E1A;
+  /* Unified glitchwave background: deep navy + a faint cyan grid, matching
+     the reference's grid-backed UI-kit sheet. Every screen sits on this —
+     no more per-level solid-color backgrounds with no shared texture. */
+  background-color: #12132B;
+  background-image:
+    linear-gradient(rgba(45, 232, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45, 232, 255, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
   image-rendering: pixelated;
 }
 
