@@ -1,21 +1,17 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import TrialHintHud from './TrialHintHud.jsx'
 
 const TrialHintContext = createContext(null)
 
 export function TrialHintProvider({ children }) {
   const [hint, setHint] = useState(null)
   const [animate, setAnimate] = useState(false)
-  const value = useMemo(() => ({ setHint, setAnimate }), [])
+  const value = useMemo(() => ({ hint, animate, setHint, setAnimate }), [hint, animate])
 
-  return (
-    <TrialHintContext.Provider value={value}>
-      <div className="relative h-full w-full overflow-hidden">
-        {children}
-        <TrialHintHud hint={hint} animate={animate} />
-      </div>
-    </TrialHintContext.Provider>
-  )
+  return <TrialHintContext.Provider value={value}>{children}</TrialHintContext.Provider>
+}
+
+export function useTrialHintState() {
+  return useContext(TrialHintContext)
 }
 
 export function useTrialHint(hint, { animate = false } = {}) {

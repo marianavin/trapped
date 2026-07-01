@@ -6,6 +6,7 @@ import HubScreen from './shell/HubScreen.jsx'
 import LevelRunner from './shell/LevelRunner.jsx'
 import { AuthProvider, useAuth } from './lib/AuthContext.jsx'
 import { loadProgress, saveLevelResult } from './lib/progressStore.js'
+import { isUnlocked } from './data/levels.js'
 
 // The UI shell: login -> hub (level select / progress) -> play a level -> back to hub.
 function AppShell() {
@@ -41,6 +42,7 @@ function AppShell() {
   }
 
   function playLevel(levelId) {
+    if (!isUnlocked(levelId, progress)) return
     setPlayKey((k) => k + 1)
     setActiveLevelId(levelId)
   }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { getLevel } from '../data/levels.js'
 import PixelButton from '../components/PixelButton.jsx'
 import { AbortDialog, ScreenFlash } from '../components/GameUI.jsx'
-import { play } from '../audio/sounds.js'
+import { stopGameAudio } from '../audio/sounds.js'
 
 export default function LevelRunner({ levelId, onDone, onExit }) {
   const level = getLevel(levelId)
@@ -14,21 +14,27 @@ export default function LevelRunner({ levelId, onDone, onExit }) {
     return () => clearTimeout(t)
   }, [])
 
+  useEffect(() => () => stopGameAudio(), [])
+
   function requestExit() {
-    play('questionArrive')
+    stopGameAudio()
     setShowExit(true)
   }
 
   function confirmExit() {
-    play('wrongBuzz')
+    stopGameAudio()
     setShowExit(false)
     onExit()
+  }
+
+  function cancelExit() {
+    setShowExit(false)
   }
 
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === 'Escape') {
-        if (showExit) setShowExit(false)
+        if (showExit) cancelExit()
         else requestExit()
       }
     }
@@ -52,7 +58,7 @@ export default function LevelRunner({ levelId, onDone, onExit }) {
           EXIT
         </PixelButton>
       </div>
-      <AbortDialog open={showExit} onConfirm={confirmExit} onCancel={() => setShowExit(false)} />
+      <AbortDialog open={showExit} onConfirm={confirmExit} onCancel={cancelExit} />
       <Component onComplete={handleComplete} onLevelComplete={handleComplete} />
     </div>
   )

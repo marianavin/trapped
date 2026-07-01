@@ -68,12 +68,16 @@ export function getBuiltLevels() {
   return LEVELS.filter((l) => l.built)
 }
 
-// A level's `built` flag gates "does this level's code exist yet" (for any
-// future level added mid-development) — that's the only lock left. The
-// sequential "finish level N before N+1 opens" rule has been intentionally
-// turned off per product decision: every built level is playable regardless
-// of progress. `progress` is accepted (and ignored) so call sites and the
-// function signature don't need to change if this gets turned back on.
-export function isUnlocked(_levelId, _progress) {
-  return true
+// A level's `built` flag gates whether its code exists yet. Sequential
+// unlock requires the previous level to appear in `progress` (player reached
+// reveal and continued). Level 1 is always playable when built.
+export function isUnlocked(levelId, progress = {}) {
+  const level = getLevel(levelId)
+  if (!level?.built) return false
+
+  const index = LEVELS.findIndex((l) => l.id === levelId)
+  if (index <= 0) return true
+
+  const previous = LEVELS[index - 1]
+  return Boolean(progress[previous.id])
 }

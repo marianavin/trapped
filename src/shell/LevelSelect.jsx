@@ -48,7 +48,7 @@ function LevelCard({ level, result, locked, onPlay }) {
           LEVEL {level.index}
         </span>
         {locked && (
-          <span className="font-pixel text-[8px] sm:text-[9px] text-l4-muted/80">
+          <span className="font-pixel text-[8px] sm:text-[9px] text-l4text/35">
             {level.built ? 'LOCKED' : 'COMING SOON'}
           </span>
         )}
@@ -57,13 +57,13 @@ function LevelCard({ level, result, locked, onPlay }) {
         )}
       </div>
 
-      <h3 className={`font-pixel text-xs sm:text-sm leading-snug ${locked ? 'text-l4-muted' : 'text-l4text'}`}>
+      <h3 className={`font-pixel text-xs sm:text-sm leading-snug ${locked ? 'text-l4text/40' : 'text-l4text'}`}>
         {level.title}
       </h3>
 
       <p
         className={`font-mono text-[11px] sm:text-xs leading-snug ${
-          locked ? 'text-l4-muted/80' : 'text-l4text/85'
+          locked ? 'text-l4text/30' : 'text-l4text/85'
         }`}
       >
         {locked

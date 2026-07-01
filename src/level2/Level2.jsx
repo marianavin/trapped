@@ -5,8 +5,8 @@ import Consequence from './Consequence.jsx'
 import Reveal from './Reveal.jsx'
 import { scoreRun } from '../data/level2.js'
 
-// Setup -> Play (label conflict -> authority voice -> confirmation
-// gut-check) -> Consequence -> Reveal, per the core loop.
+// Setup -> Play (label conflict -> authority voice -> confirm wire -> cut)
+// -> Consequence -> Reveal, per the core loop.
 export default function Level2({ onComplete }) {
   const [stage, setStage] = useState('setup')
   const [scored, setScored] = useState(null)

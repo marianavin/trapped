@@ -32,19 +32,14 @@ export default function HubBar({ tab, onTabChange, points }) {
         </nav>
 
         <div className="flex items-center justify-end gap-2 sm:gap-3 min-w-0 shrink-0">
-          <div className="flex flex-col items-end min-w-0 leading-tight">
+          <div className="flex flex-col items-end gap-0 min-w-0">
             {user?.name && (
-              <span className="hidden sm:block font-mono text-[10px] sm:text-[11px] text-l4text uppercase tracking-wide truncate max-w-[8rem]">
+              <span className="hidden sm:block font-mono text-[10px] sm:text-[11px] text-l4text uppercase tracking-wide truncate max-w-[8rem] leading-none">
                 {user.name}
               </span>
             )}
-            <span className="inline-flex items-baseline gap-1.5 sm:gap-2">
-              <span className="font-pixel text-xs sm:text-sm text-accent-cyan tabular-nums leading-none">
-                {points}
-              </span>
-              <span className="font-mono text-[9px] sm:text-[10px] text-l4text uppercase tracking-wide leading-none">
-                POINTS
-              </span>
+            <span className="font-mono text-[10px] sm:text-[11px] font-bold text-accent-cyan uppercase tracking-wide leading-none tabular-nums">
+              {points} POINTS
             </span>
           </div>
           <div aria-hidden="true" className="w-px h-6 bg-accent-cyan/20 shrink-0" />

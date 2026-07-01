@@ -73,14 +73,17 @@ export const BIAS_CARDS = {
   },
   confirmation: {
     name: 'CONFIRMATION BIAS',
-    subtitle: 'CUT NOW',
+    subtitle: 'CONFIRM YOUR WIRE',
     info:
       'Confirmation bias is looking for evidence you were right after a first decision, instead of checking whether you might be wrong.',
     fellFor: [
-      'After the first cut, you stopped looking for evidence you were wrong.',
-      'You were looking for evidence you were right.',
+      'When asked to confirm your wire, you changed your pick.',
+      'You were looking for a choice that felt right — not one you had checked.',
     ],
-    escaped: ['After the first cut, you kept checking.', "That's harder than it sounds."],
+    escaped: [
+      'When asked to confirm, you held steady.',
+      "You didn't swap just to feel more certain.",
+    ],
   },
 }
 
@@ -98,11 +101,12 @@ export function scoreRun({ firstCut, authorityChoice, finalAction }) {
   // whatever that voice demanded, regardless of your first cut.
   const preFinalWire = authorityFellFor ? TRAP_WIRE : firstCut
 
-  const confirmationFellFor = finalAction == null ? true : finalAction === 'gut'
-  // Escaping confirmation bias means genuinely re-checking at the end, which
-  // always resolves to the correct wire. Going with your gut just locks in
-  // whatever survived the authority stage, right or wrong.
-  const finalWire = confirmationFellFor ? preFinalWire : CORRECT_WIRE
+  // Confirmation bias fires when the player changes their wire at the confirm
+  // step — defending the first pick counts as escaping. CUT NOW just executes
+  // whatever wire survived that check; pressing it is not itself a bias fail.
+  const confirmationFellFor =
+    finalAction == null || authorityChoice == null || authorityChoice === 'switch'
+  const finalWire = preFinalWire
 
   const results = {
     labelSignifier: labelSignifierFellFor,

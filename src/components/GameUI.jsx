@@ -59,7 +59,7 @@ export function PanelCard({
         'text-left p-4 flex flex-col gap-2 transition-all border-2 rounded-sm',
         FOCUS_RING,
         disabled
-          ? 'bg-l4bg/60 text-l4-muted border-l4text/15 cursor-not-allowed opacity-60 saturate-[0.45]'
+          ? 'bg-l4bg/40 text-l4text/40 border-l4text/10 cursor-not-allowed opacity-50 saturate-[0.35] grayscale-[0.4]'
           : `gw-panel-grid text-l4text cursor-pointer hover:brightness-110 active:scale-[0.98] ${borderClass}`,
         className,
       ].join(' ')}

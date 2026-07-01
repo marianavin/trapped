@@ -58,3 +58,13 @@ export function stopAll() {
     // ignore
   }
 }
+
+/** Stop Howler audio and any in-flight Web Speech (level voice lines). */
+export function stopGameAudio() {
+  stopAll()
+  try {
+    window.speechSynthesis?.cancel()
+  } catch {
+    // ignore
+  }
+}

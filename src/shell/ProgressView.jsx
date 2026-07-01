@@ -10,12 +10,18 @@ function LevelRow({ level, result, locked }) {
   else if (!locked) status = completed ? 'COMPLETE' : 'NOT STARTED'
 
   return (
-    <ListRow>
+    <ListRow className={locked ? 'opacity-45 saturate-[0.35] grayscale-[0.35]' : ''}>
       <div className="flex flex-col flex-1 min-w-0">
-        <span className={`font-pixel text-[9px] sm:text-[10px] ${locked ? 'text-l4-muted' : 'text-accent-cyan'}`}>
+        <span
+          className={`font-pixel text-[9px] sm:text-[10px] ${
+            locked ? 'text-l4text/40' : 'text-accent-cyan'
+          }`}
+        >
           LEVEL {level.index} — {level.title}
         </span>
-        <span className="text-l4-muted text-[10px] sm:text-xs mt-1">{status}</span>
+        <span className={`text-[10px] sm:text-xs mt-1 ${locked ? 'text-l4text/30' : 'text-l4-muted'}`}>
+          {status}
+        </span>
       </div>
       <div className="text-right shrink-0">
         {completed ? (
@@ -31,7 +37,7 @@ function LevelRow({ level, result, locked }) {
             </div>
           </>
         ) : (
-          <span className="text-l4-muted">—</span>
+          <span className={locked ? 'text-l4text/25' : 'text-l4-muted'}>—</span>
         )}
       </div>
     </ListRow>
