@@ -42,7 +42,7 @@ export default function Keypad({
               whileTap={{ scale: 0.9 }}
               animate={pressed ? { scale: [1, 1.15, 1] } : { scale: 1 }}
               transition={{ duration: 0.15 }}
-              className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-transparent ${
+              className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 ${
                 active ? '' : 'opacity-50'
               } ${o.className || ''}`}
               style={{
@@ -50,6 +50,11 @@ export default function Keypad({
                 top: `${pos.y}%`,
                 width: `${CIRCLE_SIZE_PCT}%`,
                 paddingBottom: `${CIRCLE_SIZE_PCT}%`,
+                // borderColor as an inline style (not a border-* utility) so
+                // a task's override always wins unambiguously over this
+                // default, instead of depending on Tailwind's generated
+                // stylesheet order between two same-specificity utilities.
+                borderColor: 'transparent',
                 ...o.style,
               }}
             >

@@ -85,7 +85,12 @@ export default function Task3MislabeledKey({ onDone }) {
 
   const overrides = {}
   hotSet.forEach((i) => {
-    overrides[i] = { className: 'border-accent-magenta text-accent-magenta neon-glow animate-pulse' }
+    // borderColor via inline style (see Keypad.jsx) so it reliably wins over
+    // the default transparent border regardless of Tailwind's class order.
+    overrides[i] = {
+      className: 'text-accent-magenta neon-glow animate-pulse',
+      style: { borderColor: '#FF4477' },
+    }
   })
 
   return (
