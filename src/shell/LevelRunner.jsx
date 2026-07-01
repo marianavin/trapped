@@ -9,8 +9,8 @@ import { getLevel } from '../data/levels.js'
 //
 // Also renders the only way out of a level mid-play: an EXIT control (plus
 // Escape key) that backs out to the hub without saving a result. Unmounting
-// the level component runs its own cleanup (e.g. stopSiren/stopAlarm), so
-// no extra teardown is needed here.
+// the level component runs its own cleanup (e.g. stopSiren), so no extra
+// teardown is needed here.
 export default function LevelRunner({ levelId, onDone, onExit }) {
   const level = getLevel(levelId)
 

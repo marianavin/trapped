@@ -1,8 +1,7 @@
-import { LEVELS } from '../data/levels.js'
+import { LEVELS, isUnlocked } from '../data/levels.js'
 import { computeTotals } from '../data/scoring.js'
 
-function LevelRow({ level, result }) {
-  const locked = !level.built
+function LevelRow({ level, result, locked }) {
   const completed = Boolean(result)
 
   let status = 'LOCKED'
@@ -41,7 +40,7 @@ function LevelRow({ level, result }) {
 // TRAPPED_Content_Copy_Spec.md (SCENARIOS SURVIVED / BIASES ESCAPED).
 // Radar chart / named profile are intentionally out of scope here — the
 // blueprint marks those cut-if-short-on-time and they only make sense once
-// all 4 levels exist; this is the simple-list fallback it names instead.
+// every level exists; this is the simple-list fallback it names instead.
 export default function ProgressView({ progress }) {
   const totals = computeTotals(progress)
 
@@ -71,9 +70,10 @@ export default function ProgressView({ progress }) {
 
       <h2 className="sr-only">Per-level breakdown</h2>
       <ul>
-        {LEVELS.map((level) => (
-          <LevelRow key={level.id} level={level} result={progress[level.id]} />
-        ))}
+        {LEVELS.map((level) => {
+          const locked = !level.built || !isUnlocked(level.id, progress)
+          return <LevelRow key={level.id} level={level} result={progress[level.id]} locked={locked} />
+        })}
       </ul>
     </div>
   )

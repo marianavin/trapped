@@ -24,22 +24,6 @@ export default {
         'accent-cyan': '#2DE8FF',
         'accent-magenta': '#FF4477',
 
-        // Level 1 — The Escape
-        'l1-bg': '#12132B',
-        'l1-smoke': '#20223A',
-        'l1-danger': '#FF4477',
-        'l1-correct': '#4A5A8A',
-        'l1-text': '#EAF7FF',
-        'l1-overlay': '#B8D4E8',
-        'l1-wall': '#1B1D45',
-        'l1-wall-dark': '#0B0C1F',
-        'l1-floor': '#14162E',
-        'l1-metal': '#4A5A8A',
-        'l1-metal-dark': '#2E3660',
-        'l1-panel': '#1B1D45',
-        'l1-sign': '#2DE8FF',
-        'l1-glass': '#2DE8FF',
-
         // Level 4 — The Witness
         l4bg: '#12132B',
         l4street: '#2DE8FF',

@@ -16,7 +16,7 @@ export default function Reveal({ success, results, onNext, onRetry }) {
 
   return (
     <div className="h-full w-full overflow-y-auto bg-l2-bg text-white px-5 py-8 flex flex-col items-center gap-8">
-      <h2 className="font-pixel text-sm sm:text-base text-center text-l2-text">LEVEL 2 — REVEAL</h2>
+      <h2 className="font-pixel text-sm sm:text-base text-center text-l2-text">LEVEL 1 — REVEAL</h2>
 
       <div className="w-full max-w-md flex flex-col gap-4">
         {BIAS_ORDER.map((key, i) => {

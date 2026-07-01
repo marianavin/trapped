@@ -1,11 +1,12 @@
-import { LEVELS } from '../data/levels.js'
+import { LEVELS, isUnlocked } from '../data/levels.js'
 
-function LevelCard({ level, result, onPlay }) {
-  const locked = !level.built
+function LevelCard({ level, result, locked, onPlay }) {
   const completed = Boolean(result)
 
   const statusText = locked
-    ? 'locked, coming soon'
+    ? level.built
+      ? 'locked, complete the previous level first'
+      : 'locked, coming soon'
     : completed
     ? `completed, ${result.escapedCount} of ${result.totalBiases} biases escaped`
     : 'not started'
@@ -42,7 +43,9 @@ function LevelCard({ level, result, onPlay }) {
 
       <p className="font-mono text-[11px] sm:text-xs opacity-70">
         {locked
-          ? 'COMING SOON'
+          ? level.built
+            ? 'COMPLETE THE PREVIOUS LEVEL'
+            : 'COMING SOON'
           : completed
           ? `${result.escapedCount}/${result.totalBiases} BIASES ESCAPED`
           : 'NOT STARTED — TAP TO PLAY'}
@@ -51,15 +54,20 @@ function LevelCard({ level, result, onPlay }) {
   )
 }
 
-// Grid of all 4 levels. Any level not yet built renders locked (see
-// levels.js) — the blueprint's level order still shows end-to-end so
-// players understand the full arc, per the Progression design lens.
+// Grid of all levels, in order. A level renders locked either because its
+// code isn't shipped yet (level.built) or because the player hasn't
+// finished every level before it (isUnlocked) — the game is strictly
+// sequential: level 1 has no prerequisite, level 2 requires level 1
+// complete, level 3 requires levels 1 and 2 complete.
 export default function LevelSelect({ progress, onPlay }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mx-auto p-5">
-      {LEVELS.map((level) => (
-        <LevelCard key={level.id} level={level} result={progress[level.id]} onPlay={onPlay} />
-      ))}
+      {LEVELS.map((level) => {
+        const locked = !level.built || !isUnlocked(level.id, progress)
+        return (
+          <LevelCard key={level.id} level={level} result={progress[level.id]} locked={locked} onPlay={onPlay} />
+        )
+      })}
     </div>
   )
 }

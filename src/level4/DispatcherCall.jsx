@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { QUESTIONS, DISPATCHER_INTRO } from '../data/level4.js'
 import PixelButton from '../components/PixelButton.jsx'
 import Typewriter from '../components/Typewriter.jsx'
+import WindowChrome from '../components/WindowChrome.jsx'
 import { play } from '../audio/sounds.js'
 import DispatcherBackdrop from './DispatcherBackdrop.jsx'
 
@@ -105,14 +106,14 @@ export default function DispatcherCall({ onComplete }) {
             transition={{ duration: 0.2 }}
             className="w-full max-w-md flex flex-col gap-5"
           >
-            <div className="pixel-border bg-l4panel p-4" aria-hidden="true">
+            <WindowChrome title="INCOMING — DISPATCH" aria-hidden="true">
               <Typewriter
                 text={QUESTIONS[qIndex].line}
                 speed={18}
                 onDone={() => setLineTyped(true)}
                 className="font-mono text-sm sm:text-base leading-relaxed"
               />
-            </div>
+            </WindowChrome>
 
             {lineTyped && (
               <motion.div

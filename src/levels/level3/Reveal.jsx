@@ -16,7 +16,7 @@ export default function Reveal({ results, outcome, onNext, onRetry }) {
 
   return (
     <div className="h-full w-full bg-[#1A1A2E] text-white flex flex-col items-center px-5 py-8 sm:px-10 overflow-y-auto">
-      <h1 className="font-pixel text-sm sm:text-base tracking-wide text-l3-prompt">LEVEL 3 — REVEAL</h1>
+      <h1 className="font-pixel text-sm sm:text-base tracking-wide text-l3-prompt">LEVEL 2 — REVEAL</h1>
       <p className={`font-mono text-sm mt-2 ${escapedCount >= cards.length / 2 ? 'text-l3-prompt' : 'text-accent-magenta'}`}>
         {escapedCount} / {cards.length} escaped
       </p>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Typewriter from '../../components/Typewriter.jsx'
 import PixelButton from '../../components/PixelButton.jsx'
+import WindowChrome from '../../components/WindowChrome.jsx'
 import StreetBackdrop from './StreetBackdrop.jsx'
 import { BYSTANDER_LINE, SIGN_TEXT, BYSTANDER_ADDRESS, SIGN_ADDRESS } from './data.js'
 import { play } from '../../audio/sounds.js'
@@ -57,11 +58,11 @@ export default function Act1Location({ onProceed }) {
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-8">
-          <div className="w-full max-w-sm border-2 border-white/70 bg-black/50 px-4 py-4">
+          <WindowChrome title="BYSTANDER" className="w-full max-w-sm">
             <p className="font-mono text-l3-label text-sm sm:text-base min-h-[3em]">
               <Typewriter text={BYSTANDER_LINE} speed={26} onDone={handleBystanderDone} />
             </p>
-          </div>
+          </WindowChrome>
 
           <AnimatePresence>
             {signVisible && (

@@ -5,8 +5,8 @@ const POINTS_PER_BIAS_ESCAPED = 25
 
 // Rolls up every completed level's normalized result into the numbers the
 // hub bar and progress view show. Denominators are computed from levels
-// actually completed so far, not hardcoded — the game only has 2 of its
-// 4 levels built right now (see levels.js).
+// actually completed so far, not hardcoded — see levels.js for the current
+// level count and per-level bias totals.
 export function computeTotals(progress) {
   const completedIds = Object.keys(progress)
   const completed = completedIds.map((id) => progress[id])
@@ -21,9 +21,9 @@ export function computeTotals(progress) {
   return {
     points,
     scenariosSurvived,
-    scenariosTotal: TOTAL_LEVEL_COUNT, // 4 — the full game, per copy spec
+    scenariosTotal: TOTAL_LEVEL_COUNT, // the full game — see levels.js
     biasesEscaped,
-    biasesAttempted, // grows to 14 once all 4 levels are built and played
+    biasesAttempted, // grows as more levels are built and played
     levelsCompleted: completedIds.length,
     levelsBuilt: LEVELS.filter((l) => l.built).length,
   }
