@@ -1,39 +1,40 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import PixelButton from '../../components/PixelButton.jsx'
-import { BIAS_CARDS } from './data.js'
+import { BIAS_CARDS, TASK_ORDER } from './data.js'
 import { play } from '../../audio/sounds.js'
 
 // Calm, quiet contrast to the chaos of play. Each bias is named, the exact
 // moment is shown, one sentence per line - never generic.
-export default function Reveal({ results, connected, onNext, onRetry }) {
+export default function Reveal({ results, outcome, onNext, onRetry }) {
   useEffect(() => {
     play('revealLoad')
   }, [])
 
-  const cards = [
-    { key: 'automaticity', outcome: results.automaticity },
-    { key: 'anchoring', outcome: results.anchoring },
-  ]
+  const cards = TASK_ORDER.map((key) => ({ key, outcome: results[key] }))
+  const escapedCount = cards.filter((c) => c.outcome === 'escaped').length
 
   return (
     <div className="h-full w-full bg-[#1A1A2E] text-white flex flex-col items-center px-5 py-8 sm:px-10 overflow-y-auto">
       <h1 className="font-pixel text-sm sm:text-base tracking-wide text-l3-prompt">LEVEL 3 — REVEAL</h1>
+      <p className={`font-mono text-sm mt-2 ${escapedCount >= cards.length / 2 ? 'text-l3-prompt' : 'text-accent-magenta'}`}>
+        {escapedCount} / {cards.length} escaped
+      </p>
 
-      <div className="flex flex-col gap-5 mt-8 w-full max-w-md">
+      <div className="flex flex-col gap-5 mt-6 w-full max-w-md">
         {cards.map(({ key, outcome }, i) => (
-          <BiasCard key={key} data={BIAS_CARDS[key]} outcome={outcome} delay={i * 0.3} />
+          <BiasCard key={key} data={BIAS_CARDS[key]} outcome={outcome} delay={i * 0.18} />
         ))}
       </div>
 
       <div className="mt-10 mb-6">
-        {connected ? (
-          <PixelButton variant="primary" onClick={onNext}>
-            NEXT
-          </PixelButton>
-        ) : (
+        {outcome === 'fail' ? (
           <PixelButton variant="danger" onClick={onRetry}>
             TRY AGAIN
+          </PixelButton>
+        ) : (
+          <PixelButton variant="primary" onClick={onNext}>
+            NEXT
           </PixelButton>
         )}
       </div>
@@ -67,7 +68,12 @@ function BiasCard({ data, outcome, delay }) {
       style={{ borderColor: glow, boxShadow: `0 0 6px ${glow}, 0 0 18px ${glow}66` }}
     >
       <div className="flex items-center justify-between mb-2 gap-3">
-        <span className="font-pixel text-[11px] sm:text-xs">{data.name}</span>
+        <div>
+          <span className="font-pixel text-[11px] sm:text-xs">{data.name}</span>
+          {data.subtitle && (
+            <span className="font-mono text-[10px] sm:text-xs ml-2 text-white/50">{data.subtitle}</span>
+          )}
+        </div>
         <span
           className="font-pixel text-[9px] sm:text-[10px] px-2 py-1 rounded-md border shrink-0 inline-flex items-center gap-1.5"
           style={{ color: glow, borderColor: glow }}

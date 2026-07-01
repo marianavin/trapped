@@ -34,7 +34,7 @@ export const LEVELS = [
     title: 'THE SCRAMBLED KEYPAD',
     accent: '#2DE8FF',
     built: true,
-    totalBiases: 2,
+    totalBiases: 4,
     Component: Level3,
     // Level3's onComplete already emits the normalized shape directly.
     normalizeResult: (payload) => payload,
