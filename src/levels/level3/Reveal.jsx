@@ -15,7 +15,7 @@ export default function Reveal({ results, outcome, onNext, onRetry }) {
 
   return (
     <RevealScreen
-      title="LEVEL 2 — REVEAL"
+      title="LEVEL 3 — REVEAL"
       subtitle={
         <span className={escapedCount >= cards.length / 2 ? 'text-escaped' : 'text-caught'}>
           {escapedCount} / {cards.length} escaped
@@ -42,6 +42,7 @@ export default function Reveal({ results, outcome, onNext, onRetry }) {
             index={i}
             name={data.name}
             subtitle={data.subtitle}
+            info={data.info}
             fellFor={!escaped}
             lines={escaped ? data.escaped : data.fell}
           />

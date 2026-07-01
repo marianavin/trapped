@@ -28,17 +28,16 @@ export default function PhoneFrame({ display, statusRight = '', children }) {
   if (imageOk) {
     return (
       <div
-        className="relative mx-auto w-[260px] sm:w-[300px] select-none rounded-[40px] p-[5px]"
+        className="phone-chassis-glow relative mx-auto w-[218px] sm:w-[251px] select-none rounded-[40px] p-[2.5px]"
         style={{
           background: `linear-gradient(180deg, ${PHONE.chassisFrom}, ${PHONE.chassisTo})`,
-          boxShadow: `0 0 10px ${PHONE.chassisGlow}, 0 0 24px ${PHONE.chassisGlow}88, 0 0 40px ${PHONE.chassisGlow}44`,
         }}
       >
         <img
           src={PHONE_IMAGE_SRC}
           alt=""
           draggable={false}
-          className="w-full h-auto block pointer-events-none rounded-[34px]"
+          className="w-full h-auto block pointer-events-none rounded-[38px]"
         />
         <div
           className="absolute -translate-x-1/2 -translate-y-1/2 font-mono tracking-widest text-xl sm:text-2xl tabular-nums"
@@ -70,16 +69,15 @@ export default function PhoneFrame({ display, statusRight = '', children }) {
 
   return (
     <div
-      className="relative mx-auto rounded-[40px] p-[6px] w-[280px] sm:w-[300px] select-none"
+      className="phone-chassis-glow relative mx-auto rounded-[40px] p-[3px] w-[234px] sm:w-[251px] select-none"
       style={{
         background: `linear-gradient(180deg, ${PHONE.chassisFrom} 0%, #FF3131 55%, ${PHONE.chassisTo} 100%)`,
-        boxShadow: `0 0 12px ${PHONE.chassisGlow}, 0 0 28px ${PHONE.chassisGlow}88, 0 0 48px ${PHONE.chassisGlow}44`,
       }}
     >
       <div className="absolute top-[10px] left-1/2 -translate-x-1/2 h-5 w-28 rounded-b-2xl bg-black z-20" aria-hidden="true" />
 
       <div
-        className="relative rounded-[34px] overflow-hidden flex flex-col items-center px-4 pt-8 pb-5"
+        className="relative rounded-[38px] overflow-hidden flex flex-col items-center px-4 pt-8 pb-5"
         style={{
           backgroundColor: PHONE.screenBg,
           backgroundImage:

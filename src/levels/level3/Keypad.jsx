@@ -80,13 +80,13 @@ export default function Keypad({
 
   const cell =
     size === 'sm'
-      ? 'h-14 w-14 text-lg'
+      ? 'h-[2.8rem] w-[2.8rem] text-base'
       : size === 'lg'
-        ? 'h-20 w-20 text-3xl'
-        : 'h-[4.25rem] w-[4.25rem] text-xl sm:h-[4.75rem] sm:w-[4.75rem] sm:text-2xl'
+        ? 'h-16 w-16 text-2xl'
+        : 'h-[3.4rem] w-[3.4rem] text-lg sm:h-[3.8rem] sm:w-[3.8rem] sm:text-xl'
 
   return (
-    <div className="grid grid-cols-3 gap-x-4 gap-y-3 justify-items-center select-none mx-auto w-fit">
+    <div className="grid grid-cols-3 gap-x-2 gap-y-1.5 justify-items-center select-none mx-auto w-fit">
       {layout.map((digit, i) => {
         const o = overrides[i] || {}
         const label = o.digit ?? digit
