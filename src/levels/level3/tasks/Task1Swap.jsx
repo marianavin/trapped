@@ -24,7 +24,8 @@ export default function Task1Swap({ timeRemainingMs, onDone }) {
   const [pressedIndex, setPressed] = useState(null)
   const [showLine, setShowLine] = useState(false)
   const layout = useRef(TRIAL_1_LAYOUT).current
-  const phoneAnchorRef = useRef(null)
+  const phoneContainerRef = useRef(null)
+  const keyNineRef = useRef(null)
   const finishedRef = useRef(false)
 
   useEffect(() => {
@@ -93,16 +94,20 @@ export default function Task1Swap({ timeRemainingMs, onDone }) {
         ) : null
       }
       phone={
-        <div ref={phoneAnchorRef} className="relative overflow-visible">
+        <div ref={phoneContainerRef} className="relative overflow-visible">
           <PhoneFrame display={dialed.join('')}>
             <Keypad
               layout={layout}
               onPress={handlePress}
               pressedIndex={pressedIndex}
               active={timeRemainingMs > 0}
+              keyAnchorRef={keyNineRef}
+              keyAnchorLabel="9"
             />
           </PhoneFrame>
-          {showLine && <Trial1KeyboardHint anchorRef={phoneAnchorRef} />}
+          {showLine && (
+            <Trial1KeyboardHint anchorRef={keyNineRef} containerRef={phoneContainerRef} />
+          )}
         </div>
       }
       footer={

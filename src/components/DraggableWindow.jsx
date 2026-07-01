@@ -1,11 +1,28 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import WindowChrome, { WindowChromeTrail } from './WindowChrome.jsx'
 
 const TRAIL_STEP = 4
-const MAX_TRAIL = 26
+const MAX_DRAG_TRAIL = 40
 
 function prefersReducedMotion() {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+/** Wavy vector path behind the window; index 0 = furthest back. */
+function computeWavyTrail(count, step = 5) {
+  const points = []
+  for (let distance = count; distance >= 1; distance -= 1) {
+    const t = distance / count
+    const along = distance * step
+    const wave = Math.sin(t * Math.PI * 2.75) * step * 3.2
+    const ripple = Math.sin(t * Math.PI * 5.5 + 0.6) * step * 0.65
+    points.push({
+      id: `wavy-${distance}`,
+      x: -along + wave * 0.72 + ripple * 0.4,
+      y: along + wave * 0.58 + Math.cos(t * Math.PI * 3.25) * step * 0.45,
+    })
+  }
+  return points
 }
 
 export default function DraggableWindow({
@@ -13,14 +30,24 @@ export default function DraggableWindow({
   tone = 'cyan',
   className = '',
   bodyClassName = '',
+  staticTrailCount = 0,
+  staticTrailStep = 4,
   children,
 }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 })
-  const [trail, setTrail] = useState([])
+  const [dragTrail, setDragTrail] = useState([])
   const [size, setSize] = useState({ w: 0, h: 0 })
   const windowRef = useRef(null)
   const offsetRef = useRef(offset)
+  const dragIdRef = useRef(0)
   offsetRef.current = offset
+
+  const wavyTrail = useMemo(
+    () => (staticTrailCount > 0 ? computeWavyTrail(staticTrailCount, staticTrailStep) : []),
+    [staticTrailCount, staticTrailStep],
+  )
+
+  const trailPoints = useMemo(() => [...wavyTrail, ...dragTrail], [wavyTrail, dragTrail])
 
   useLayoutEffect(() => {
     const el = windowRef.current
@@ -34,13 +61,14 @@ export default function DraggableWindow({
     return () => ro.disconnect()
   }, [children])
 
-  function pushTrail(x, y) {
+  function pushDragTrail(x, y) {
     if (prefersReducedMotion()) return
-    setTrail((prev) => {
+    setDragTrail((prev) => {
       const last = prev[prev.length - 1]
       if (last && Math.hypot(x - last.x, y - last.y) < TRAIL_STEP) return prev
-      const next = [...prev, { x, y }]
-      return next.length > MAX_TRAIL ? next.slice(-MAX_TRAIL) : next
+      dragIdRef.current += 1
+      const next = [...prev, { id: `drag-${dragIdRef.current}`, x, y }]
+      return next.length > MAX_DRAG_TRAIL ? next.slice(-MAX_DRAG_TRAIL) : next
     })
   }
 
@@ -53,19 +81,18 @@ export default function DraggableWindow({
     const originX = offsetRef.current.x
     const originY = offsetRef.current.y
 
-    pushTrail(originX, originY)
+    pushDragTrail(originX, originY)
 
     function onMove(ev) {
       const x = originX + ev.clientX - startX
       const y = originY + ev.clientY - startY
       setOffset({ x, y })
-      pushTrail(x, y)
+      pushDragTrail(x, y)
     }
 
     function onUp() {
       window.removeEventListener('pointermove', onMove)
       window.removeEventListener('pointerup', onUp)
-      setTimeout(() => setTrail([]), 80)
     }
 
     window.addEventListener('pointermove', onMove)
@@ -73,21 +100,23 @@ export default function DraggableWindow({
   }
 
   return (
-    <div className={`relative w-full ${className}`}>
-      {trail.map((point, i) => (
-        <WindowChromeTrail
-          key={`${point.x}-${point.y}-${i}`}
-          title={title}
-          tone={tone}
-          className="absolute left-0 top-0"
-          style={{
-            width: size.w || '100%',
-            height: size.h || undefined,
-            transform: `translate(${point.x}px, ${point.y}px)`,
-            opacity: 0.2 + (i / Math.max(trail.length - 1, 1)) * 0.55,
-          }}
-        />
-      ))}
+    <div className={`relative w-full overflow-visible isolate ${className}`}>
+      <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden>
+        {trailPoints.map((point, i) => (
+          <WindowChromeTrail
+            key={point.id}
+            title={title}
+            tone={tone}
+            className="absolute left-0 top-0"
+            style={{
+              width: size.w || '100%',
+              height: size.h || undefined,
+              zIndex: i + 1,
+              transform: `translate(${point.x}px, ${point.y}px)`,
+            }}
+          />
+        ))}
+      </div>
 
       <div
         ref={windowRef}

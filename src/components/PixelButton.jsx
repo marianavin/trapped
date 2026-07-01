@@ -5,6 +5,7 @@ const VARIANTS = {
   prompt: 'border-l3-prompt text-l3-prompt bg-black/40 hover:bg-l3-prompt/10',
   dark: 'border-l4text text-l4text bg-l4panel hover:bg-l4text/10',
   light: 'border-l4text text-l4text bg-black/30 hover:bg-l4text/10',
+  purple: 'border-[#4A3FA8] text-white bg-[#4A3FA8] hover:bg-[#5A4BB8] active:brightness-95 purple-glow-pulse',
   ghost: 'border-white/20 text-l4text/55 bg-black/20 hover:bg-white/5 hover:text-l4text/75 hover:border-white/30',
 }
 
@@ -24,7 +25,8 @@ export default function PixelButton({
   className = '',
 }) {
   const isGhost = variant === 'ghost'
-  const glow = isGhost ? '' : 'neon-glow'
+  const isPurple = variant === 'purple'
+  const glow = isGhost ? '' : isPurple ? '' : 'neon-glow'
 
   return (
     <button
