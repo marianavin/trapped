@@ -10,7 +10,7 @@ const BIAS_ORDER = ['misinformation', 'anchoring', 'authority', 'confirmation']
 function Row({ label, truth, reported, wrong }) {
   return (
     <div className="grid grid-cols-2 gap-3 font-mono text-xs sm:text-sm">
-      <div className="text-revealtext/70">{label}</div>
+      <div className="text-l4text/70">{label}</div>
       <div />
       <div className="text-escaped">{truth}</div>
       <div className={wrong ? 'text-caught' : 'text-escaped'}>
@@ -29,7 +29,7 @@ export default function RevealScreen({ answers, results, onContinue }) {
   const report = buildReport(answers)
 
   return (
-    <div className="h-full w-full overflow-y-auto bg-revealbg text-revealtext px-5 py-8 flex flex-col items-center gap-8">
+    <div className="h-full w-full overflow-y-auto bg-l4bg text-l4text px-5 py-8 flex flex-col items-center gap-8">
       <h2 className="font-pixel text-sm sm:text-base text-center">WHAT YOU SAW VS. WHAT YOU REPORTED</h2>
 
       <div className="w-full max-w-md flex flex-col gap-2">
@@ -38,7 +38,7 @@ export default function RevealScreen({ answers, results, onContinue }) {
           <div>YOUR REPORT</div>
         </div>
         <Row label="Color" truth={TRUTH.color} reported={report.color} wrong={report.color !== TRUTH.color} />
-        <Row label="Speed" truth={TRUTH.speed} reported={report.speed} wrong={report.speed !== TRUTH.speed} />
+        <Row label="Driver's shirt" truth={TRUTH.shirt} reported={report.shirt} wrong={report.shirt !== TRUTH.shirt} />
         <Row label="Type" truth={TRUTH.type} reported={report.type} wrong={report.type !== TRUTH.type} />
         <Row label="Direction" truth={TRUTH.direction} reported={report.direction} wrong={report.direction !== TRUTH.direction} />
       </div>

@@ -20,9 +20,20 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Neon-glow panel chrome — used across every screen (dialogue boxes,
+   reveal cards, hub bar, level-select cards, buttons): rounded corners, a
+   colored border, and a soft glow using the same color, instead of the
+   old hard pixel drop-shadow. `currentColor` means the glow automatically
+   matches whatever text color the element already has — level accents,
+   status colors, etc — without needing a new class per color. */
 .pixel-border {
-  border: 4px solid currentColor;
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+  border: 2px solid currentColor;
+  border-radius: 10px;
+  box-shadow: 0 0 5px currentColor, 0 0 16px currentColor, inset 0 0 14px rgba(0, 0, 0, 0.35);
+}
+
+.neon-glow {
+  box-shadow: 0 0 5px currentColor, 0 0 16px currentColor;
 }
 
 .scanlines {

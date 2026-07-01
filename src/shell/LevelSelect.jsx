@@ -20,7 +20,11 @@ function LevelCard({ level, result, onPlay }) {
         'focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300',
         locked ? 'bg-l4panel/40 text-l4text/30 cursor-not-allowed' : 'bg-l4panel text-l4text hover:bg-l4text hover:text-l4panel cursor-pointer',
       ].join(' ')}
-      style={!locked ? { borderColor: level.accent } : undefined}
+      style={
+        !locked
+          ? { borderColor: level.accent, boxShadow: `0 0 5px ${level.accent}, 0 0 16px ${level.accent}66` }
+          : undefined
+      }
     >
       <div className="flex items-center justify-between">
         <span className="font-pixel text-[9px] sm:text-[10px]" style={!locked ? { color: level.accent } : undefined}>

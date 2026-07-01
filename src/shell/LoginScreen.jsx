@@ -35,7 +35,7 @@ export default function LoginScreen() {
             onChange={(e) => setName(e.target.value)}
             placeholder="YOUR NAME"
             maxLength={24}
-            className="font-pixel text-[10px] w-full bg-transparent border-4 border-l4text text-l4text px-3 py-3 text-center placeholder:text-l4text/60 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
+            className="font-pixel text-[10px] w-full bg-black/30 rounded-lg neon-glow border-2 border-l4text text-l4text px-3 py-3 text-center placeholder:text-l4text/60 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
             onKeyDown={(e) => e.key === 'Enter' && signInMock(name)}
           />
           <PixelButton full onClick={() => signInMock(name)}>

@@ -202,4 +202,15 @@ export const sounds = {
         0.01
       )
     ),
+
+  // Act 2 — the newspaper. A short burst of noise stands in for a page
+  // rustle/unfold; there's no clean "paper" timbre available from square/
+  // sine oscillators alone, so noise is the closest fit in this synth.
+  paperRustle: () =>
+    makeUrl(
+      concat(
+        tone({ freq: 200, duration: 0.12, type: 'noise', volume: 0.08 }),
+        tone({ freq: 200, duration: 0.08, type: 'noise', volume: 0.05 })
+      )
+    ),
 }

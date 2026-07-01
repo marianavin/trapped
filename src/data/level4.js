@@ -2,15 +2,38 @@
 
 export const SETUP_LINES = ['YOU SEE EVERYTHING.', 'FOR 8 SECONDS.']
 
-export const DISPATCHER_INTRO = 'THE DISPATCHER IS CALLING.'
+// Act 2 — the newspaper. Read before the call, this is where the wrong
+// "dark sedan / fled north" story is first planted — not by an officer's
+// leading question, but by a public report the player reads as fact before
+// anyone has even asked them what they saw. Real witness contamination
+// usually starts exactly like this.
+export const NEWSPAPER = {
+  kicker: 'LOCAL NEWS',
+  date: 'THE NEXT MORNING',
+  headline: 'HIT AND RUN ON MÄGI STREET',
+  body: [
+    'A PEDESTRIAN WAS STRUCK AND LEFT INJURED LAST NIGHT.',
+    'WITNESSES DESCRIBE A DARK SEDAN FLEEING NORTH.',
+    'POLICE ASK ANYONE WHO SAW THE INCIDENT TO COME FORWARD.',
+  ],
+  cta: 'CALL THE POLICE',
+}
 
-// Ground truth of the 8-second flash scene. Deliberately contradicts every
-// leading suggestion the dispatcher makes — this is what makes the reveal land.
+// Act 3 — the call is now outgoing (the player dials, not the other way
+// around), per the redesigned 3-act structure.
+export const CALL_DIALLING = 'DIALLING POLICE…'
+export const DISPATCHER_INTRO = 'OFFICER: WHAT DID YOU SEE?'
+
+// Ground truth of the 8-second accident scene (Act 1). Everything here is
+// deliberately rendered so it's clearly perceptible — sharp silhouette,
+// high-contrast color, one continuous direction, a visible driver. The bias
+// isn't in what the player saw; it's in what the newspaper and the officer
+// later talk them into reporting instead. This is what makes the reveal land.
 export const TRUTH = {
   color: 'SILVER',
-  speed: 'MODERATE SPEED',
   type: 'HATCHBACK',
-  direction: 'SOUTH',
+  direction: 'WEST',
+  shirt: 'AMBER',
 }
 
 export const QUESTIONS = [
@@ -25,11 +48,11 @@ export const QUESTIONS = [
   },
   {
     id: 'q2',
-    line: 'Moving fast when it happened?',
+    line: 'The driver — red shirt, was it?',
     options: [
-      { id: 'yes', label: 'YES, FAST' },
-      { id: 'moderate', label: 'MODERATE SPEED' },
-      { id: 'noticed', label: "I DIDN'T NOTICE" },
+      { id: 'yes', label: 'YES, RED' },
+      { id: 'maybe', label: 'MAYBE' },
+      { id: 'unsure', label: "I'M NOT SURE" },
     ],
   },
   {
@@ -52,7 +75,7 @@ export const QUESTIONS = [
   },
   {
     id: 'q5',
-    line: 'Let me read that back. Dark sedan, speeding, heading north. Does that sound right?',
+    line: 'Let me read that back. Dark sedan, red shirt, heading north. Does that sound right?',
     options: [
       { id: 'confirm', label: 'CONFIRM' },
       { id: 'correct', label: 'CORRECT IT' },
@@ -118,7 +141,8 @@ export const BIAS_CARDS = {
   },
 }
 
-// Derives which biases fired from the player's 5 answers.
+// Derives which biases fired from the player's 5 answers (q1 color, q2
+// shirt color, q3 vehicle type, q4 direction, q5 final confirm).
 // Kept purely as a function of recorded choices — no hidden randomness.
 export function scoreAnswers(answers) {
   const affirmed = (id) => answers[id] === 'yes'
@@ -146,16 +170,16 @@ export function scoreAnswers(answers) {
 }
 
 // Builds the player's "final report" for the reveal split-screen —
-// what they actually told the dispatcher, in the dispatcher's own terms.
+// what they actually told the officer, in the officer's own terms.
 export function buildReport(answers) {
   const colorMap = { yes: 'DARK', maybe: 'POSSIBLY DARK', unsure: 'UNCERTAIN' }
-  const speedMap = { yes: 'FAST', moderate: 'MODERATE SPEED', noticed: 'UNNOTICED' }
+  const shirtMap = { yes: 'RED', maybe: 'POSSIBLY RED', unsure: 'UNCERTAIN' }
   const typeMap = { yes: 'SEDAN', no: 'NOT A SEDAN', unsure: 'UNCERTAIN' }
   const dirMap = { yes: 'NORTH', think: 'PROBABLY NORTH', couldnt: 'UNKNOWN' }
 
   return {
     color: colorMap[answers.q1] ?? 'UNCERTAIN',
-    speed: speedMap[answers.q2] ?? 'UNCERTAIN',
+    shirt: shirtMap[answers.q2] ?? 'UNCERTAIN',
     type: typeMap[answers.q3] ?? 'UNCERTAIN',
     direction: dirMap[answers.q4] ?? 'UNKNOWN',
   }

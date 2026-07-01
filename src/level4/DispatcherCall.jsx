@@ -6,8 +6,14 @@ import Typewriter from '../components/Typewriter.jsx'
 import { play } from '../audio/sounds.js'
 import DispatcherBackdrop from './DispatcherBackdrop.jsx'
 
+// Act 3 — the call is now outgoing: the player dials the police rather than
+// being called, per the redesigned 3-act structure. Mechanically unchanged
+// from the original dispatcher-call version — same leading-question/scoring
+// flow — only the framing text and the sound cue's meaning shift (the same
+// two-tone ring now plays as "it's ringing on their end" instead of "an
+// incoming call").
 export default function DispatcherCall({ onComplete }) {
-  const [stage, setStage] = useState('ringing') // ringing -> intro -> q0..q4 -> done
+  const [stage, setStage] = useState('dialling') // dialling -> intro -> q0..q4 -> done
   const [qIndex, setQIndex] = useState(0)
   const [lineTyped, setLineTyped] = useState(false)
   const [answers, setAnswers] = useState({})
@@ -46,8 +52,8 @@ export default function DispatcherCall({ onComplete }) {
   // separately from the visual typewriter effect below — otherwise a live
   // region on the animated text would announce every character increment.
   const srAnnouncement =
-    stage === 'ringing'
-      ? 'Incoming call...'
+    stage === 'dialling'
+      ? 'Dialling police...'
       : stage === 'intro'
       ? DISPATCHER_INTRO
       : stage === 'question'
@@ -66,15 +72,15 @@ export default function DispatcherCall({ onComplete }) {
 
       <div className="relative z-10 w-full flex flex-col items-center gap-6">
       <AnimatePresence mode="wait">
-        {stage === 'ringing' && (
+        {stage === 'dialling' && (
           <motion.p
-            key="ringing"
+            key="dialling"
             aria-hidden="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="font-pixel text-xs sm:text-sm animate-pulse"
           >
-            INCOMING CALL...
+            DIALLING POLICE…
           </motion.p>
         )}
 
