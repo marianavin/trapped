@@ -1,14 +1,21 @@
 // Exact copy per TRAPPED_Content_Copy_Spec.md — Level 2: The Bomb
 
-export const SETUP_LINES = ['DEFUSE IT.', '90 SECONDS.']
+export const SETUP_LINES = ['DEFUSE IT.', '60 SECONDS.']
 
-export const TIMER_SECONDS = 90
+export const TIMER_SECONDS = 60
 
 export const VOICE_1_LINE = 'CUT THE BLUE WIRE.'
 export const VOICE_1_HINT = 'Use the wire key below — each wire is labeled A, B, or C.'
 
-export const LEGEND_LABEL = 'WIRE KEY — INVERTED'
+export const LEGEND_LABEL = 'WIRE KEY'
 export const LEGEND_ROWS = ['BLUE → WIRE B', 'RED → WIRE A', 'YELLOW → WIRE C']
+
+// Wire insulation colours — red is bright coral so it reads clearly against dynamite (#C42A2A).
+export const LEGEND_SWATCHES = {
+  BLUE: '#3B82F6',
+  RED: '#FF6B4A',
+  YELLOW: '#EAB308',
+}
 
 export const VOICE_2_LINE = 'IGNORE THE KEY. TRUST THE INSTRUCTION. CUT BLUE.'
 export const VOICE_2_HINT = 'Without the key: blue means WIRE A.'
@@ -21,9 +28,9 @@ export const RECHECK_PROMPT = "TIME'S ALMOST UP."
 // lines and legend map color words to these labels so colorblind players can
 // still play without losing the label-vs-signifier mechanic.
 export const WIRES = [
-  { id: 'blue', label: 'WIRE A', shortLabel: 'A', color: '#3B82F6', pattern: 'stripe' },
-  { id: 'red', label: 'WIRE B', shortLabel: 'B', color: '#DC2626', pattern: 'solid' },
-  { id: 'yellow', label: 'WIRE C', shortLabel: 'C', color: '#EAB308', pattern: 'dotted' },
+  { id: 'blue', label: 'WIRE A', shortLabel: 'A', color: LEGEND_SWATCHES.BLUE, pattern: 'stripe' },
+  { id: 'red', label: 'WIRE B', shortLabel: 'B', color: LEGEND_SWATCHES.RED, pattern: 'solid' },
+  { id: 'yellow', label: 'WIRE C', shortLabel: 'C', color: LEGEND_SWATCHES.YELLOW, pattern: 'dotted' },
 ]
 
 // The legend is inverted: what Voice 1 calls "the blue wire" translates,

@@ -20,6 +20,7 @@ export const LEVELS = [
     accent: '#00F0FF',
     built: true,
     totalBiases: 3,
+    hook: '60 SECONDS. THREE WIRES. SOMEONE IS LYING.',
     Component: Level2,
     // Level2's onComplete already emits the normalized shape directly.
     normalizeResult: (payload) => payload,
@@ -31,6 +32,7 @@ export const LEVELS = [
     accent: '#00F0FF',
     built: true,
     totalBiases: 4,
+    hook: 'THE NUMBERS ARE WRONG ON PURPOSE.',
     Component: Level3,
     // Level3's onComplete already emits the normalized shape directly.
     normalizeResult: (payload) => payload,
@@ -40,8 +42,9 @@ export const LEVELS = [
     index: 3,
     title: 'THE WITNESS',
     accent: '#00F0FF',
-    built: true,
+    built: false,
     totalBiases: 4,
+    hook: 'YOU SAW IT. OR DID YOU?',
     Component: Level4,
     // Level4 always ends on a fixed narrative outcome (the wrong car gets
     // flagged regardless of the final confirm) — only the process/bias

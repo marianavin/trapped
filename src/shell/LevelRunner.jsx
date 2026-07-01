@@ -1,23 +1,40 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { getLevel } from '../data/levels.js'
 import PixelButton from '../components/PixelButton.jsx'
+import { AbortDialog, ScreenFlash } from '../components/GameUI.jsx'
+import { play } from '../audio/sounds.js'
 
 export default function LevelRunner({ levelId, onDone, onExit }) {
   const level = getLevel(levelId)
+  const [showExit, setShowExit] = useState(false)
+  const [flash, setFlash] = useState(true)
+
+  useEffect(() => {
+    const t = setTimeout(() => setFlash(false), 220)
+    return () => clearTimeout(t)
+  }, [])
+
+  function requestExit() {
+    play('questionArrive')
+    setShowExit(true)
+  }
 
   function confirmExit() {
-    const ok = window.confirm("Exit this level? Your progress on this level won't be saved.")
-    if (ok) onExit()
+    play('wrongBuzz')
+    setShowExit(false)
+    onExit()
   }
 
   useEffect(() => {
     function handleKeyDown(e) {
-      if (e.key === 'Escape') confirmExit()
+      if (e.key === 'Escape') {
+        if (showExit) setShowExit(false)
+        else requestExit()
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [showExit])
 
   if (!level || !level.built) return null
 
@@ -29,11 +46,13 @@ export default function LevelRunner({ levelId, onDone, onExit }) {
 
   return (
     <div className="relative h-full w-full">
-      <div className="fixed top-2 right-2 z-[60]">
-        <PixelButton variant="dark" onClick={confirmExit} className="!px-2 !py-2 !text-[8px] sm:!text-[9px]">
-          ✕ MENU
+      <ScreenFlash show={flash} />
+      <div className="absolute top-2 right-2 z-[60]">
+        <PixelButton variant="ghost" size="xs" onClick={requestExit}>
+          EXIT
         </PixelButton>
       </div>
+      <AbortDialog open={showExit} onConfirm={confirmExit} onCancel={() => setShowExit(false)} />
       <Component onComplete={handleComplete} onLevelComplete={handleComplete} />
     </div>
   )

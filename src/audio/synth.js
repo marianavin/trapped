@@ -192,4 +192,15 @@ export const sounds = {
         tone({ freq: 200, duration: 0.08, type: 'noise', volume: 0.05 })
       )
     ),
+
+  countdownTick: () => makeUrl(tone({ freq: 660, duration: 0.035, type: 'square', volume: 0.1 })),
+  countdownUrgent: () => makeUrl(tone({ freq: 1046, duration: 0.055, type: 'square', volume: 0.18 })),
+  wireSnip: () =>
+    makeUrl(
+      concat(
+        tone({ freq: 1400, duration: 0.025, type: 'square', volume: 0.14 }),
+        tone({ freq: 180, duration: 0.06, type: 'noise', volume: 0.08 })
+      )
+    ),
+  tabBlip: () => makeUrl(tone({ freq: 520, duration: 0.04, type: 'square', volume: 0.1 })),
 }

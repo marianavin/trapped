@@ -45,6 +45,16 @@ body {
   box-shadow: 0 0 4px #FF00FF, 0 0 14px #FF00FF, 0 0 28px #FF00FF44;
 }
 
+.neon-border-cyan {
+  border-color: #00F0FF;
+  box-shadow: 0 0 4px #00F0FF, 0 0 14px #00F0FF44;
+}
+
+.neon-border-caught {
+  border-color: #FF3131;
+  box-shadow: 0 0 4px #FF3131, 0 0 14px #FF313144;
+}
+
 /* System window body — subtle inner grid like the reference panels */
 .gw-panel-grid {
   background-color: #1A1A3A;
@@ -52,6 +62,34 @@ body {
     linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
   background-size: 16px 16px;
+}
+
+/* Pixel-styled scrollbar — cyan thumb on dark panel track */
+.gw-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #00F0FF #1A1A3A;
+}
+
+.gw-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.gw-scrollbar::-webkit-scrollbar-track {
+  background: #1A1A3A;
+  border-left: 2px solid rgba(0, 240, 255, 0.12);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+}
+
+.gw-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00F0FF 0%, #0090A8 100%);
+  border: 2px solid #0A0A0A;
+  border-radius: 2px;
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.45);
+}
+
+.gw-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #00F0FF;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.65);
 }
 
 /* Large title with chromatic aberration — reference header style */
@@ -65,16 +103,122 @@ body {
     0 0 20px #00F0FF66;
 }
 
-/* Status bar / footer chrome */
+/* Status bar — legacy class kept for any in-panel use */
 .gw-status-bar {
   border-top: 2px solid rgba(0, 240, 255, 0.25);
   background: linear-gradient(180deg, #1A1A3A 0%, #121225 100%);
 }
 
+/* Arcade cabinet — industrial frame, neon bevel, embedded footer */
+.cabinet-shell {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(6px, 1.2vw, 12px);
+  background-color: #0a0a12;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.cabinet-frame {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  --screw-size: 16px;
+  --cabinet-rail: clamp(22px, 3vw, 28px);
+  --cabinet-gap: clamp(6px, 0.8vw, 8px);
+  padding: var(--cabinet-rail);
+  gap: var(--cabinet-gap);
+  border-radius: clamp(6px, 1.2vw, 12px);
+  background: linear-gradient(180deg, #3a4068 0%, #2d325a 45%, #1a1e3a 100%);
+  border: 3px solid #0a0a0a;
+  box-shadow:
+    inset 0 2px 0 rgba(74, 80, 136, 0.35),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.45),
+    0 6px 24px rgba(0, 0, 0, 0.55);
+}
+
+.cabinet-screw {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  width: var(--screw-size);
+  height: var(--screw-size);
+  --screw-inset: max(3px, calc((var(--cabinet-rail) - var(--screw-size)) / 2));
+}
+
+.cabinet-screw-tl { top: var(--screw-inset); left: var(--screw-inset); }
+.cabinet-screw-tr { top: var(--screw-inset); right: var(--screw-inset); }
+.cabinet-screw-bl { bottom: var(--screw-inset); left: var(--screw-inset); }
+.cabinet-screw-br { bottom: var(--screw-inset); right: var(--screw-inset); }
+
+.cabinet-bezel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-radius: clamp(4px, 0.8vw, 8px);
+  padding: 3px;
+  background: linear-gradient(135deg, #00F0FF 0%, #FF00FF 55%, #00F0FF 100%);
+  box-shadow:
+    0 0 6px rgba(0, 240, 255, 0.25),
+    0 0 6px rgba(255, 0, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.cabinet-screen {
+  flex: 1;
+  background-color: #121225;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+  border-radius: clamp(3px, 0.6vw, 6px);
+  box-shadow:
+    inset 0 0 48px rgba(0, 0, 0, 0.55),
+    inset 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.cabinet-screen-glare {
+  pointer-events: none;
+  position: absolute;
+  z-index: 48;
+  border-radius: inherit;
+}
+
+.cabinet-screen-glare-tl {
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 40%;
+  background: radial-gradient(ellipse at 0% 0%, rgba(0, 240, 255, 0.06) 0%, transparent 70%);
+}
+
+.cabinet-screen-glare-br {
+  bottom: 0;
+  right: 0;
+  width: 50%;
+  height: 45%;
+  background: radial-gradient(ellipse at 100% 100%, rgba(255, 0, 255, 0.05) 0%, transparent 70%);
+}
+
+.cabinet-footer {
+  flex-shrink: 0;
+  border-radius: clamp(3px, 0.6vw, 6px);
+  border: 2px solid #0a0a0a;
+  background: linear-gradient(180deg, #2d325a 0%, #1a1e3a 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(0, 240, 255, 0.12),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+}
+
 /* Scanlines overlay */
 .scanlines {
   pointer-events: none;
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 50;
   background: repeating-linear-gradient(
@@ -90,7 +234,7 @@ body {
 /* Subtle CRT vignette */
 .crt-vignette {
   pointer-events: none;
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 49;
   background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.45) 100%);
@@ -127,4 +271,27 @@ body {
 
 .glitch-shift {
   animation: glitchShift 4s infinite;
+}
+
+/* Hard cut flash when entering a level */
+.screen-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+  background: rgba(0, 240, 255, 0.35);
+  animation: screenFlash 0.22s ease-out forwards;
+}
+
+@keyframes screenFlash {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-flicker,
+  .glitch-shift,
+  .shake,
+  .screen-flash {
+    animation: none !important;
+  }
 }

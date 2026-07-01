@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import BombPanel from './BombPanel.jsx'
+import BombPanel, { BombWireKey } from './BombPanel.jsx'
 import { play, startSiren, stopSiren } from '../audio/sounds.js'
 import {
   TIMER_SECONDS,
@@ -29,7 +29,7 @@ function shuffled(arr) {
 // menu of choices: click a wire to cut it (label-vs-legend conflict), click
 // a wire again once the calmer second voice contradicts the first
 // (authority bias), then either re-check the legend or hit CUT NOW under
-// max time pressure (confirmation bias). One 90s countdown, embedded in the
+// max time pressure (confirmation bias). One 60s countdown, embedded in the
 // panel's own LED display, runs throughout — running out mid-decision is
 // itself a fail.
 export default function Play({ onDone }) {
@@ -40,6 +40,7 @@ export default function Play({ onDone }) {
   const [authorityChoice, setAuthorityChoice] = useState(null)
   const [secondsLeft, setSecondsLeft] = useState(TIMER_SECONDS)
   const doneRef = useRef(false)
+  const prevSecondsRef = useRef(TIMER_SECONDS)
 
   useEffect(() => {
     startSiren()
@@ -50,6 +51,12 @@ export default function Play({ onDone }) {
     if (doneRef.current || secondsLeft <= 0) return
     const t = setTimeout(() => setSecondsLeft((s) => s - 1), 1000)
     return () => clearTimeout(t)
+  }, [secondsLeft])
+
+  useEffect(() => {
+    if (secondsLeft >= prevSecondsRef.current || secondsLeft <= 0 || doneRef.current) return
+    prevSecondsRef.current = secondsLeft
+    play(secondsLeft <= 5 ? 'countdownUrgent' : 'countdownTick')
   }, [secondsLeft])
 
   useEffect(() => {
@@ -67,7 +74,7 @@ export default function Play({ onDone }) {
 
   function handleWireClick(id) {
     if (stage === 'choose1') {
-      play('keyClick')
+      play('wireSnip')
       setFirstCut(id)
       setCurrentWireId(id)
       setStage('voice2')
@@ -75,7 +82,7 @@ export default function Play({ onDone }) {
       return
     }
     if (stage === 'voice2') {
-      play('keyClick')
+      play('wireSnip')
       setAuthorityChoice(id === firstCut ? 'stick' : 'switch')
       setCurrentWireId(id)
       setStage('final')
@@ -99,20 +106,29 @@ export default function Play({ onDone }) {
   const message = stage === 'choose1' ? VOICE_1_LINE : stage === 'voice2' ? VOICE_2_LINE : RECHECK_PROMPT
   const messageHint = stage === 'choose1' ? VOICE_1_HINT : stage === 'voice2' ? VOICE_2_HINT : null
 
+  const urgent = secondsLeft > 0 && secondsLeft <= 5
+
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center bg-l2-bg text-l2-text px-4 py-6 gap-4">
-      <BombPanel
-        wires={wires}
-        currentWireId={currentWireId}
-        mm={mm}
-        ss={ss}
-        message={message}
-        messageHint={messageHint}
+    <div className={`relative h-full w-full bg-l4bg text-l4text overflow-hidden ${urgent ? 'shake' : ''}`}>
+      <div className="h-full overflow-y-auto gw-scrollbar">
+        <div className="min-h-full flex flex-col items-center justify-center px-4 py-6 gap-4 pb-40">
+          <BombPanel
+            wires={wires}
+            currentWireId={currentWireId}
+            mm={mm}
+            ss={ss}
+            secondsLeft={secondsLeft}
+            message={message}
+            messageHint={messageHint}
+            onWireClick={handleWireClick}
+            wiresClickable={stage === 'choose1' || stage === 'voice2'}
+          />
+        </div>
+      </div>
+
+      <BombWireKey
         legendLabel={LEGEND_LABEL}
         legendRows={LEGEND_ROWS}
-        showLegend
-        onWireClick={handleWireClick}
-        wiresClickable={stage === 'choose1' || stage === 'voice2'}
         showRecheck={stage === 'final'}
         onRecheck={handleRecheck}
         showCutNow={stage === 'final'}

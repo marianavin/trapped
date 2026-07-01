@@ -9,17 +9,24 @@ export default function TitleScreen({ onBegin }) {
     play('bootChime')
   }, [])
 
+  function handleBegin() {
+    play('keyClick')
+    onBegin()
+  }
+
   return (
     <GlitchShell contentClassName="gap-8 px-6 py-10">
       <ScreenHeader title="TRAPPED" subtitle="Your mind is the obstacle." />
 
       <WindowChrome title="SYSTEM // INIT" className="w-full max-w-sm">
-        <p className="font-mono text-xs sm:text-sm text-l4text/80 leading-relaxed text-center">
-          A cognitive bias escape room. Three scenarios. One rule: question what feels obvious.
-        </p>
+        <div className="font-mono text-xs sm:text-sm text-l4text/80 leading-relaxed text-center flex flex-col gap-2">
+          <p>THREE SCENARIOS.</p>
+          <p>YOUR CONFIDENCE IS THE TRAP.</p>
+          <p>QUESTION EVERYTHING THAT FEELS OBVIOUS.</p>
+        </div>
       </WindowChrome>
 
-      <PixelButton variant="primary" onClick={onBegin}>
+      <PixelButton variant="primary" onClick={handleBegin}>
         BEGIN
       </PixelButton>
     </GlitchShell>

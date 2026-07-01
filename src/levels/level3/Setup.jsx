@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { SETUP_TEXT } from './data.js'
+import { LevelScreen } from '../../components/GameUI.jsx'
 import { play, startSiren } from '../../audio/sounds.js'
 
-// 10 seconds of context, no instructions. Auto-advances - the player is
-// never told what a "correct" move looks like here or anywhere else.
 export default function Setup({ onDone }) {
   useEffect(() => {
     play('setupTone')
@@ -14,18 +13,18 @@ export default function Setup({ onDone }) {
   }, [onDone])
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center bg-l3-bg px-6 text-center">
+    <LevelScreen center className="px-6 text-center gap-3">
       {SETUP_TEXT.map((line, i) => (
         <motion.p
           key={line}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: i * 0.6, duration: 0.3 }}
-          className="font-pixel text-white text-sm sm:text-lg leading-relaxed"
+          className="font-pixel text-sm sm:text-lg leading-relaxed"
         >
           {line}
         </motion.p>
       ))}
-    </div>
+    </LevelScreen>
   )
 }

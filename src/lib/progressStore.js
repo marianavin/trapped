@@ -94,3 +94,48 @@ export async function saveLevelResult(userId, levelId, normalizedResult) {
 
   return loadProgress(userId)
 }
+
+// Registers/renames a player so the leaderboard has a nickname to show.
+// No-op when Supabase isn't configured (leaderboard simply isn't available
+// offline — nothing else in the app depends on this succeeding).
+export async function upsertPlayer(id, nickname) {
+  if (!isSupabaseConfigured || !id) return
+
+  const { error } = await supabase
+    .from('players')
+    .upsert({ id, nickname, updated_at: new Date().toISOString() }, { onConflict: 'id' })
+
+  if (error) {
+    console.error('upsertPlayer failed:', error.message)
+  }
+}
+
+// Full rankings for the Leaderboard tab: one row per player who has played
+// at least once, sorted by points (see supabase/schema.sql's `leaderboard`
+// view for how points are computed). Returns [] when Supabase isn't
+// configured or the query fails — the UI treats that as "no leaderboard
+// available yet" rather than an error state.
+export async function loadLeaderboard() {
+  if (!isSupabaseConfigured) return []
+
+  const { data, error } = await supabase
+    .from('leaderboard')
+    .select('player_id, nickname, scenarios_survived, levels_completed, biases_escaped, biases_attempted, points')
+
+  if (error) {
+    console.error('loadLeaderboard failed:', error.message)
+    return []
+  }
+
+  return data
+    .filter((row) => row.levels_completed > 0)
+    .map((row) => ({
+      playerId: row.player_id,
+      nickname: row.nickname,
+      scenariosSurvived: row.scenarios_survived,
+      levelsCompleted: row.levels_completed,
+      biasesEscaped: row.biases_escaped,
+      biasesAttempted: row.biases_attempted,
+      points: row.points,
+    }))
+}
