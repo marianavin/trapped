@@ -17,7 +17,7 @@ export default function DialogueBox({ text, sub, title = 'MESSAGE', tone = 'cyan
           onDone={onDone}
           className="font-mono text-sm sm:text-base leading-relaxed"
         />
-        {sub && <p className="font-mono text-xs text-l4text/60 mt-2">{sub}</p>}
+        {sub && <p className="font-mono text-xs text-l4-muted mt-2">{sub}</p>}
       </WindowChrome>
     </motion.div>
   )

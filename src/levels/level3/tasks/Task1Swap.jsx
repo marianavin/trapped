@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
 import Keypad from '../Keypad.jsx'
 import PhoneFrame from '../PhoneFrame.jsx'
 import TrialLayout from '../TrialLayout.jsx'
 import Trial1KeyboardHint from '../Trial1KeyboardHint.jsx'
+import { useTrialHint } from '../TrialHintContext.jsx'
 import { TRIAL_1_LAYOUT } from '../data.js'
 import { speak, cancelSpeech } from '../speech.js'
 import { play } from '../../../audio/sounds.js'
@@ -27,6 +27,8 @@ export default function Task1Swap({ timeRemainingMs, onDone }) {
   const phoneContainerRef = useRef(null)
   const keyNineRef = useRef(null)
   const finishedRef = useRef(false)
+
+  useTrialHint(showLine ? '“NINE. ONE. ONE.”' : null, { animate: true })
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -82,17 +84,6 @@ export default function Task1Swap({ timeRemainingMs, onDone }) {
   return (
     <TrialLayout
       header={<p className="font-pixel text-[10px] text-l3-prompt">TRIAL 1 / 4</p>}
-      prompt={
-        showLine ? (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="font-mono text-l3-label text-lg tracking-widest"
-          >
-            &ldquo;NINE. ONE. ONE.&rdquo;
-          </motion.p>
-        ) : null
-      }
       phone={
         <div ref={phoneContainerRef} className="relative overflow-visible">
           <PhoneFrame display={dialed.join('')}>

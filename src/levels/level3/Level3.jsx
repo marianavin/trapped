@@ -10,6 +10,7 @@ import Task4LoudNumber from './tasks/Task4LoudNumber.jsx'
 import { TASK_ORDER, LEVEL_TIMER_MS, scrambledLayout, TRIAL_3_REMIX_SEED } from './data.js'
 import { stopAll } from '../../audio/sounds.js'
 import { cancelSpeech } from './speech.js'
+import { TrialHintProvider } from './TrialHintContext.jsx'
 
 // The 4 trials, in alternating perception (P) / memory (M) order so the
 // player can't pattern-match "keypad = X trick" too early.
@@ -120,7 +121,7 @@ export default function Level3({ onComplete }) {
   if (state.phase === 'play') {
     const { Comp } = TASKS[state.index]
     return (
-      <div className="relative h-full w-full overflow-hidden">
+      <TrialHintProvider>
         <LevelTimerContext.Provider value={timeRemainingMs}>
           <div className="h-full overflow-y-auto gw-scrollbar">
             <Comp
@@ -132,7 +133,7 @@ export default function Level3({ onComplete }) {
           </div>
         </LevelTimerContext.Provider>
         <CRTOverlay />
-      </div>
+      </TrialHintProvider>
     )
   }
 

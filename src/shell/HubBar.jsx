@@ -11,20 +11,11 @@ const TABS = [
 
 export default function HubBar({ tab, onTabChange, points }) {
   const { user, signOut } = useAuth()
-  const initial = (user?.name || '?').trim().charAt(0).toUpperCase()
 
   return (
     <header className="w-full border-b-2 border-accent-cyan/30 bg-l4panel px-4 py-2.5 shadow-neon-cyan">
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 min-h-9">
-        {/* brand */}
-        <div className="flex items-center justify-start min-w-0">
-          <h1 className="m-0 leading-none font-pixel text-sm sm:text-base tracking-widest glitch-title glitch-shift">
-            TRAPPED
-          </h1>
-        </div>
-
-        {/* navigation */}
-        <nav role="tablist" aria-label="Game sections" className="flex items-center gap-1 justify-self-center">
+      <div className="flex items-center justify-between gap-3 min-h-9">
+        <nav role="tablist" aria-label="Game sections" className="flex items-center gap-1">
           {TABS.map((t) => (
             <TabButton
               key={t.id}
@@ -40,23 +31,23 @@ export default function HubBar({ tab, onTabChange, points }) {
           ))}
         </nav>
 
-        {/* player */}
-        <div className="flex items-center justify-end gap-2 sm:gap-3 min-w-0">
-          <div className="flex items-center gap-2 min-w-0">
-            <div
-              aria-hidden="true"
-              title={user?.name}
-              className="w-6 h-6 sm:w-7 sm:h-7 shrink-0 flex items-center justify-center border-2 border-accent-cyan text-accent-cyan font-pixel text-[8px] sm:text-[10px] bg-l4bg neon-glow-cyan"
-            >
-              {initial}
-            </div>
-            <span className="hidden sm:inline font-mono text-xs text-l4text/70 truncate max-w-[7rem]">
-              {user?.name}
+        <div className="flex items-center justify-end gap-2 sm:gap-3 min-w-0 shrink-0">
+          <div className="flex flex-col items-end min-w-0 leading-tight">
+            {user?.name && (
+              <span className="hidden sm:block font-mono text-[10px] sm:text-[11px] text-l4text uppercase tracking-wide truncate max-w-[8rem]">
+                {user.name}
+              </span>
+            )}
+            <span className="inline-flex items-baseline gap-1.5 sm:gap-2">
+              <span className="font-pixel text-xs sm:text-sm text-accent-cyan tabular-nums leading-none">
+                {points}
+              </span>
+              <span className="font-mono text-[9px] sm:text-[10px] text-l4text uppercase tracking-wide leading-none">
+                POINTS
+              </span>
             </span>
           </div>
-          <span className="font-pixel text-[9px] sm:text-[10px] text-accent-cyan shrink-0 tabular-nums">
-            {points} POINTS
-          </span>
+          <div aria-hidden="true" className="w-px h-6 bg-accent-cyan/20 shrink-0" />
           <PixelButton variant="ghost" size="xs" onClick={signOut}>
             SIGN OUT
           </PixelButton>

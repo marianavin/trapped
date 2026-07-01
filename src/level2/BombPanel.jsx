@@ -1,31 +1,13 @@
 import { motion } from 'framer-motion'
 import BombArt from './BombArt.jsx'
 import WindowChrome from '../components/WindowChrome.jsx'
-import PixelButton from '../components/PixelButton.jsx'
 import { LEGEND_SWATCHES } from '../data/level2.js'
 
-const HUD_CORNER =
-  'absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 flex flex-col gap-2 w-[11.5rem] sm:w-52 max-w-[calc(100%-1.5rem)]'
+const HUD_STACK = 'flex flex-col gap-2 w-full'
 
-export function BombPlayHud({
-  hint,
-  hintLabel = 'HINT',
-  legendLabel,
-  legendRows,
-  showRecheck,
-  onRecheck,
-  showCutNow,
-  onCutNow,
-  className = '',
-}) {
+export function BombPlayHud({ legendLabel, legendRows, className = '' }) {
   return (
-    <div className={[HUD_CORNER, className].filter(Boolean).join(' ')}>
-      {hint && (
-        <WindowChrome title={hintLabel} bodyClassName="!p-2 sm:!p-3">
-          <p className="font-mono text-[10px] sm:text-xs text-l4text leading-snug">{hint}</p>
-        </WindowChrome>
-      )}
-
+    <div className={[HUD_STACK, className].filter(Boolean).join(' ')}>
       <WindowChrome title={legendLabel} bodyClassName="!p-2 sm:!p-3">
         <ul className="flex flex-col gap-1.5">
           {legendRows.map((row) => (
@@ -45,31 +27,25 @@ export function BombPlayHud({
             </li>
           ))}
         </ul>
-        {showRecheck && (
-          <PixelButton variant="primary" size="sm" full onClick={onRecheck} className="mt-2">
-            RE-CHECK THE KEY
-          </PixelButton>
-        )}
       </WindowChrome>
-
-      {showCutNow && (
-        <PixelButton variant="danger" size="sm" onClick={onCutNow}>
-          CUT NOW
-        </PixelButton>
-      )}
     </div>
   )
 }
 
 export default function BombPanel({
   wires,
-  currentWireId,
+  selectedWireId,
   mm,
   ss,
   secondsLeft = 60,
   message,
   onWireClick,
   wiresClickable,
+  showConfirmWire,
+  onConfirmWire,
+  showCutNow,
+  onCutNow,
+  hud,
 }) {
   const urgent = secondsLeft > 0 && secondsLeft <= 5
 
@@ -89,7 +65,7 @@ export default function BombPanel({
       )}
 
       <motion.div
-        className="w-full border-2 border-black shadow-window-offset"
+        className="w-full border-2 border-black shadow-window-offset flex items-center justify-center"
         animate={urgent ? { x: [0, -2, 2, -1, 1, 0] } : { x: 0 }}
         transition={{ duration: 0.4, repeat: urgent ? Infinity : 0 }}
       >
@@ -98,11 +74,17 @@ export default function BombPanel({
           ss={ss}
           urgent={urgent}
           wires={wires}
-          currentWireId={currentWireId}
+          selectedWireId={selectedWireId}
           wiresClickable={wiresClickable}
           onWireClick={onWireClick}
+          showConfirmWire={showConfirmWire}
+          onConfirmWire={onConfirmWire}
+          showCutNow={showCutNow}
+          onCutNow={onCutNow}
         />
       </motion.div>
+
+      {hud}
     </div>
   )
 }

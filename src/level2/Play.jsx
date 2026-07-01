@@ -4,12 +4,9 @@ import { play, startSiren, stopAll } from '../audio/sounds.js'
 import {
   TIMER_SECONDS,
   VOICE_1_LINE,
-  VOICE_1_HINT,
-  HINT_LABEL,
   LEGEND_LABEL,
   LEGEND_ROWS,
   VOICE_2_LINE,
-  VOICE_2_HINT,
   RECHECK_PROMPT,
   WIRES,
 } from '../data/level2.js'
@@ -26,18 +23,15 @@ function shuffled(arr) {
   return a
 }
 
-// The whole defusal happens as direct manipulation of the bomb panel, not a
-// menu of choices: click a wire to cut it (label-vs-legend conflict), click
-// a wire again once the calmer second voice contradicts the first
-// (authority bias), then either re-check the legend or hit CUT NOW under
-// max time pressure (confirmation bias). One 60s countdown, embedded in the
-// panel's own LED display, runs throughout — running out mid-decision is
-// itself a fail.
+// The whole defusal happens as direct manipulation of the bomb panel: pick a
+// wire under Voice 1, Voice 2 plays immediately, confirm (optionally change
+// wire first), then CUT NOW under time pressure. One 60s countdown runs
+// throughout — running out mid-decision is itself a fail.
 export default function Play({ onDone }) {
   const [wires] = useState(() => shuffled(WIRES))
   const [stage, setStage] = useState('choose1') // choose1 -> voice2 -> final
-  const [firstCut, setFirstCut] = useState(null)
-  const [currentWireId, setCurrentWireId] = useState(null)
+  const [firstSelection, setFirstSelection] = useState(null)
+  const [selectedWireId, setSelectedWireId] = useState(null)
   const [authorityChoice, setAuthorityChoice] = useState(null)
   const [secondsLeft, setSecondsLeft] = useState(TIMER_SECONDS)
   const doneRef = useRef(false)
@@ -62,9 +56,13 @@ export default function Play({ onDone }) {
 
   useEffect(() => {
     if (secondsLeft <= 0) {
-      finish({ firstCut, authorityChoice, finalAction: null })
+      finish({
+        firstCut: firstSelection,
+        authorityChoice,
+        finalAction: null,
+      })
     }
-  }, [secondsLeft, firstCut, authorityChoice])
+  }, [secondsLeft, firstSelection, authorityChoice])
 
   function finish(payload) {
     if (doneRef.current) return
@@ -74,68 +72,61 @@ export default function Play({ onDone }) {
   }
 
   function handleWireClick(id) {
+    play('wireSnip')
+    setSelectedWireId(id)
+
     if (stage === 'choose1') {
-      play('wireSnip')
-      setFirstCut(id)
-      setCurrentWireId(id)
+      setFirstSelection(id)
       setStage('voice2')
-      play('questionArrive')
-      return
-    }
-    if (stage === 'voice2') {
-      play('wireSnip')
-      setAuthorityChoice(id === firstCut ? 'stick' : 'switch')
-      setCurrentWireId(id)
-      setStage('final')
       play('questionArrive')
     }
   }
 
-  function handleRecheck() {
+  function handleConfirmWire() {
+    if (stage !== 'voice2' || !selectedWireId || firstSelection == null) return
     play('keyClick')
-    finish({ firstCut, authorityChoice, finalAction: 'recheck' })
+    setAuthorityChoice(selectedWireId === firstSelection ? 'stick' : 'switch')
+    setStage('final')
+    play('questionArrive')
   }
 
   function handleCutNow() {
     play('keyClick')
-    finish({ firstCut, authorityChoice, finalAction: 'gut' })
+    finish({
+      firstCut: firstSelection,
+      authorityChoice,
+      finalAction: 'gut',
+    })
   }
 
   const mm = String(Math.floor(Math.max(secondsLeft, 0) / 60)).padStart(2, '0')
   const ss = String(Math.max(secondsLeft, 0) % 60).padStart(2, '0')
 
   const message = stage === 'choose1' ? VOICE_1_LINE : stage === 'voice2' ? VOICE_2_LINE : RECHECK_PROMPT
-  const messageHint = stage === 'choose1' ? VOICE_1_HINT : stage === 'voice2' ? VOICE_2_HINT : null
 
   const urgent = secondsLeft > 0 && secondsLeft <= 5
 
   return (
     <div className={`relative h-full w-full bg-l4bg text-l4text overflow-hidden ${urgent ? 'shake' : ''}`}>
       <div className="h-full overflow-y-auto gw-scrollbar">
-        <div className="min-h-full flex flex-col items-center justify-center px-4 py-6 gap-4 pb-40">
+        <div className="min-h-full flex flex-col items-center justify-center px-4 py-6 gap-4">
           <BombPanel
             wires={wires}
-            currentWireId={currentWireId}
+            selectedWireId={selectedWireId}
             mm={mm}
             ss={ss}
             secondsLeft={secondsLeft}
             message={message}
             onWireClick={handleWireClick}
             wiresClickable={stage === 'choose1' || stage === 'voice2'}
+            showConfirmWire={stage === 'voice2' && selectedWireId != null}
+            onConfirmWire={handleConfirmWire}
+            showCutNow={stage === 'final'}
+            onCutNow={handleCutNow}
+            hud={<BombPlayHud legendLabel={LEGEND_LABEL} legendRows={LEGEND_ROWS} />}
           />
         </div>
       </div>
-
-      <BombPlayHud
-        hint={messageHint}
-        hintLabel={HINT_LABEL}
-        legendLabel={LEGEND_LABEL}
-        legendRows={LEGEND_ROWS}
-        showRecheck={stage === 'final'}
-        onRecheck={handleRecheck}
-        showCutNow={stage === 'final'}
-        onCutNow={handleCutNow}
-      />
     </div>
   )
 }

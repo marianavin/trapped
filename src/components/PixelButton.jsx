@@ -6,7 +6,7 @@ const VARIANTS = {
   dark: 'border-l4text text-l4text bg-l4panel hover:bg-l4text/10',
   light: 'border-l4text text-l4text bg-black/30 hover:bg-l4text/10',
   purple: 'border-[#4A3FA8] text-white bg-[#4A3FA8] hover:bg-[#5A4BB8] active:brightness-95 purple-glow-pulse',
-  ghost: 'border-white/20 text-l4text/55 bg-black/20 hover:bg-white/5 hover:text-l4text/75 hover:border-white/30',
+  ghost: 'border-l4text/50 text-l4text bg-black/30 hover:bg-white/5 hover:border-l4text/80',
 }
 
 const SIZES = {
@@ -39,7 +39,7 @@ export default function PixelButton({
         SIZES[size] || SIZES.md,
         glow,
         'active:scale-95',
-        isGhost ? 'active:brightness-100 opacity-80 hover:opacity-100' : 'active:brightness-125 hover:brightness-125',
+        isGhost ? 'active:brightness-100' : 'active:brightness-125 hover:brightness-125',
         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-cyan',
         disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
         full ? 'w-full' : '',

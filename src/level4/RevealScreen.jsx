@@ -10,7 +10,7 @@ const BIAS_ORDER = ['misinformation', 'anchoring', 'authority', 'confirmation']
 function Row({ label, truth, reported, wrong }) {
   return (
     <div className="grid grid-cols-2 gap-3 font-mono text-xs sm:text-sm">
-      <div className="text-l4text/70">{label}</div>
+      <div className="text-l4-muted">{label}</div>
       <div />
       <div className="text-escaped">{truth}</div>
       <div className={`${wrong ? 'text-caught' : 'text-escaped'} inline-flex items-center gap-1`}>

@@ -111,7 +111,7 @@ export default function Act2Keypad({ onDone }) {
           )}
         </motion.div>
 
-        <p className="font-mono text-[10px] sm:text-xs text-l3-prompt/70 mt-6">
+        <p className="font-mono text-[10px] sm:text-xs text-l3-label mt-6">
           MISTAKES: {mistakes}/{MAX_MISTAKES}
         </p>
       </div>
@@ -122,8 +122,8 @@ export default function Act2Keypad({ onDone }) {
 function PulsingVoice({ text }) {
   return (
     <motion.p
-      className="font-mono text-l3-prompt/80 text-xs sm:text-sm"
-      animate={{ opacity: [0.35, 1, 0.35] }}
+      className="font-mono text-l3-label text-xs sm:text-sm"
+      animate={{ opacity: [0.8, 1, 0.8] }}
       transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
     >
       {text}

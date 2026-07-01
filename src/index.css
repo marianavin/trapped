@@ -24,6 +24,11 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Readable text on dark glitchwave panels — prefer over text-l4text/40–/60 */
+.text-muted {
+  color: #B8D6E6;
+}
+
 /* --- Glitchwave design system ------------------------------------------ */
 
 /* Neon-glow panel chrome — cards, buttons, stat boxes */

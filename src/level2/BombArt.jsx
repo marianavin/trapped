@@ -23,13 +23,13 @@ const C = {
 function buildLayout() {
   const bx = 52
   const stickW = 216
-  const stickH = 20
-  const frontY = [40, 62, 84]
-  const backY = [50, 72]
+  const stickH = 36
+  const frontY = [34, 62, 90]
+  const backY = [44, 72]
   const backX = bx + 18
   const backW = stickW - 36
   const tx = bx + stickW / 2 - 44
-  const ty = 50
+  const ty = 53
   const tw = 88
   const th = 54
   const faceX = tx + 4
@@ -38,29 +38,50 @@ function buildLayout() {
   const faceH = th - 14
   const ropeY = frontY[0] - 8
   const ropeH = frontY[2] + stickH - ropeY + 12
-  const wireY = [58, 76, 94]
-  const viewH = 208
+  const wireY = frontY.map((y) => y + Math.round(stickH / 2))
+  const cutLeft = bx + 24
+  const cutRight = bx + stickW - 20
+
+  const contentTop = frontY[0] - 10
+  const contentBottom = ropeY + ropeH
+  const contentH = contentBottom - contentTop
+  const viewPad = 28
+  const actionStripH = 52
+  const viewH = contentH + viewPad * 2 + actionStripH
+  const offsetY = viewPad - contentTop
+  const shift = (y) => y + offsetY
+  const btnW = 208
+  const btnH = 20
+  const btnX = (320 - btnW) / 2
+  const actionsBottom = viewH - viewPad
+  const cutBtnY = actionsBottom - btnH
 
   return {
     bx,
     stickW,
     stickH,
-    frontY,
-    backY,
+    frontY: frontY.map(shift),
+    backY: backY.map(shift),
     backX,
     backW,
     tx,
-    ty,
+    ty: shift(ty),
     tw,
     th,
     faceX,
-    faceY,
+    faceY: shift(faceY),
     faceW,
     faceH,
-    ropeY,
+    ropeY: shift(ropeY),
     ropeH,
-    wireY,
+    wireY: wireY.map(shift),
+    cutLeft,
+    cutRight,
     viewH,
+    btnW,
+    btnH,
+    btnX,
+    cutBtnY,
   }
 }
 
@@ -107,87 +128,219 @@ function wireDash(pattern) {
 }
 
 function wirePath(index) {
-  const { tx, ty, tw, th, bx, stickW, wireY } = L
+  const { tx, ty, tw, th, bx, stickW, wireY, cutLeft, cutRight } = L
   const y = wireY[index]
   const labelX = 28
   const endX = bx + stickW + 20
+  const cutGap = 22
+  const cutX = index === 1 ? cutRight : cutLeft
+  const half = cutGap / 2
+
+  const base = { labelX, labelY: y, cutX, cutY: y, cutGap }
 
   if (index === 0) {
     return {
+      ...base,
       d: `M ${tx + 8} ${ty + 14} L ${labelX + 14} ${y} L ${endX} ${y}`,
-      labelX,
-      labelY: y,
-      cutX: bx + stickW / 2,
-      cutY: y,
+      dLeft: `M ${tx + 8} ${ty + 14} L ${labelX + 14} ${y} L ${cutX - half} ${y}`,
+      dRight: `M ${cutX + half} ${y} L ${endX} ${y}`,
     }
   }
   if (index === 1) {
     return {
+      ...base,
       d: `M ${tx + tw - 8} ${ty + 24} L ${labelX + 14} ${y} L ${endX} ${y}`,
-      labelX,
-      labelY: y,
-      cutX: bx + stickW - 36,
-      cutY: y,
+      dLeft: `M ${tx + tw - 8} ${ty + 24} L ${labelX + 14} ${y} L ${cutX - half} ${y}`,
+      dRight: `M ${cutX + half} ${y} L ${endX} ${y}`,
     }
   }
   return {
+    ...base,
     d: `M ${tx + tw / 2} ${ty + th} L ${tx + tw / 2} ${y} L ${labelX + 14} ${y} L ${endX} ${y}`,
-    labelX,
-    labelY: y,
-    cutX: bx + 48,
-    cutY: y,
+    dLeft: `M ${tx + tw / 2} ${ty + th} L ${tx + tw / 2} ${y} L ${labelX + 14} ${y} L ${cutX - half} ${y}`,
+    dRight: `M ${cutX + half} ${y} L ${endX} ${y}`,
   }
 }
 
-function WireGraphics({ wire, index, isCurrent }) {
-  const { d, labelX, labelY, cutX, cutY } = wirePath(index)
-  const dash = wireDash(wire.pattern)
+function wireStroke(path, wire, dash, shadow = false) {
+  return (
+    <path
+      d={path}
+      fill="none"
+      stroke={shadow ? C.black : wire.color}
+      strokeWidth={shadow ? 9 : 6}
+      strokeLinecap="square"
+      strokeDasharray={dash}
+      opacity={shadow ? 0.25 : 1}
+    />
+  )
+}
+
+function WireCutOverlay({ wire, index }) {
+  const { cutX, cutY, cutGap } = wirePath(index)
+  const halfGap = cutGap / 2
 
   return (
     <g pointerEvents="none" aria-hidden="true">
-      <path d={d} fill="none" stroke={C.black} strokeWidth={9} strokeLinecap="square" strokeDasharray={dash} opacity={0.25} />
-      <path d={d} fill="none" stroke={wire.color} strokeWidth={6} strokeLinecap="square" strokeDasharray={dash} />
-      <rect x={labelX - 10} y={labelY - 9} width={20} height={16} fill={C.labelBg} stroke={C.black} strokeWidth={2} />
-      <text x={labelX} y={labelY + 3} textAnchor="middle" className="font-pixel" fontSize={8} fill={C.labelText}>
+      <rect x={cutX - halfGap - 8} y={cutY - 4} width={7} height={8} fill={wire.color} stroke={C.black} strokeWidth={2} />
+      <rect x={cutX - halfGap - 5} y={cutY - 1} width={4} height={2} fill="#C9A227" />
+      <rect x={cutX + halfGap + 1} y={cutY - 4} width={7} height={8} fill={wire.color} stroke={C.black} strokeWidth={2} />
+      <rect x={cutX + halfGap + 2} y={cutY - 1} width={4} height={2} fill="#C9A227" />
+      <line x1={cutX - halfGap - 6} y1={cutY - 6} x2={cutX + halfGap + 6} y2={cutY + 6} stroke={C.black} strokeWidth={2} />
+      <line x1={cutX - halfGap - 6} y1={cutY + 6} x2={cutX + halfGap + 6} y2={cutY - 6} stroke="#FF3131" strokeWidth={2} />
+    </g>
+  )
+}
+
+function WireGraphics({ wire, index, isSelected }) {
+  const { d, dLeft, dRight, labelX, labelY } = wirePath(index)
+  const dash = wireDash(wire.pattern)
+
+  return (
+    <g pointerEvents="none" aria-hidden="true" opacity={isSelected ? 0.92 : 1}>
+      {isSelected ? (
+        <>
+          {wireStroke(dLeft, wire, dash, true)}
+          {wireStroke(dLeft, wire, dash)}
+          {wireStroke(dRight, wire, dash, true)}
+          {wireStroke(dRight, wire, dash)}
+        </>
+      ) : (
+        <>
+          {wireStroke(d, wire, dash, true)}
+          {wireStroke(d, wire, dash)}
+        </>
+      )}
+      <rect
+        x={labelX - 10}
+        y={labelY - 9}
+        width={20}
+        height={16}
+        fill={C.labelBg}
+        stroke={C.black}
+        strokeWidth={2}
+        opacity={isSelected ? 0.55 : 1}
+      />
+      <text
+        x={labelX}
+        y={labelY + 3}
+        textAnchor="middle"
+        className="font-pixel"
+        fontSize={8}
+        fill={C.labelText}
+        opacity={isSelected ? 0.55 : 1}
+      >
         {wire.shortLabel}
       </text>
-      {isCurrent && (
-        <>
-          <rect x={cutX - 4} y={cutY - 4} width={8} height={8} fill={wire.color} stroke={C.black} strokeWidth={1} />
-          <text x={cutX - 10} y={cutY - 10} fontSize={9}>
-            ✂️
-          </text>
-        </>
+      {isSelected && (
+        <line x1={labelX - 8} y1={labelY + 1} x2={labelX + 8} y2={labelY + 1} stroke="#FF3131" strokeWidth={2} />
       )}
     </g>
   )
 }
 
-function WireHitTarget({ wire, index, clickable, onClick }) {
-  const { d, labelX, labelY } = wirePath(index)
+function WireSegmentHit({ wire, index, clickable, selected, onClick }) {
+  if (!clickable) return null
+
+  const { bx, stickW, wireY } = L
+  const y = wireY[index]
+  const startX = 44
+
+  function activate(e) {
+    e.stopPropagation()
+    onClick(wire.id)
+  }
+
+  return (
+    <line
+      role="radio"
+      aria-checked={selected}
+      aria-label={`Cut ${wire.label}`}
+      x1={startX}
+      y1={y}
+      x2={bx + stickW}
+      y2={y}
+      stroke="transparent"
+      strokeWidth={8}
+      strokeLinecap="round"
+      onClick={activate}
+      style={{ cursor: 'pointer', pointerEvents: 'all' }}
+    />
+  )
+}
+
+function WireLabelHit({ wire, index, clickable, selected, onClick }) {
+  if (!clickable) return null
+
+  const { labelX, labelY } = wirePath(index)
   const aria = `Cut ${wire.label}${wire.pattern === 'stripe' ? ', striped texture' : wire.pattern === 'dotted' ? ', dotted texture' : ', solid texture'}`
 
   function activate(e) {
-    if (!clickable) return
     e.stopPropagation()
     onClick(wire.id)
   }
 
   function onKeyDown(e) {
-    if (clickable && (e.key === 'Enter' || e.key === ' ')) {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
       onClick(wire.id)
     }
   }
 
-  if (!clickable) return null
+  return (
+    <rect
+      role="radio"
+      tabIndex={0}
+      aria-checked={selected}
+      aria-label={aria}
+      x={labelX - 10}
+      y={labelY - 9}
+      width={20}
+      height={16}
+      fill="transparent"
+      onClick={activate}
+      onKeyDown={onKeyDown}
+      style={{ cursor: 'pointer', pointerEvents: 'all' }}
+    />
+  )
+}
 
-  const hitStyle = { cursor: 'pointer', pointerEvents: 'all' }
+function SvgActionButton({ x, y, width, height, label, variant, fontSize = 8, onClick }) {
+  const border = variant === 'danger' ? C.timerUrgent : '#00F0FF'
+  const text = variant === 'danger' ? C.timerUrgent : '#00F0FF'
+
+  function activate(e) {
+    e.stopPropagation()
+    onClick?.()
+  }
+
+  function onKeyDown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onClick?.()
+    }
+  }
 
   return (
-    <g role="button" tabIndex={0} aria-label={aria} onKeyDown={onKeyDown}>
-      <path d={d} fill="none" stroke="transparent" strokeWidth={24} strokeLinecap="round" onClick={activate} style={hitStyle} />
-      <rect x={labelX - 14} y={labelY - 12} width={28} height={24} fill="transparent" onClick={activate} style={hitStyle} />
+    <g
+      role="button"
+      tabIndex={0}
+      onClick={activate}
+      onKeyDown={onKeyDown}
+      style={{ cursor: 'pointer', pointerEvents: 'all' }}
+    >
+      <rect x={x} y={y} width={width} height={height} fill="rgba(0,0,0,0.4)" stroke={C.black} strokeWidth={2} />
+      <rect x={x + 2} y={y + 2} width={width - 4} height={height - 4} fill="rgba(0,0,0,0.25)" stroke={border} strokeWidth={2} />
+      <text
+        x={x + width / 2}
+        y={y + height / 2 + 3}
+        textAnchor="middle"
+        className="font-pixel"
+        fontSize={fontSize}
+        fill={text}
+      >
+        {label}
+      </text>
     </g>
   )
 }
@@ -197,11 +350,38 @@ export default function BombArt({
   ss,
   urgent,
   wires = [],
-  currentWireId,
+  selectedWireId,
   wiresClickable,
   onWireClick,
+  showConfirmWire,
+  onConfirmWire,
+  showCutNow,
+  onCutNow,
 }) {
-  const { bx, stickW, stickH, frontY, backY, backX, backW, tx, ty, tw, th, faceX, faceY, faceW, faceH, ropeY, ropeH, viewH } = L
+  const {
+    bx,
+    stickW,
+    stickH,
+    frontY,
+    backY,
+    backX,
+    backW,
+    tx,
+    ty,
+    tw,
+    th,
+    faceX,
+    faceY,
+    faceW,
+    faceH,
+    ropeY,
+    ropeH,
+    viewH,
+    btnW,
+    btnH,
+    btnX,
+    cutBtnY,
+  } = L
 
   return (
     <svg viewBox={`0 0 320 ${viewH}`} className="w-full h-auto block" shapeRendering="crispEdges">
@@ -235,7 +415,7 @@ export default function BombArt({
 
       {/* wires draped over the bundle */}
       {wires.map((w, i) => (
-        <WireGraphics key={w.id} wire={w} index={i} isCurrent={w.id === currentWireId} />
+        <WireGraphics key={w.id} wire={w} index={i} isSelected={w.id === selectedWireId} />
       ))}
 
       <RopeColumn x={bx - 14} y={ropeY} h={ropeH} />
@@ -267,21 +447,67 @@ export default function BombArt({
         </motion.text>
       </g>
 
-      {/* hit targets on top so ropes/timer never block label clicks */}
-      {wires.map((w, i) => (
-        <WireHitTarget
-          key={`hit-${w.id}`}
-          wire={w}
-          index={i}
-          clickable={wiresClickable}
-          onClick={onWireClick}
-        />
-      ))}
+      {/* cut marks on top of timer so they stay visible */}
+      {wires.map((w, i) =>
+        w.id === selectedWireId ? <WireCutOverlay key={`cut-${w.id}`} wire={w} index={i} /> : null,
+      )}
+
+      {/* hit targets on top — segment first, then labels so letters stay precise */}
+      <g role="radiogroup" aria-label="Choose a wire to cut">
+        {wires.map((w, i) => (
+          <WireSegmentHit
+            key={`seg-${w.id}`}
+            wire={w}
+            index={i}
+            clickable={wiresClickable}
+            selected={w.id === selectedWireId}
+            onClick={onWireClick}
+          />
+        ))}
+        {wires.map((w, i) => (
+          <WireLabelHit
+            key={`label-${w.id}`}
+            wire={w}
+            index={i}
+            clickable={wiresClickable}
+            selected={w.id === selectedWireId}
+            onClick={onWireClick}
+          />
+        ))}
+      </g>
 
       <g pointerEvents="none" aria-hidden="true">
         <rect x={bx + 8} y={frontY[0] - 10} width={4} height={8} fill={C.black} />
         <rect x={bx + stickW - 12} y={frontY[0] - 10} width={4} height={8} fill={C.black} />
       </g>
+
+      {(showConfirmWire || showCutNow) && (
+        <g aria-label="Defusal actions">
+          {showConfirmWire && (
+            <SvgActionButton
+              x={btnX}
+              y={cutBtnY}
+              width={btnW}
+              height={btnH}
+              label="CONFIRM SELECTED WIRE"
+              variant="primary"
+              fontSize={7}
+              onClick={onConfirmWire}
+            />
+          )}
+          {showCutNow && (
+            <SvgActionButton
+              x={btnX}
+              y={cutBtnY}
+              width={btnW}
+              height={btnH}
+              label="CUT NOW"
+              variant="danger"
+              onClick={onCutNow}
+            />
+          )}
+        </g>
+      )}
     </svg>
   )
 }

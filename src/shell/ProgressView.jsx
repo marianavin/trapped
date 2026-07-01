@@ -12,10 +12,10 @@ function LevelRow({ level, result, locked }) {
   return (
     <ListRow>
       <div className="flex flex-col flex-1 min-w-0">
-        <span className={`font-pixel text-[9px] sm:text-[10px] ${locked ? 'text-l4text/60' : 'text-accent-cyan'}`}>
+        <span className={`font-pixel text-[9px] sm:text-[10px] ${locked ? 'text-l4-muted' : 'text-accent-cyan'}`}>
           LEVEL {level.index} — {level.title}
         </span>
-        <span className="text-l4text/60 text-[10px] sm:text-xs mt-1">{status}</span>
+        <span className="text-l4-muted text-[10px] sm:text-xs mt-1">{status}</span>
       </div>
       <div className="text-right shrink-0">
         {completed ? (
@@ -26,12 +26,12 @@ function LevelRow({ level, result, locked }) {
               </span>
               {result.outcomeSuccess ? 'SURVIVED' : 'DID NOT SURVIVE'}
             </div>
-            <div className="text-l4text/60">
+            <div className="text-l4-muted">
               {result.escapedCount}/{result.totalBiases} BIASES ESCAPED
             </div>
           </>
         ) : (
-          <span className="text-l4text/40">—</span>
+          <span className="text-l4-muted">—</span>
         )}
       </div>
     </ListRow>
@@ -48,19 +48,19 @@ export default function ProgressView({ progress }) {
           <p className="font-pixel text-xl sm:text-2xl">
             {totals.scenariosSurvived}/{totals.scenariosTotal}
           </p>
-          <p className="font-mono text-[10px] sm:text-xs text-l4text/60 mt-2">SCENARIOS SURVIVED</p>
+          <p className="font-mono text-[10px] sm:text-xs text-l4-muted mt-2">SCENARIOS SURVIVED</p>
         </StatCard>
         <StatCard tone="cyan">
           <p className="font-pixel text-xl sm:text-2xl">
             {totals.biasesEscaped}/{totals.biasesAttempted || 0}
           </p>
-          <p className="font-mono text-[10px] sm:text-xs text-l4text/60 mt-2">BIASES ESCAPED</p>
+          <p className="font-mono text-[10px] sm:text-xs text-l4-muted mt-2">BIASES ESCAPED</p>
         </StatCard>
       </div>
 
       <div className="text-center">
         <p className="font-pixel text-lg sm:text-xl text-accent-cyan">{totals.points} POINTS</p>
-        <p className="font-mono text-[10px] text-l4text/60 mt-1">
+        <p className="font-mono text-[10px] text-l4-muted mt-1">
           {totals.levelsCompleted}/{totals.levelsBuilt} AVAILABLE LEVELS COMPLETE
         </p>
       </div>

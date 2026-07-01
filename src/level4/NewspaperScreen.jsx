@@ -33,7 +33,7 @@ export default function NewspaperScreen({ onProceed }) {
           aria-hidden="true"
         />
 
-        <p className="font-pixel text-[9px] tracking-widest text-reveal-text/60 mb-2">
+        <p className="font-pixel text-[9px] tracking-widest text-reveal-muted mb-2">
           {NEWSPAPER.kicker} · {NEWSPAPER.date}
         </p>
         <h1 className="font-pixel text-sm sm:text-base leading-relaxed mb-4">{NEWSPAPER.headline}</h1>

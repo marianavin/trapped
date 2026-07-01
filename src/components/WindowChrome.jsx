@@ -18,7 +18,7 @@ export function WindowChromeTrail({ title, tone = 'cyan', style, className = '' 
     >
       {title && (
         <div className={`flex items-center justify-between gap-2 px-2 py-1.5 border-b-2 border-black ${titleBarToneClass(tone)}`}>
-          <span className="font-pixel text-[7px] sm:text-[8px] text-black tracking-wide truncate uppercase opacity-80">
+          <span className="font-pixel text-[7px] sm:text-[8px] text-black tracking-wide truncate uppercase">
             {title}
           </span>
         </div>

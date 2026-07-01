@@ -18,7 +18,7 @@ export function TabButton({ id, label, active, controls, onClick, activeClassNam
       className={[
         'font-pixel text-[8px] sm:text-[9px] px-2 py-2 rounded-sm transition-colors',
         FOCUS_RING,
-        active ? activeClassName : 'text-l4text/60 hover:text-l4text/80',
+        active ? activeClassName : 'text-l4-muted hover:text-l4text/80',
       ].join(' ')}
     >
       {label}
@@ -59,7 +59,7 @@ export function PanelCard({
         'text-left p-4 flex flex-col gap-2 transition-all border-2 rounded-sm',
         FOCUS_RING,
         disabled
-          ? 'bg-l4panel/50 text-l4text/60 border-l4text/20 cursor-not-allowed'
+          ? 'bg-l4bg/60 text-l4-muted border-l4text/15 cursor-not-allowed opacity-60 saturate-[0.45]'
           : `gw-panel-grid text-l4text cursor-pointer hover:brightness-110 active:scale-[0.98] ${borderClass}`,
         className,
       ].join(' ')}
@@ -235,7 +235,7 @@ export function AbortDialog({ open, onConfirm, onCancel }) {
   return (
     <div className="absolute inset-0 z-[70] flex items-center justify-center bg-black/70 p-4">
       <WindowChrome title="ABORT PROTOCOL" tone="danger" className="w-full max-w-xs">
-        <p className="font-mono text-xs text-l4text/80 text-center leading-relaxed mb-4">
+        <p className="font-mono text-xs text-l4text text-center leading-relaxed mb-4">
           EXIT THIS LEVEL?
           <br />
           PROGRESS WON&apos;T BE SAVED.
@@ -259,7 +259,7 @@ export function TextInput({ className = '', ...props }) {
     <input
       className={[
         'font-pixel text-[10px] w-full bg-black/40 rounded-sm border-[1.5px] border-accent-cyan text-l4text px-3 py-3 text-center',
-        'placeholder:text-l4text/50',
+        'placeholder:text-l4-muted',
         'focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-accent-cyan',
         className,
       ].join(' ')}
@@ -285,7 +285,7 @@ export function ListRow({ children, highlight = false, className = '' }) {
 
 export function RankBadge({ rank }) {
   const label = rank === 0 ? '1ST' : rank === 1 ? '2ND' : rank === 2 ? '3RD' : String(rank + 1)
-  const accent = rank < 3 ? 'text-accent-cyan' : 'text-l4text/50'
+  const accent = rank < 3 ? 'text-accent-cyan' : 'text-l4-muted'
   return (
     <span className={`font-pixel text-[8px] sm:text-[9px] w-7 text-center shrink-0 ${accent}`}>{label}</span>
   )

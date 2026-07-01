@@ -68,7 +68,7 @@ export default function LoginScreen() {
                 CONTINUE WITH GOOGLE
               </PixelButton>
               {ALLOWED_EMAIL_DOMAIN && (
-                <p className="font-mono text-xs text-l4text/60">@{ALLOWED_EMAIL_DOMAIN} accounts only</p>
+                <p className="font-mono text-xs text-l4-muted">@{ALLOWED_EMAIL_DOMAIN} accounts only</p>
               )}
               {authError && (
                 <p role="alert" className="font-mono text-xs text-caught">

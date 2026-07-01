@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import Keypad from '../Keypad.jsx'
 import PhoneFrame from '../PhoneFrame.jsx'
 import TrialLayout from '../TrialLayout.jsx'
+import { useTrialHint } from '../TrialHintContext.jsx'
 import { scrambledLayout } from '../data.js'
 import { speak, cancelSpeech } from '../speech.js'
 import { play } from '../../../audio/sounds.js'
@@ -23,6 +24,8 @@ export default function Task4LoudNumber({ timeRemainingMs, onDone }) {
   const [anchorLeaks, setAnchorLeaks] = useState(0)
   const layout = useRef(scrambledLayout(53)).current
   const finishedRef = useRef(false)
+
+  useTrialHint('“SEVEN. THREE. EIGHT. TWO.”')
 
   useEffect(() => {
     setTimeout(() => speak('seven, three, eight, two', { rate: 0.7 }), 1200)
@@ -74,13 +77,8 @@ export default function Task4LoudNumber({ timeRemainingMs, onDone }) {
       header={
         <>
           <p className="font-pixel text-[10px] text-l3-prompt">TRIAL 4 / 4</p>
-          <p className="font-pixel text-[10px] text-white/60 mt-1">DIAL THE ACCESS CODE</p>
+          <p className="font-pixel text-[10px] text-l3-label mt-1">DIAL THE ACCESS CODE</p>
         </>
-      }
-      prompt={
-        <p className="font-mono text-l3-label text-lg tracking-widest">
-          &ldquo;SEVEN. THREE. EIGHT. TWO.&rdquo;
-        </p>
       }
       phone={
         <PhoneFrame display={dialed.join('')}>

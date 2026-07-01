@@ -11,10 +11,10 @@ function Row({ entry, rank, isSelf }) {
         {entry.nickname}
         {isSelf ? ' (YOU)' : ''}
       </span>
-      <span className="text-l4text/60 text-[10px] sm:text-xs shrink-0">
+      <span className="text-l4-muted text-[10px] sm:text-xs shrink-0">
         {entry.scenariosSurvived}/{entry.levelsCompleted} SURVIVED
       </span>
-      <span className="text-l4text/60 text-[10px] sm:text-xs shrink-0">
+      <span className="text-l4-muted text-[10px] sm:text-xs shrink-0">
         {entry.biasesEscaped}/{entry.biasesAttempted} BIASES
       </span>
       <span className="font-pixel text-[10px] sm:text-xs text-accent-cyan shrink-0 w-16 text-right">
@@ -27,7 +27,7 @@ function Row({ entry, rank, isSelf }) {
 function EmptyState({ message }) {
   return (
     <div className="w-full max-w-2xl mx-auto p-5 text-center">
-      <p className="font-mono text-xs text-l4text/70">{message}</p>
+      <p className="font-mono text-xs text-l4-muted">{message}</p>
     </div>
   )
 }

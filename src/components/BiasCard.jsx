@@ -51,7 +51,7 @@ export default function BiasCard({ name, fellFor, lines, index, subtitle, info }
             <span className="text-l4text">{name}</span>
           </h3>
           {subtitle && (
-            <p className="font-mono text-[10px] sm:text-xs text-l4text/50 mt-1">{subtitle}</p>
+            <p className="font-mono text-[10px] sm:text-xs text-l4-muted mt-1">{subtitle}</p>
           )}
         </div>
         <span

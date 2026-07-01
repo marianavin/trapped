@@ -20,6 +20,7 @@ export default {
         l4street: '#00F0FF',
         l4panel: '#1A1A3A',
         l4text: '#E8F8FF',
+        'l4-muted': '#B8D6E6',
         l4flash: '#F5FBFF',
         wrong: '#FF3131',
         correct: '#00F0FF',
@@ -41,6 +42,7 @@ export default {
         // Reveal — light "printed document" surfaces on the dark grid
         revealbg: '#F0F0F5',
         revealtext: '#121225',
+        'reveal-muted': '#4A5568',
         escaped: '#00F0FF',
         caught: '#FF3131',
         'reveal-bg': '#F0F0F5',

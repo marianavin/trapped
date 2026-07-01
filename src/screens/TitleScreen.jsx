@@ -19,7 +19,7 @@ export default function TitleScreen({ onBegin }) {
       <ScreenHeader title="TRAPPED" subtitle="Your mind is the obstacle." />
 
       <WindowChrome title="SYSTEM // INIT" className="w-full max-w-sm">
-        <div className="font-mono text-xs sm:text-sm text-l4text/80 leading-relaxed text-center flex flex-col gap-2">
+        <div className="font-mono text-xs sm:text-sm text-l4text leading-relaxed text-center flex flex-col gap-2">
           <p>THREE SCENARIOS.</p>
           <p>YOUR CONFIDENCE IS THE TRAP.</p>
           <p>QUESTION EVERYTHING THAT FEELS OBVIOUS.</p>

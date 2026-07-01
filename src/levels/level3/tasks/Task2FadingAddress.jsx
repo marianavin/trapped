@@ -4,6 +4,7 @@ import Keypad from '../Keypad.jsx'
 import { scrambledLayout } from '../data.js'
 import PhoneFrame from '../PhoneFrame.jsx'
 import TrialLayout from '../TrialLayout.jsx'
+import { useTrialHint } from '../TrialHintContext.jsx'
 import { speak, cancelSpeech } from '../speech.js'
 import { play } from '../../../audio/sounds.js'
 
@@ -26,6 +27,10 @@ export default function Task2FadingAddress({ timeRemainingMs, onDone }) {
   const dialLayout = useRef(scrambledLayout(11)).current
   const recallLayout = useRef(scrambledLayout(29)).current
   const finishedRef = useRef(false)
+
+  const hintText =
+    phase === 'dial' ? '“ONE. ONE. TWO.”' : phase === 'recall' ? 'ADDRESS DIGITS' : null
+  useTrialHint(hintText, { animate: phase === 'dial' })
 
   useEffect(() => {
     if (phase !== 'flash') return
@@ -87,14 +92,13 @@ export default function Task2FadingAddress({ timeRemainingMs, onDone }) {
       header={
         <>
           <p className="font-pixel text-[10px] text-l3-prompt">TRIAL 2 / 4</p>
-          <p className="font-pixel text-[10px] text-white/60 mt-1">
+          <p className="font-pixel text-[10px] text-l3-label mt-1">
             {phase === 'flash' && 'REMEMBER THE ADDRESS'}
             {phase === 'dial' && 'FIRST — DIAL 1-1-2'}
             {phase === 'recall' && 'NOW — ADDRESS DIGITS'}
           </p>
         </>
       }
-      prompt={null}
       phone={
         <AnimatePresence mode="wait">
           {phase === 'flash' ? (
@@ -128,7 +132,7 @@ export default function Task2FadingAddress({ timeRemainingMs, onDone }) {
         </AnimatePresence>
       }
       footer={
-        <p className="font-pixel text-[9px] text-l3-prompt/60">
+        <p className="font-pixel text-[9px] text-l3-label">
           {phase === 'recall' ? `${recall.length}/${ADDRESS_DIGITS.length}` : ''}
         </p>
       }

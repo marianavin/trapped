@@ -1,4 +1,4 @@
-import { LEVELS, TOTAL_LEVEL_COUNT } from './levels.js'
+import { LEVELS, getBuiltLevels } from './levels.js'
 
 const POINTS_PER_SURVIVED = 100
 const POINTS_PER_BIAS_ESCAPED = 25
@@ -10,6 +10,7 @@ const POINTS_PER_BIAS_ESCAPED = 25
 export function computeTotals(progress) {
   const completedIds = Object.keys(progress)
   const completed = completedIds.map((id) => progress[id])
+  const levelsBuilt = getBuiltLevels().length
 
   const scenariosSurvived = completed.filter((r) => r.outcomeSuccess).length
   const biasesEscaped = completed.reduce((sum, r) => sum + (r.escapedCount || 0), 0)
@@ -21,10 +22,10 @@ export function computeTotals(progress) {
   return {
     points,
     scenariosSurvived,
-    scenariosTotal: TOTAL_LEVEL_COUNT, // the full game — see levels.js
+    scenariosTotal: levelsBuilt,
     biasesEscaped,
     biasesAttempted, // grows as more levels are built and played
     levelsCompleted: completedIds.length,
-    levelsBuilt: LEVELS.filter((l) => l.built).length,
+    levelsBuilt,
   }
 }

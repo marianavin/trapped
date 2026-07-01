@@ -9,7 +9,7 @@ export function ScreenHeader({ title, subtitle, compact = false, className = '' 
         <p
           className={[
             'font-mono max-w-md mx-auto',
-            compact ? 'text-[10px] text-l4text/50 mt-2' : 'text-sm sm:text-base text-l4text/75 mt-4',
+            compact ? 'text-[10px] text-l4-muted mt-2' : 'text-sm sm:text-base text-l4text/85 mt-4',
           ].join(' ')}
         >
           {subtitle}
@@ -27,8 +27,8 @@ const AUTHORS = [
 export function StatusFooter({ left = 'TRAPPED v0.1', right = 'D&R FUNCTION DAYS · Q2 2026' }) {
   return (
     <footer className="cabinet-footer-inner px-4 py-1.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-      <span className="font-mono text-[9px] sm:text-[10px] text-accent-cyan/60">{left}</span>
-      <span className="font-mono text-[9px] sm:text-[10px] text-l4text/40">
+      <span className="font-mono text-[9px] sm:text-[10px] text-accent-cyan">{left}</span>
+      <span className="font-mono text-[9px] sm:text-[10px] text-l4text">
         Authors:{' '}
         {AUTHORS.map((author, i) => (
           <span key={author.url}>
@@ -37,14 +37,14 @@ export function StatusFooter({ left = 'TRAPPED v0.1', right = 'D&R FUNCTION DAYS
               href={author.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-cyan/60 hover:text-accent-cyan underline underline-offset-2"
+              className="text-accent-cyan hover:text-accent-cyan underline underline-offset-2"
             >
               {author.handle}
             </a>
           </span>
         ))}
       </span>
-      <span className="font-mono text-[9px] sm:text-[10px] text-l4text/40">{right}</span>
+      <span className="font-mono text-[9px] sm:text-[10px] text-l4text">{right}</span>
     </footer>
   )
 }

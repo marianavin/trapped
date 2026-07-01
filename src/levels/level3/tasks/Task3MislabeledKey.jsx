@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Keypad from '../Keypad.jsx'
 import PhoneFrame from '../PhoneFrame.jsx'
 import TrialLayout from '../TrialLayout.jsx'
+import { useTrialHint } from '../TrialHintContext.jsx'
 import { scrambledLayout } from '../data.js'
 import { speak, cancelSpeech } from '../speech.js'
 import { play } from '../../../audio/sounds.js'
@@ -27,6 +28,8 @@ export default function Task3MislabeledKey({ timeRemainingMs, onDone, trial3Layo
     pickHot(layout.map((d, i) => (d ? i : -1)).filter((i) => i >= 0))
   ).current
   const hotKeys = useRef(new Set(hotSet)).current
+
+  useTrialHint('“SEVEN. THREE. EIGHT. TWO.”')
 
   useEffect(() => {
     setTimeout(() => speak('seven, three, eight, two', { rate: 0.7 }), 300)
@@ -68,11 +71,6 @@ export default function Task3MislabeledKey({ timeRemainingMs, onDone, trial3Layo
   return (
     <TrialLayout
       header={<p className="font-pixel text-[10px] text-l3-prompt">TRIAL 3 / 4</p>}
-      prompt={
-        <p className="font-mono text-l3-label text-lg tracking-widest">
-          &ldquo;SEVEN. THREE. EIGHT. TWO.&rdquo;
-        </p>
-      }
       phone={
         <PhoneFrame display={dialed.join('')}>
           <Keypad
