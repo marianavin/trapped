@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
-import { motion } from 'framer-motion'
 import { TRUTH, BIAS_CARDS, buildReport } from '../data/level4.js'
 import BiasCard from '../components/BiasCard.jsx'
 import PixelButton from '../components/PixelButton.jsx'
+import { RevealScreen } from '../components/GameUI.jsx'
 import { play } from '../audio/sounds.js'
 
 const BIAS_ORDER = ['misinformation', 'anchoring', 'authority', 'confirmation']
@@ -23,7 +23,7 @@ function Row({ label, truth, reported, wrong }) {
   )
 }
 
-export default function RevealScreen({ answers, results, onContinue }) {
+export default function RevealScreenLevel4({ answers, results, onContinue }) {
   useEffect(() => {
     play('revealLoad')
   }, [])
@@ -31,10 +31,15 @@ export default function RevealScreen({ answers, results, onContinue }) {
   const report = buildReport(answers)
 
   return (
-    <div className="h-full w-full overflow-y-auto bg-l4bg text-l4text px-5 py-8 flex flex-col items-center gap-8">
-      <h2 className="font-pixel text-sm sm:text-base text-center text-accent-cyan tracking-widest glitch-shift">WHAT YOU SAW VS. WHAT YOU REPORTED</h2>
-
-      <div className="w-full max-w-md flex flex-col gap-2">
+    <RevealScreen
+      title="WHAT YOU SAW VS. WHAT YOU REPORTED"
+      actions={
+        <PixelButton variant="primary" onClick={onContinue}>
+          NEXT
+        </PixelButton>
+      }
+    >
+      <div className="flex flex-col gap-2 -mt-2">
         <div className="grid grid-cols-2 gap-3 font-pixel text-[9px] sm:text-[10px] mb-1">
           <div>WHAT HAPPENED</div>
           <div>YOUR REPORT</div>
@@ -45,31 +50,23 @@ export default function RevealScreen({ answers, results, onContinue }) {
         <Row label="Direction" truth={TRUTH.direction} reported={report.direction} wrong={report.direction !== TRUTH.direction} />
       </div>
 
-      <p className="font-mono text-sm italic text-center max-w-sm">
+      <p className="font-mono text-sm italic text-center max-w-sm mx-auto">
         "You didn't see a dark car. You agreed to one."
       </p>
 
-      <div className="w-full max-w-md flex flex-col gap-4">
-        {BIAS_ORDER.map((key, i) => {
-          const fellFor = results[key]
-          const card = BIAS_CARDS[key]
-          return (
-            <BiasCard
-              key={key}
-              index={i}
-              name={card.name}
-              fellFor={fellFor}
-              lines={fellFor ? card.fellFor : card.escaped}
-            />
-          )
-        })}
-      </div>
-
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}>
-        <PixelButton variant="primary" onClick={onContinue}>
-          NEXT
-        </PixelButton>
-      </motion.div>
-    </div>
+      {BIAS_ORDER.map((key, i) => {
+        const fellFor = results[key]
+        const card = BIAS_CARDS[key]
+        return (
+          <BiasCard
+            key={key}
+            index={i}
+            name={card.name}
+            fellFor={fellFor}
+            lines={fellFor ? card.fellFor : card.escaped}
+          />
+        )
+      })}
+    </RevealScreen>
   )
 }

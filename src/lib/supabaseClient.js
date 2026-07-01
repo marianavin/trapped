@@ -16,3 +16,11 @@ export const supabase = isSupabaseConfigured
 // Restricts Google sign-in to a single Google Workspace domain (your org's
 // emails). Set VITE_ALLOWED_EMAIL_DOMAIN in .env, e.g. "vinted.com".
 export const ALLOWED_EMAIL_DOMAIN = import.meta.env.VITE_ALLOWED_EMAIL_DOMAIN || null
+
+// Google SSO is parked for now (no Google Cloud project access for the
+// Function Days build) — the game runs on nickname-only login regardless of
+// whether Supabase is configured. Supabase, when configured, is still used
+// to persist progress and power the leaderboard (see progressStore.js).
+// Flip this to true once Google auth is actually wired up in the Supabase
+// dashboard (see SUPABASE_SETUP.md) to bring back the Google login screen.
+export const GOOGLE_SSO_ENABLED = false

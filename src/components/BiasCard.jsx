@@ -21,7 +21,7 @@ export default function BiasCard({ name, fellFor, lines, index, subtitle, info }
       initial={{ opacity: 0, rotateY: -90 }}
       animate={{ opacity: 1, rotateY: 0 }}
       transition={{ duration: 0.35, delay: index * 0.3 }}
-      className="border-2 rounded-sm bg-black/40 p-4 flex flex-col gap-2 text-white"
+      className="border-2 rounded-sm bg-black/40 p-4 flex flex-col gap-2 text-l4text"
       style={{ borderColor: glow, boxShadow: `0 0 4px ${glow}, 0 0 16px ${glow}66` }}
     >
       <div className="flex items-start justify-between gap-3">
@@ -48,10 +48,10 @@ export default function BiasCard({ name, fellFor, lines, index, subtitle, info }
               </span>
             )}
             <span className="text-neutral-400">Bias:</span>
-            <span className="text-white">{name}</span>
+            <span className="text-l4text">{name}</span>
           </h3>
           {subtitle && (
-            <p className="font-mono text-[10px] sm:text-xs text-white/50 mt-1">{subtitle}</p>
+            <p className="font-mono text-[10px] sm:text-xs text-l4text/50 mt-1">{subtitle}</p>
           )}
         </div>
         <span
@@ -64,7 +64,7 @@ export default function BiasCard({ name, fellFor, lines, index, subtitle, info }
           {fellFor ? 'FELL FOR IT' : 'ESCAPED'}
         </span>
       </div>
-      <div className="font-mono text-xs sm:text-sm leading-relaxed text-white/85">
+      <div className="font-mono text-xs sm:text-sm leading-relaxed text-l4text/85">
         {lines.map((l, i) => (
           <p key={i}>{l}</p>
         ))}

@@ -1,12 +1,24 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { supabase, isSupabaseConfigured, ALLOWED_EMAIL_DOMAIN } from './supabaseClient.js'
+import { supabase, isSupabaseConfigured, ALLOWED_EMAIL_DOMAIN, GOOGLE_SSO_ENABLED } from './supabaseClient.js'
+import { upsertPlayer } from './progressStore.js'
 
 const MOCK_USER_KEY = 'trapped_mock_user'
+
+// Nickname login is used whenever Google SSO isn't switched on, regardless
+// of whether Supabase itself is configured — see GOOGLE_SSO_ENABLED in
+// supabaseClient.js for why.
+const USE_GOOGLE_AUTH = GOOGLE_SSO_ENABLED && isSupabaseConfigured
 
 const AuthContext = createContext(null)
 
 function domainOf(email) {
   return typeof email === 'string' && email.includes('@') ? email.split('@')[1].toLowerCase() : null
+}
+
+function randomId() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID()
+  // Fallback for environments without crypto.randomUUID (older Safari).
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`
 }
 
 function loadMockUser() {
@@ -29,7 +41,7 @@ export function AuthProvider({ children }) {
   const [authError, setAuthError] = useState(null)
 
   useEffect(() => {
-    if (!isSupabaseConfigured) {
+    if (!USE_GOOGLE_AUTH) {
       const mock = loadMockUser()
       setUser(mock)
       setStatus(mock ? 'signedIn' : 'signedOut')
@@ -97,12 +109,18 @@ export function AuthProvider({ children }) {
     if (error) setAuthError(error.message)
   }
 
-  // Dev-mode stand-in for Google SSO — no password, no backend. Lets the
-  // shell be built and played end-to-end before Supabase is wired up.
+  // Nickname login — no password, no Google. This is the game's real login
+  // for the Function Days build (see GOOGLE_SSO_ENABLED). Each device keeps
+  // a stable random id across renames so replaying under a new nickname
+  // doesn't fork into a second leaderboard entry, and two different players
+  // who happen to type the same nickname never collide into one account
+  // (the old version derived the id from the name itself, which did collide).
   function signInMock(name) {
     const trimmed = (name || '').trim() || 'PLAYER'
+    const existing = loadMockUser()
+    const id = existing?.id || `mock-${randomId()}`
     const mockUser = {
-      id: `mock-${trimmed.toLowerCase().replace(/\s+/g, '-')}`,
+      id,
       email: `${trimmed.toLowerCase().replace(/\s+/g, '.')}@mock.local`,
       name: trimmed,
       avatarUrl: null,
@@ -110,10 +128,13 @@ export function AuthProvider({ children }) {
     localStorage.setItem(MOCK_USER_KEY, JSON.stringify(mockUser))
     setUser(mockUser)
     setStatus('signedIn')
+    // Sync the nickname to Supabase so the leaderboard can show it — best
+    // effort only, never blocks sign-in if it fails or Supabase isn't set up.
+    upsertPlayer(id, trimmed).catch((err) => console.error('upsertPlayer failed:', err.message))
   }
 
   async function signOut() {
-    if (isSupabaseConfigured) {
+    if (USE_GOOGLE_AUTH) {
       try {
         await supabase.auth.signOut()
       } catch (err) {
@@ -131,7 +152,7 @@ export function AuthProvider({ children }) {
       status,
       user,
       authError,
-      isMock: !isSupabaseConfigured,
+      isMock: !USE_GOOGLE_AUTH,
       signInWithGoogle,
       signInMock,
       signOut,

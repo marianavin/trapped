@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { NEWSPAPER } from '../data/level4.js'
 import PixelButton from '../components/PixelButton.jsx'
+import { LevelScreen } from '../components/GameUI.jsx'
 import { play } from '../audio/sounds.js'
 
 // Act 2 — the newspaper. The bridge between witnessing the accident and
@@ -17,7 +18,7 @@ export default function NewspaperScreen({ onProceed }) {
   }, [])
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center bg-l4bg px-6 py-10 gap-8">
+    <LevelScreen center className="px-6 py-10 gap-8">
       <motion.div
         initial={{ opacity: 0, y: 14, rotate: -1 }}
         animate={{ opacity: 1, y: 0, rotate: 0 }}
@@ -44,10 +45,10 @@ export default function NewspaperScreen({ onProceed }) {
       </motion.div>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-        <PixelButton variant="dark" onClick={onProceed}>
+        <PixelButton variant="primary" onClick={onProceed}>
           {NEWSPAPER.cta}
         </PixelButton>
       </motion.div>
-    </div>
+    </LevelScreen>
   )
 }

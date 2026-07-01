@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import CRTOverlay from './components/CRTOverlay.jsx'
+import CabinetFrame from './components/CabinetFrame.jsx'
+import { LoadingScreen } from './components/GameUI.jsx'
 import TitleScreen from './screens/TitleScreen.jsx'
 import LoginScreen from './shell/LoginScreen.jsx'
 import HubScreen from './shell/HubScreen.jsx'
@@ -49,11 +50,7 @@ function AppShell() {
   }
 
   if (status === 'loading') {
-    return (
-      <div role="status" aria-live="polite" className="h-full w-full flex items-center justify-center bg-l4bg text-accent-cyan">
-        <p className="font-pixel text-xs animate-pulse glitch-shift">LOADING…</p>
-      </div>
-    )
+    return <LoadingScreen />
   }
 
   if (status === 'signedOut') {
@@ -76,11 +73,7 @@ function AppShell() {
   }
 
   if (!progressReady) {
-    return (
-      <div role="status" aria-live="polite" className="h-full w-full flex items-center justify-center bg-l4bg text-accent-cyan">
-        <p className="font-pixel text-xs animate-pulse glitch-shift">LOADING PROGRESS…</p>
-      </div>
-    )
+    return <LoadingScreen message="LOADING PROGRESS…" />
   }
 
   return <HubScreen progress={progress} onPlay={playLevel} />
@@ -88,11 +81,10 @@ function AppShell() {
 
 export default function App() {
   return (
-    <div className="h-screen w-screen crt-flicker">
-      <CRTOverlay />
+    <CabinetFrame>
       <AuthProvider>
         <AppShell />
       </AuthProvider>
-    </div>
+    </CabinetFrame>
   )
 }

@@ -1,8 +1,9 @@
 import { LEVELS, isUnlocked } from '../data/levels.js'
+import { PanelCard } from '../components/GameUI.jsx'
+import { play } from '../audio/sounds.js'
 
 function LevelCard({ level, result, locked, onPlay }) {
   const completed = Boolean(result)
-  const accent = locked ? undefined : '#00F0FF'
 
   const statusText = locked
     ? level.built
@@ -12,44 +13,38 @@ function LevelCard({ level, result, locked, onPlay }) {
     ? `completed, ${result.escapedCount} of ${result.totalBiases} biases escaped`
     : 'not started'
 
+  function handleClick() {
+    if (locked) return
+    play('questionArrive')
+    onPlay(level.id)
+  }
+
   return (
-    <button
-      onClick={() => !locked && onPlay(level.id)}
-      disabled={locked}
-      aria-label={`Level ${level.index}, ${level.title}, ${statusText}`}
-      className={[
-        'text-left p-4 flex flex-col gap-2 transition-all border-2 rounded-sm',
-        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-cyan',
-        locked
-          ? 'bg-l4panel/50 text-l4text/60 border-l4text/20 cursor-not-allowed'
-          : 'gw-panel-grid text-l4text cursor-pointer hover:brightness-110',
-      ].join(' ')}
-      style={
-        !locked
-          ? { borderColor: accent, boxShadow: `0 0 4px ${accent}, 0 0 14px ${accent}44` }
-          : undefined
-      }
-    >
+    <PanelCard disabled={locked} onClick={handleClick} aria-label={`Level ${level.index}, ${level.title}, ${statusText}`}>
       <div className="flex items-center justify-between">
-        <span className="font-pixel text-[9px] sm:text-[10px]" style={!locked ? { color: accent } : undefined}>
+        <span className={`font-pixel text-[9px] sm:text-[10px] ${locked ? '' : 'text-accent-cyan'}`}>
           LEVEL {level.index}
         </span>
-        {locked && <span className="font-pixel text-[8px] sm:text-[9px] text-l4text/50">LOCKED</span>}
+        {locked && (
+          <span className="font-pixel text-[8px] sm:text-[9px] text-l4text/70">
+            {level.built ? 'LOCKED' : 'COMING SOON'}
+          </span>
+        )}
         {!locked && completed && <span className="font-pixel text-[8px] sm:text-[9px] text-escaped">DONE</span>}
       </div>
 
       <h3 className="font-pixel text-xs sm:text-sm leading-snug">{level.title}</h3>
 
-      <p className="font-mono text-[11px] sm:text-xs opacity-70">
+      <p className="font-mono text-[11px] sm:text-xs text-l4text/75 leading-snug">
         {locked
           ? level.built
             ? 'COMPLETE THE PREVIOUS LEVEL'
             : 'COMING SOON'
           : completed
           ? `${result.escapedCount}/${result.totalBiases} BIASES ESCAPED`
-          : 'NOT STARTED — TAP TO PLAY'}
+          : level.hook}
       </p>
-    </button>
+    </PanelCard>
   )
 }
 

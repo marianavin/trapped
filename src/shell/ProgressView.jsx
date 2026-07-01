@@ -1,16 +1,18 @@
 import { LEVELS, isUnlocked } from '../data/levels.js'
 import { computeTotals } from '../data/scoring.js'
+import { ListRow, StatCard } from '../components/GameUI.jsx'
 
 function LevelRow({ level, result, locked }) {
   const completed = Boolean(result)
 
   let status = 'LOCKED'
-  if (!locked) status = completed ? 'COMPLETE' : 'NOT STARTED'
+  if (locked && !level.built) status = 'COMING SOON'
+  else if (!locked) status = completed ? 'COMPLETE' : 'NOT STARTED'
 
   return (
-    <li className="flex items-center justify-between gap-3 font-mono text-xs sm:text-sm py-3 border-b border-accent-cyan/10">
-      <div className="flex flex-col">
-        <span className="font-pixel text-[9px] sm:text-[10px]" style={{ color: locked ? undefined : '#00F0FF' }}>
+    <ListRow>
+      <div className="flex flex-col flex-1 min-w-0">
+        <span className={`font-pixel text-[9px] sm:text-[10px] ${locked ? 'text-l4text/60' : 'text-accent-cyan'}`}>
           LEVEL {level.index} — {level.title}
         </span>
         <span className="text-l4text/60 text-[10px] sm:text-xs mt-1">{status}</span>
@@ -32,7 +34,7 @@ function LevelRow({ level, result, locked }) {
           <span className="text-l4text/40">—</span>
         )}
       </div>
-    </li>
+    </ListRow>
   )
 }
 
@@ -42,22 +44,22 @@ export default function ProgressView({ progress }) {
   return (
     <div className="w-full max-w-2xl mx-auto p-5 flex flex-col gap-6">
       <div className="grid grid-cols-2 gap-4 text-center">
-        <div className="gw-panel-grid border-2 border-caught rounded-sm p-4 text-caught" style={{ boxShadow: '0 0 4px #FF3131, 0 0 14px #FF313144' }}>
+        <StatCard tone="caught">
           <p className="font-pixel text-xl sm:text-2xl">
             {totals.scenariosSurvived}/{totals.scenariosTotal}
           </p>
           <p className="font-mono text-[10px] sm:text-xs text-l4text/60 mt-2">SCENARIOS SURVIVED</p>
-        </div>
-        <div className="gw-panel-grid border-2 border-escaped rounded-sm p-4 text-escaped" style={{ boxShadow: '0 0 4px #00F0FF, 0 0 14px #00F0FF44' }}>
+        </StatCard>
+        <StatCard tone="cyan">
           <p className="font-pixel text-xl sm:text-2xl">
             {totals.biasesEscaped}/{totals.biasesAttempted || 0}
           </p>
           <p className="font-mono text-[10px] sm:text-xs text-l4text/60 mt-2">BIASES ESCAPED</p>
-        </div>
+        </StatCard>
       </div>
 
       <div className="text-center">
-        <p className="font-pixel text-lg sm:text-xl text-accent-cyan">{totals.points} PTS</p>
+        <p className="font-pixel text-lg sm:text-xl text-accent-cyan">{totals.points} POINTS</p>
         <p className="font-mono text-[10px] text-l4text/60 mt-1">
           {totals.levelsCompleted}/{totals.levelsBuilt} AVAILABLE LEVELS COMPLETE
         </p>
