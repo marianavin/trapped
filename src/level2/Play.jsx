@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import BombPanel, { BombWireKey } from './BombPanel.jsx'
-import { play, startSiren, stopSiren } from '../audio/sounds.js'
+import BombPanel, { BombPlayHud } from './BombPanel.jsx'
+import { play, startSiren, stopAll } from '../audio/sounds.js'
 import {
   TIMER_SECONDS,
   VOICE_1_LINE,
   VOICE_1_HINT,
+  HINT_LABEL,
   LEGEND_LABEL,
   LEGEND_ROWS,
   VOICE_2_LINE,
@@ -44,7 +45,7 @@ export default function Play({ onDone }) {
 
   useEffect(() => {
     startSiren()
-    return () => stopSiren()
+    return () => stopAll()
   }, [])
 
   useEffect(() => {
@@ -68,7 +69,7 @@ export default function Play({ onDone }) {
   function finish(payload) {
     if (doneRef.current) return
     doneRef.current = true
-    stopSiren()
+    stopAll()
     onDone(payload)
   }
 
@@ -119,14 +120,15 @@ export default function Play({ onDone }) {
             ss={ss}
             secondsLeft={secondsLeft}
             message={message}
-            messageHint={messageHint}
             onWireClick={handleWireClick}
             wiresClickable={stage === 'choose1' || stage === 'voice2'}
           />
         </div>
       </div>
 
-      <BombWireKey
+      <BombPlayHud
+        hint={messageHint}
+        hintLabel={HINT_LABEL}
         legendLabel={LEGEND_LABEL}
         legendRows={LEGEND_ROWS}
         showRecheck={stage === 'final'}

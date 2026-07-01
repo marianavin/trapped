@@ -50,7 +50,7 @@ function LevelCard({ level, result, locked, onPlay }) {
 
 export default function LevelSelect({ progress, onPlay }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mx-auto p-5">
+    <div className="flex flex-col gap-3 w-full max-w-lg mx-auto p-5">
       {LEVELS.map((level) => {
         const locked = !level.built || !isUnlocked(level.id, progress)
         return (

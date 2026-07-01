@@ -13,7 +13,7 @@ export default function TrialTimer({ ms }) {
   const urgent = ms <= 5000
   return (
     <p
-      className={`pointer-events-none absolute top-[102px] left-1/2 z-30 -translate-x-1/2 font-pixel text-xl tabular-nums text-l3-error ${
+      className={`pointer-events-none absolute top-14 left-1/2 z-30 -translate-x-1/2 font-pixel text-xl tabular-nums text-l3-error ${
         urgent ? 'animate-pulse' : ''
       }`}
     >

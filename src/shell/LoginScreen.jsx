@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PixelButton from '../components/PixelButton.jsx'
 import GlitchShell, { ScreenHeader } from '../components/GlitchShell.jsx'
-import WindowChrome from '../components/WindowChrome.jsx'
+import DraggableWindow from '../components/DraggableWindow.jsx'
 import { TextInput } from '../components/GameUI.jsx'
 import { play } from '../audio/sounds.js'
 import { useAuth } from '../lib/AuthContext.jsx'
@@ -12,11 +12,11 @@ export default function LoginScreen() {
   const [name, setName] = useState('')
 
   return (
-    <GlitchShell contentClassName="gap-8 px-6 py-10">
+    <GlitchShell contentClassName="gap-8 px-6 py-10 overflow-visible" className="overflow-visible">
       <ScreenHeader title="TRAPPED" subtitle="Your mind is the obstacle." />
 
       {isMock ? (
-        <WindowChrome title="PLAYER LOGIN" className="w-full max-w-xs">
+        <DraggableWindow title="PLAYER LOGIN" className="max-w-xs">
           <div className="flex flex-col items-center gap-4">
             <p className="font-pixel text-[8px] sm:text-[9px] text-accent-cyan text-center">
               ENTER A NICKNAME FOR THE LEADERBOARD
@@ -38,9 +38,9 @@ export default function LoginScreen() {
               ENTER
             </PixelButton>
           </div>
-        </WindowChrome>
+        </DraggableWindow>
       ) : (
-        <WindowChrome title="PLAYER LOGIN" className="w-full max-w-xs">
+        <DraggableWindow title="PLAYER LOGIN" className="max-w-xs">
           <div className="flex flex-col items-center gap-4">
             <PixelButton full variant="primary" onClick={signInWithGoogle}>
               CONTINUE WITH GOOGLE
@@ -54,7 +54,7 @@ export default function LoginScreen() {
               </p>
             )}
           </div>
-        </WindowChrome>
+        </DraggableWindow>
       )}
     </GlitchShell>
   )

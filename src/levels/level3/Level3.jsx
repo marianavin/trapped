@@ -8,7 +8,7 @@ import Task2FadingAddress from './tasks/Task2FadingAddress.jsx'
 import Task3MislabeledKey from './tasks/Task3MislabeledKey.jsx'
 import Task4LoudNumber from './tasks/Task4LoudNumber.jsx'
 import { TASK_ORDER, LEVEL_TIMER_MS, scrambledLayout, TRIAL_3_REMIX_SEED } from './data.js'
-import { stopSiren } from '../../audio/sounds.js'
+import { stopAll } from '../../audio/sounds.js'
 import { cancelSpeech } from './speech.js'
 
 // The 4 trials, in alternating perception (P) / memory (M) order so the
@@ -44,7 +44,7 @@ export default function Level3({ onComplete }) {
   }
 
   const restart = () => {
-    stopSiren()
+    stopAll()
     cancelSpeech()
     timedOutRef.current = false
     setTimeRemainingMs(LEVEL_TIMER_MS)
@@ -68,7 +68,7 @@ export default function Level3({ onComplete }) {
           return { ...s, results, phase: 'reveal' }
         })
         timedOutRef.current = true
-        stopSiren()
+        stopAll()
         cancelSpeech()
         return
       }
@@ -77,6 +77,12 @@ export default function Level3({ onComplete }) {
     tick()
     const id = setInterval(tick, 10)
     return () => clearInterval(id)
+  }, [state.phase])
+
+  useEffect(() => {
+    if (state.phase !== 'reveal') return
+    stopAll()
+    cancelSpeech()
   }, [state.phase])
 
   function handleTaskDone(result) {
@@ -99,7 +105,7 @@ export default function Level3({ onComplete }) {
 
   if (state.phase === 'setup') {
     return (
-      <div className="relative h-full w-full overflow-hidden">
+      <div className="relative h-full w-full overflow-y-auto gw-scrollbar">
         <Setup
           onDone={() => {
             startLevelTimer()
@@ -115,13 +121,15 @@ export default function Level3({ onComplete }) {
     const { Comp } = TASKS[state.index]
     return (
       <div className="relative h-full w-full overflow-hidden">
+        <div className="h-full overflow-y-auto gw-scrollbar">
+          <Comp
+            key={state.index}
+            timeRemainingMs={timeRemainingMs}
+            trial3Layout={state.index === 2 ? trial3Layout : undefined}
+            onDone={handleTaskDone}
+          />
+        </div>
         <TrialTimer ms={timeRemainingMs} />
-        <Comp
-          key={state.index}
-          timeRemainingMs={timeRemainingMs}
-          trial3Layout={state.index === 2 ? trial3Layout : undefined}
-          onDone={handleTaskDone}
-        />
         <CRTOverlay />
       </div>
     )
@@ -134,7 +142,7 @@ export default function Level3({ onComplete }) {
   const fellBooleans = Object.fromEntries(TASK_ORDER.map((k) => [k, !state.results[k]?.passed]))
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    <div className="relative h-full w-full overflow-y-auto gw-scrollbar">
       <Reveal
         results={flatResults}
         outcome={outcome}

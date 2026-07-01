@@ -4,6 +4,8 @@ export const SETUP_LINES = ['DEFUSE IT.', '60 SECONDS.']
 
 export const TIMER_SECONDS = 60
 
+export const HINT_LABEL = 'HINT'
+
 export const VOICE_1_LINE = 'CUT THE BLUE WIRE.'
 export const VOICE_1_HINT = 'Use the wire key below — each wire is labeled A, B, or C.'
 
@@ -45,6 +47,9 @@ export const CONSEQUENCE_FAIL = ['TIMER HIT ZERO.']
 export const BIAS_CARDS = {
   labelSignifier: {
     name: 'LABEL VS. SIGNIFIER',
+    subtitle: 'THE WIRE KEY',
+    info:
+      'Label vs. signifier is the gap between what something looks like and what it is called. Interfaces exploit this when a label says one thing but the control does another.',
     fellFor: [
       'The wire looked blue.',
       'The legend said otherwise.',
@@ -55,6 +60,9 @@ export const BIAS_CARDS = {
   },
   authority: {
     name: 'AUTHORITY BIAS',
+    subtitle: 'THE SECOND VOICE',
+    info:
+      'Authority bias is the tendency to trust a calmer, more confident instruction over an earlier one — even when confidence is not evidence.',
     fellFor: [
       'The second voice was calmer.',
       'More certain.',
@@ -65,6 +73,9 @@ export const BIAS_CARDS = {
   },
   confirmation: {
     name: 'CONFIRMATION BIAS',
+    subtitle: 'CUT NOW',
+    info:
+      'Confirmation bias is looking for evidence you were right after a first decision, instead of checking whether you might be wrong.',
     fellFor: [
       'After the first cut, you stopped looking for evidence you were wrong.',
       'You were looking for evidence you were right.',

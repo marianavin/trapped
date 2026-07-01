@@ -4,7 +4,12 @@ import WindowChrome from '../components/WindowChrome.jsx'
 import PixelButton from '../components/PixelButton.jsx'
 import { LEGEND_SWATCHES } from '../data/level2.js'
 
-export function BombWireKey({
+const HUD_CORNER =
+  'absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 flex flex-col gap-2 w-[11.5rem] sm:w-52 max-w-[calc(100%-1.5rem)]'
+
+export function BombPlayHud({
+  hint,
+  hintLabel = 'HINT',
   legendLabel,
   legendRows,
   showRecheck,
@@ -14,13 +19,13 @@ export function BombWireKey({
   className = '',
 }) {
   return (
-    <div
-      className={[
-        'absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 flex flex-col gap-2',
-        'w-[11.5rem] sm:w-52 max-w-[calc(100%-1.5rem)]',
-        className,
-      ].join(' ')}
-    >
+    <div className={[HUD_CORNER, className].filter(Boolean).join(' ')}>
+      {hint && (
+        <WindowChrome title={hintLabel} bodyClassName="!p-2 sm:!p-3">
+          <p className="font-mono text-[10px] sm:text-xs text-l4text leading-snug">{hint}</p>
+        </WindowChrome>
+      )}
+
       <WindowChrome title={legendLabel} bodyClassName="!p-2 sm:!p-3">
         <ul className="flex flex-col gap-1.5">
           {legendRows.map((row) => (
@@ -46,6 +51,7 @@ export function BombWireKey({
           </PixelButton>
         )}
       </WindowChrome>
+
       {showCutNow && (
         <PixelButton variant="danger" size="sm" onClick={onCutNow}>
           CUT NOW
@@ -62,7 +68,6 @@ export default function BombPanel({
   ss,
   secondsLeft = 60,
   message,
-  messageHint,
   onWireClick,
   wiresClickable,
 }) {
@@ -80,9 +85,6 @@ export default function BombPanel({
           aria-atomic="true"
         >
           <p className="font-mono text-[11px] sm:text-sm text-l4text leading-snug">{message}</p>
-          {messageHint && (
-            <p className="font-mono text-[10px] sm:text-xs text-accent-cyan/90 mt-2 leading-snug">{messageHint}</p>
-          )}
         </WindowChrome>
       )}
 

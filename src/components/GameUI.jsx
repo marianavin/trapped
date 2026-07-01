@@ -237,7 +237,7 @@ export function TextInput({ className = '', ...props }) {
     <input
       className={[
         'font-pixel text-[10px] w-full bg-black/40 rounded-sm border-2 border-accent-cyan text-l4text px-3 py-3 text-center',
-        'placeholder:text-l4text/50 neon-glow-cyan',
+        'placeholder:text-l4text/50',
         FOCUS_RING,
         className,
       ].join(' ')}

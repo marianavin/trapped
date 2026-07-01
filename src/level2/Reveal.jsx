@@ -24,6 +24,8 @@ export default function Reveal({ success, results, onNext, onRetry }) {
             key={key}
             index={i}
             name={card.name}
+            subtitle={card.subtitle}
+            info={card.info}
             fellFor={fellFor}
             lines={fellFor ? card.fellFor : card.escaped}
           />

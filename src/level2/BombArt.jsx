@@ -23,24 +23,45 @@ const C = {
 function buildLayout() {
   const bx = 52
   const stickW = 216
-  const stickH = 14
-  const frontY = [38, 56, 74]
-  const backY = [47, 65]
+  const stickH = 20
+  const frontY = [40, 62, 84]
+  const backY = [50, 72]
   const backX = bx + 18
   const backW = stickW - 36
-  const tx = bx + stickW / 2 - 40
-  const ty = 46
-  const tw = 80
-  const th = 42
-  const faceX = tx + 3
-  const faceY = ty + 6
-  const faceW = tw - 6
-  const faceH = th - 10
-  const ropeY = frontY[0] - 6
-  const ropeH = frontY[2] + stickH - frontY[0] + 12
-  const wireY = [50, 66, 82]
+  const tx = bx + stickW / 2 - 44
+  const ty = 50
+  const tw = 88
+  const th = 54
+  const faceX = tx + 4
+  const faceY = ty + 8
+  const faceW = tw - 8
+  const faceH = th - 14
+  const ropeY = frontY[0] - 8
+  const ropeH = frontY[2] + stickH - ropeY + 12
+  const wireY = [58, 76, 94]
+  const viewH = 208
 
-  return { bx, stickW, stickH, frontY, backY, backX, backW, tx, ty, tw, th, faceX, faceY, faceW, faceH, ropeY, ropeH, wireY }
+  return {
+    bx,
+    stickW,
+    stickH,
+    frontY,
+    backY,
+    backX,
+    backW,
+    tx,
+    ty,
+    tw,
+    th,
+    faceX,
+    faceY,
+    faceW,
+    faceH,
+    ropeY,
+    ropeH,
+    wireY,
+    viewH,
+  }
 }
 
 const L = buildLayout()
@@ -60,7 +81,7 @@ function Stick({ x, y, w, h, dim = false }) {
 function RopeColumn({ x, y, h }) {
   const steps = Math.floor(h / 8)
   return (
-    <g>
+    <g pointerEvents="none" aria-hidden="true">
       <rect x={x - 3} y={y} width={16} height={h} fill={C.strap} stroke={C.black} strokeWidth={2} />
       <rect x={x - 1} y={y + 2} width={3} height={h - 4} fill={C.strapHi} opacity={0.5} />
       <rect x={x + 1} y={y} width={10} height={h} fill={C.rope} stroke={C.black} strokeWidth={1} />
@@ -118,13 +139,12 @@ function wirePath(index) {
   }
 }
 
-function CuttableWire({ wire, index, isCurrent, clickable, onClick }) {
+function WireGraphics({ wire, index, isCurrent }) {
   const { d, labelX, labelY, cutX, cutY } = wirePath(index)
   const dash = wireDash(wire.pattern)
-  const aria = `Cut ${wire.label}${wire.pattern === 'stripe' ? ', striped texture' : wire.pattern === 'dotted' ? ', dotted texture' : ', solid texture'}`
 
   return (
-    <g>
+    <g pointerEvents="none" aria-hidden="true">
       <path d={d} fill="none" stroke={C.black} strokeWidth={9} strokeLinecap="square" strokeDasharray={dash} opacity={0.25} />
       <path d={d} fill="none" stroke={wire.color} strokeWidth={6} strokeLinecap="square" strokeDasharray={dash} />
       <rect x={labelX - 10} y={labelY - 9} width={20} height={16} fill={C.labelBg} stroke={C.black} strokeWidth={2} />
@@ -134,26 +154,40 @@ function CuttableWire({ wire, index, isCurrent, clickable, onClick }) {
       {isCurrent && (
         <>
           <rect x={cutX - 4} y={cutY - 4} width={8} height={8} fill={wire.color} stroke={C.black} strokeWidth={1} />
-          <text x={cutX - 10} y={cutY - 10} fontSize={9} aria-hidden="true">
+          <text x={cutX - 10} y={cutY - 10} fontSize={9}>
             ✂️
           </text>
         </>
       )}
-      <path
-        d={d}
-        fill="none"
-        stroke="transparent"
-        strokeWidth={20}
-        strokeLinecap="round"
-        onClick={() => clickable && onClick(wire.id)}
-        style={{ cursor: clickable ? 'pointer' : 'default', pointerEvents: 'all' }}
-        aria-label={aria}
-        role="button"
-        tabIndex={clickable ? 0 : -1}
-        onKeyDown={(e) => {
-          if (clickable && (e.key === 'Enter' || e.key === ' ')) onClick(wire.id)
-        }}
-      />
+    </g>
+  )
+}
+
+function WireHitTarget({ wire, index, clickable, onClick }) {
+  const { d, labelX, labelY } = wirePath(index)
+  const aria = `Cut ${wire.label}${wire.pattern === 'stripe' ? ', striped texture' : wire.pattern === 'dotted' ? ', dotted texture' : ', solid texture'}`
+
+  function activate(e) {
+    if (!clickable) return
+    e.stopPropagation()
+    onClick(wire.id)
+  }
+
+  function onKeyDown(e) {
+    if (clickable && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault()
+      onClick(wire.id)
+    }
+  }
+
+  if (!clickable) return null
+
+  const hitStyle = { cursor: 'pointer', pointerEvents: 'all' }
+
+  return (
+    <g role="button" tabIndex={0} aria-label={aria} onKeyDown={onKeyDown}>
+      <path d={d} fill="none" stroke="transparent" strokeWidth={24} strokeLinecap="round" onClick={activate} style={hitStyle} />
+      <rect x={labelX - 14} y={labelY - 12} width={28} height={24} fill="transparent" onClick={activate} style={hitStyle} />
     </g>
   )
 }
@@ -167,10 +201,10 @@ export default function BombArt({
   wiresClickable,
   onWireClick,
 }) {
-  const { bx, stickW, stickH, frontY, backY, backX, backW, tx, ty, tw, th, faceX, faceY, faceW, faceH, ropeY, ropeH } = L
+  const { bx, stickW, stickH, frontY, backY, backX, backW, tx, ty, tw, th, faceX, faceY, faceW, faceH, ropeY, ropeH, viewH } = L
 
   return (
-    <svg viewBox="0 0 320 168" className="w-full h-auto block" shapeRendering="crispEdges">
+    <svg viewBox={`0 0 320 ${viewH}`} className="w-full h-auto block" shapeRendering="crispEdges">
       <defs>
         <pattern id="bombGrid" width={16} height={16} patternUnits="userSpaceOnUse">
           <path d="M 16 0 L 0 0 0 16" fill="none" stroke="rgba(0,240,255,0.06)" strokeWidth={1} />
@@ -187,8 +221,8 @@ export default function BombArt({
         </clipPath>
       </defs>
 
-      <rect width={320} height={168} fill={C.bg} />
-      <rect width={320} height={168} fill="url(#bombGrid)" />
+      <rect width={320} height={viewH} fill={C.bg} />
+      <rect width={320} height={viewH} fill="url(#bombGrid)" />
 
       {/* dynamite — behind wires */}
       <g aria-hidden="true">
@@ -201,33 +235,28 @@ export default function BombArt({
 
       {/* wires draped over the bundle */}
       {wires.map((w, i) => (
-        <CuttableWire
-          key={w.id}
-          wire={w}
-          index={i}
-          isCurrent={w.id === currentWireId}
-          clickable={wiresClickable}
-          onClick={onWireClick}
-        />
+        <WireGraphics key={w.id} wire={w} index={i} isCurrent={w.id === currentWireId} />
       ))}
 
       <RopeColumn x={bx - 14} y={ropeY} h={ropeH} />
       <RopeColumn x={bx + stickW + 4} y={ropeY} h={ropeH} />
 
-      <rect x={tx - 8} y={ty - 4} width={10} height={th + 8} fill={C.strap} stroke={C.black} strokeWidth={2} />
-      <rect x={tx + tw - 2} y={ty - 4} width={10} height={th + 8} fill={C.strap} stroke={C.black} strokeWidth={2} />
+      <g pointerEvents="none" aria-hidden="true">
+        <rect x={tx - 8} y={ty - 4} width={10} height={th + 8} fill={C.strap} stroke={C.black} strokeWidth={2} />
+        <rect x={tx + tw - 2} y={ty - 4} width={10} height={th + 8} fill={C.strap} stroke={C.black} strokeWidth={2} />
 
-      <rect x={tx} y={ty} width={tw} height={th} fill={C.timerBody} stroke={C.black} strokeWidth={2} />
-      <rect x={tx + 2} y={ty + 2} width={tw - 4} height={3} fill={C.strapHi} opacity={0.55} />
-      <rect x={faceX} y={faceY} width={faceW} height={faceH} fill={C.timerFace} stroke={C.black} strokeWidth={2} />
+        <rect x={tx} y={ty} width={tw} height={th} fill={C.timerBody} stroke={C.black} strokeWidth={2} />
+        <rect x={tx + 2} y={ty + 2} width={tw - 4} height={3} fill={C.strapHi} opacity={0.55} />
+        <rect x={faceX} y={faceY} width={faceW} height={faceH} fill={C.timerFace} stroke={C.black} strokeWidth={2} />
+      </g>
 
-      <g clipPath="url(#timerFaceClip)">
+      <g clipPath="url(#timerFaceClip)" pointerEvents="none">
         <motion.text
           x={faceX + faceW / 2}
           y={faceY + faceH / 2 + 4}
           textAnchor="middle"
           className="font-pixel tabular-nums"
-          fontSize={12}
+          fontSize={13}
           fill={urgent ? C.timerUrgent : C.timerDigit}
           filter="url(#ledGlow)"
           animate={{ scale: urgent ? [1, 1.08, 1] : 1 }}
@@ -238,8 +267,21 @@ export default function BombArt({
         </motion.text>
       </g>
 
-      <rect x={bx + 8} y={frontY[0] - 8} width={4} height={6} fill={C.black} />
-      <rect x={bx + stickW - 12} y={frontY[0] - 8} width={4} height={6} fill={C.black} />
+      {/* hit targets on top so ropes/timer never block label clicks */}
+      {wires.map((w, i) => (
+        <WireHitTarget
+          key={`hit-${w.id}`}
+          wire={w}
+          index={i}
+          clickable={wiresClickable}
+          onClick={onWireClick}
+        />
+      ))}
+
+      <g pointerEvents="none" aria-hidden="true">
+        <rect x={bx + 8} y={frontY[0] - 10} width={4} height={8} fill={C.black} />
+        <rect x={bx + stickW - 12} y={frontY[0] - 10} width={4} height={8} fill={C.black} />
+      </g>
     </svg>
   )
 }

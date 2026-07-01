@@ -1,4 +1,4 @@
-import { Howl } from 'howler'
+import { Howl, Howler } from 'howler'
 import { sounds as gen } from './synth.js'
 
 // Howl instances are created lazily on first play, both because generating
@@ -47,4 +47,14 @@ export function stopSiren() {
   }
   sirenHowl?.stop()
   sirenHowl = null
+}
+
+/** Stop siren loop and every cached / in-flight Howl instance. */
+export function stopAll() {
+  stopSiren()
+  try {
+    Howler.stop()
+  } catch {
+    // ignore
+  }
 }
