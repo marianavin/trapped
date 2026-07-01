@@ -3,8 +3,6 @@ import { motion } from 'framer-motion'
 import { CONSEQUENCE_WIN, CONSEQUENCE_FAIL } from '../data/level2.js'
 import { play } from '../audio/sounds.js'
 
-// Immediate, unambiguous result of the player's decisions. No commentary yet -
-// that's what the reveal screen is for.
 export default function Consequence({ success, onDone }) {
   const lines = success ? CONSEQUENCE_WIN : CONSEQUENCE_FAIL
 
@@ -15,11 +13,7 @@ export default function Consequence({ success, onDone }) {
   }, [success, onDone])
 
   return (
-    <div
-      className={`h-full w-full flex flex-col items-center justify-center px-6 text-center ${
-        success ? 'bg-l2-bg' : 'bg-black'
-      }`}
-    >
+    <div className="h-full w-full flex flex-col items-center justify-center px-6 text-center bg-l2-bg">
       {lines.map((line, i) => (
         <motion.p
           key={line}

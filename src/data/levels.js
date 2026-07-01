@@ -17,7 +17,7 @@ export const LEVELS = [
     id: 'level1',
     index: 1,
     title: 'THE BOMB',
-    accent: '#2DE8FF',
+    accent: '#00F0FF',
     built: true,
     totalBiases: 3,
     Component: Level2,
@@ -28,7 +28,7 @@ export const LEVELS = [
     id: 'level2',
     index: 2,
     title: 'THE SCRAMBLED KEYPAD',
-    accent: '#2DE8FF',
+    accent: '#00F0FF',
     built: true,
     totalBiases: 4,
     Component: Level3,
@@ -39,7 +39,7 @@ export const LEVELS = [
     id: 'level3',
     index: 3,
     title: 'THE WITNESS',
-    accent: '#2DE8FF',
+    accent: '#00F0FF',
     built: true,
     totalBiases: 4,
     Component: Level4,
@@ -66,15 +66,11 @@ export function getBuiltLevels() {
 }
 
 // A level's `built` flag gates "does this level's code exist yet" (for any
-// future level added mid-development). This gates the separate, player-
-// facing rule: each level only opens once every level before it in display
-// order has been played through to a result — "level 2 and 3 require level
-// 1 complete; level 3 also requires level 2 complete." Level 1 has no
-// prerequisite. `progress` is the { [levelId]: normalizedResult } map from
-// progressStore.js — any recorded result (win or lose) counts as complete,
-// consistent with how "DONE" already works elsewhere in the hub.
-export function isUnlocked(levelId, progress) {
-  const idx = LEVELS.findIndex((l) => l.id === levelId)
-  if (idx <= 0) return true
-  return LEVELS.slice(0, idx).every((l) => Boolean(progress[l.id]))
+// future level added mid-development) — that's the only lock left. The
+// sequential "finish level N before N+1 opens" rule has been intentionally
+// turned off per product decision: every built level is playable regardless
+// of progress. `progress` is accepted (and ignored) so call sites and the
+// function signature don't need to change if this gets turned back on.
+export function isUnlocked(_levelId, _progress) {
+  return true
 }

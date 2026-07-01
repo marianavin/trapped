@@ -9,14 +9,11 @@
 html, body, #root {
   height: 100%;
   margin: 0;
-  /* Unified glitchwave background: deep navy + a faint cyan grid, matching
-     the reference's grid-backed UI-kit sheet. Every screen sits on this —
-     no more per-level solid-color backgrounds with no shared texture. */
-  background-color: #12132B;
+  background-color: #121225;
   background-image:
-    linear-gradient(rgba(45, 232, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(45, 232, 255, 0.05) 1px, transparent 1px);
-  background-size: 28px 28px;
+    linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
   image-rendering: pixelated;
 }
 
@@ -27,22 +24,54 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Neon-glow panel chrome — used across every screen (dialogue boxes,
-   reveal cards, hub bar, level-select cards, buttons): rounded corners, a
-   colored border, and a soft glow using the same color, instead of the
-   old hard pixel drop-shadow. `currentColor` means the glow automatically
-   matches whatever text color the element already has — level accents,
-   status colors, etc — without needing a new class per color. */
+/* --- Glitchwave design system ------------------------------------------ */
+
+/* Neon-glow panel chrome — cards, buttons, stat boxes */
 .pixel-border {
   border: 2px solid currentColor;
-  border-radius: 10px;
-  box-shadow: 0 0 5px currentColor, 0 0 16px currentColor, inset 0 0 14px rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+  box-shadow: 0 0 4px currentColor, 0 0 14px currentColor, inset 0 0 12px rgba(0, 0, 0, 0.4);
 }
 
 .neon-glow {
-  box-shadow: 0 0 5px currentColor, 0 0 16px currentColor;
+  box-shadow: 0 0 4px currentColor, 0 0 14px currentColor;
 }
 
+.neon-glow-cyan {
+  box-shadow: 0 0 4px #00F0FF, 0 0 14px #00F0FF, 0 0 28px #00F0FF44;
+}
+
+.neon-glow-magenta {
+  box-shadow: 0 0 4px #FF00FF, 0 0 14px #FF00FF, 0 0 28px #FF00FF44;
+}
+
+/* System window body — subtle inner grid like the reference panels */
+.gw-panel-grid {
+  background-color: #1A1A3A;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Large title with chromatic aberration — reference header style */
+.glitch-title {
+  position: relative;
+  color: #00F0FF;
+  text-shadow:
+    2px 0 #FF00FF,
+    -2px 0 #00F0FF,
+    0 0 8px #00F0FF,
+    0 0 20px #00F0FF66;
+}
+
+/* Status bar / footer chrome */
+.gw-status-bar {
+  border-top: 2px solid rgba(0, 240, 255, 0.25);
+  background: linear-gradient(180deg, #1A1A3A 0%, #121225 100%);
+}
+
+/* Scanlines overlay */
 .scanlines {
   pointer-events: none;
   position: fixed;
@@ -50,12 +79,21 @@ body {
   z-index: 50;
   background: repeating-linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.15) 0px,
-    rgba(0, 0, 0, 0.15) 1px,
+    rgba(0, 0, 0, 0.18) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
     transparent 1px,
     transparent 3px
   );
   mix-blend-mode: multiply;
+}
+
+/* Subtle CRT vignette */
+.crt-vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.45) 100%);
 }
 
 .crt-flicker {
@@ -78,4 +116,15 @@ body {
 
 .shake {
   animation: shake 0.2s linear;
+}
+
+@keyframes glitchShift {
+  0%, 90%, 100% { transform: translate(0); }
+  92% { transform: translate(-2px, 1px); }
+  94% { transform: translate(2px, -1px); }
+  96% { transform: translate(-1px, -1px); }
+}
+
+.glitch-shift {
+  animation: glitchShift 4s infinite;
 }

@@ -7,16 +7,16 @@ import { play } from '../audio/sounds.js'
 
 const BIAS_ORDER = ['labelSignifier', 'authority', 'confirmation']
 
-// Calm, quiet contrast to the chaos of play. Each bias is named, the exact
-// moment is shown, one sentence per line - never generic.
 export default function Reveal({ success, results, onNext, onRetry }) {
   useEffect(() => {
     play('revealLoad')
   }, [])
 
   return (
-    <div className="h-full w-full overflow-y-auto bg-l2-bg text-white px-5 py-8 flex flex-col items-center gap-8">
-      <h2 className="font-pixel text-sm sm:text-base text-center text-l2-text">LEVEL 1 — REVEAL</h2>
+    <div className="h-full w-full overflow-y-auto bg-l2-bg text-l4text px-5 py-8 flex flex-col items-center gap-8">
+      <h2 className="font-pixel text-sm sm:text-base text-center text-accent-cyan tracking-widest glitch-shift">
+        LEVEL 1 — REVEAL
+      </h2>
 
       <div className="w-full max-w-md flex flex-col gap-4">
         {BIAS_ORDER.map((key, i) => {

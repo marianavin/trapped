@@ -32,7 +32,7 @@ export default function RevealScreen({ answers, results, onContinue }) {
 
   return (
     <div className="h-full w-full overflow-y-auto bg-l4bg text-l4text px-5 py-8 flex flex-col items-center gap-8">
-      <h2 className="font-pixel text-sm sm:text-base text-center">WHAT YOU SAW VS. WHAT YOU REPORTED</h2>
+      <h2 className="font-pixel text-sm sm:text-base text-center text-accent-cyan tracking-widest glitch-shift">WHAT YOU SAW VS. WHAT YOU REPORTED</h2>
 
       <div className="w-full max-w-md flex flex-col gap-2">
         <div className="grid grid-cols-2 gap-3 font-pixel text-[9px] sm:text-[10px] mb-1">

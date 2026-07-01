@@ -8,23 +8,23 @@
 const C = {
   bodyLight: '#3A5A9A',
   body: '#232659',
-  bodyDark: '#12132B',
+  bodyDark: '#121225',
   black: '#0A0A0A',
-  stripeRed: '#FF4477',
+  stripeRed: '#FF3131',
   bolt: '#B8D4E8',
   boltDark: '#4A5A8A',
   batteryBody: '#3A3A3A',
-  batteryGreen: '#2DE8FF',
-  batteryGreenDark: '#0E8FA6',
+  batteryGreen: '#00F0FF',
+  batteryGreenDark: '#00A8C0',
   wireYellow: '#F2C230',
-  wireTip: '#FF4477',
+  wireTip: '#FF3131',
   switchBody: '#232659',
   gateBox: '#EDEDE6',
   gateText: '#1A1A1A',
   ledBg: '#050505',
-  led: '#2DE8FF',
-  indicatorGreen: '#2DE8FF',
-  indicatorRed: '#FF4477',
+  led: '#00F0FF',
+  indicatorGreen: '#00F0FF',
+  indicatorRed: '#FF3131',
   bezel: '#3A3D6B',
   bezelDark: '#232659',
   warnYellow: '#F5C518',
@@ -60,12 +60,48 @@ function PixelBolt({ x, y }) {
   )
 }
 
+function WirePatternOverlay({ y, pattern }) {
+  if (pattern === 'stripe') {
+    return (
+      <>
+        <rect x={100} y={y - 3} width={4} height={6} fill={C.black} opacity={0.35} />
+        <rect x={108} y={y - 3} width={4} height={6} fill={C.black} opacity={0.35} />
+        <rect x={116} y={y - 3} width={4} height={6} fill={C.black} opacity={0.35} />
+        <rect x={124} y={y - 3} width={4} height={6} fill={C.black} opacity={0.35} />
+      </>
+    )
+  }
+  if (pattern === 'dotted') {
+    return (
+      <>
+        <rect x={102} y={y - 2} width={2} height={2} fill={C.black} opacity={0.45} />
+        <rect x={110} y={y - 2} width={2} height={2} fill={C.black} opacity={0.45} />
+        <rect x={118} y={y - 2} width={2} height={2} fill={C.black} opacity={0.45} />
+        <rect x={126} y={y - 2} width={2} height={2} fill={C.black} opacity={0.45} />
+      </>
+    )
+  }
+  return null
+}
+
+function WireLabelBadge({ y, shortLabel }) {
+  return (
+    <g aria-hidden="true">
+      <rect x={52} y={y - 7} width={14} height={12} fill={C.gateBox} stroke={C.black} strokeWidth={1.5} />
+      <text x={59} y={y + 1} textAnchor="middle" className="font-pixel" fontSize={6} fill={C.gateText}>
+        {shortLabel}
+      </text>
+    </g>
+  )
+}
+
 export default function BombPanel({
   wires,
   currentWireId,
   mm,
   ss,
   message,
+  messageHint,
   legendLabel,
   legendRows,
   showLegend,
@@ -179,6 +215,7 @@ export default function BombPanel({
           const isCurrent = w.id === currentWireId
           return (
             <g key={w.id}>
+              <WireLabelBadge y={y} shortLabel={w.shortLabel} />
               <rect
                 x={96}
                 y={y - 4}
@@ -188,6 +225,7 @@ export default function BombPanel({
                 stroke={C.black}
                 strokeWidth={2}
               />
+              <WirePatternOverlay y={y} pattern={w.pattern} />
               {isCurrent && (
                 <rect
                   x={130}
@@ -214,7 +252,7 @@ export default function BombPanel({
                 stroke="none"
                 onClick={() => wiresClickable && onWireClick(w.id)}
                 style={{ cursor: wiresClickable ? 'pointer' : 'default', pointerEvents: 'all' }}
-                aria-label={`Cut ${w.label}`}
+                aria-label={`Cut ${w.label}${w.pattern === 'stripe' ? ', striped texture' : w.pattern === 'dotted' ? ', dotted texture' : ', solid texture'}`}
                 role="button"
                 tabIndex={wiresClickable ? 0 : -1}
                 onKeyDown={(e) => {
@@ -252,7 +290,7 @@ export default function BombPanel({
           type="button"
           onClick={onCutNow}
           className="absolute font-pixel text-white text-[8px] sm:text-[9px] px-2 py-2 active:translate-y-[2px] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
-          style={{ right: '10%', bottom: '4%', background: '#FF4477', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.5)' }}
+          style={{ right: '10%', bottom: '4%', background: '#FF3131', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.5)' }}
         >
           CUT NOW
         </button>
@@ -261,10 +299,16 @@ export default function BombPanel({
       {/* instruction speech bubble — sits in the SVG's own top margin (device body starts at y=44/200=22%) */}
       {message && (
         <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
           className="absolute p-2 sm:p-3"
-          style={{ right: '1%', top: '1%', width: '52%', background: '#FFFFFF', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0,0,0,0.4)' }}
+          style={{ right: '1%', top: '1%', width: '52%', background: '#FFFFFF', border: '3px solid #0A0A0A', boxShadow: '3px 3px 0 rgba(0, 0, 0, 0.4)' }}
         >
-          <p className="font-mono text-[9px] sm:text-xs leading-snug text-black">{message}</p>
+          <p className="font-mono text-[9px] sm:text-xs leading-snug text-black font-bold">{message}</p>
+          {messageHint && (
+            <p className="font-mono text-[8px] sm:text-[10px] leading-snug text-black/80 mt-1">{messageHint}</p>
+          )}
         </div>
       )}
 
@@ -279,8 +323,9 @@ export default function BombPanel({
               gets ~9.9:1 and the bump to 8-9px keeps it legible on a phone */}
           <p className="font-pixel text-[8px] sm:text-[9px] tracking-wide text-gray-700 mb-1">{legendLabel}</p>
           {legendRows.map((row) => (
-            <p key={row} className="font-mono text-[10px] sm:text-xs leading-tight font-bold">
-              {row}
+            <p key={row} className="font-mono text-[10px] sm:text-xs leading-tight font-bold flex items-center gap-1.5">
+              <span aria-hidden="true" className="inline-block w-3 h-3 border border-black shrink-0" style={{ background: row.startsWith('BLUE') ? '#3B82F6' : row.startsWith('RED') ? '#DC2626' : '#EAB308' }} />
+              <span>{row}</span>
             </p>
           ))}
           {showRecheck && (

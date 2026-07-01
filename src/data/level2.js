@@ -5,20 +5,25 @@ export const SETUP_LINES = ['DEFUSE IT.', '90 SECONDS.']
 export const TIMER_SECONDS = 90
 
 export const VOICE_1_LINE = 'CUT THE BLUE WIRE.'
+export const VOICE_1_HINT = 'Use the wire key below — each wire is labeled A, B, or C.'
 
-export const LEGEND_LABEL = 'COLOR KEY — INVERTED'
-export const LEGEND_ROWS = ['BLUE = RED', 'RED = BLUE', 'YELLOW = YELLOW']
+export const LEGEND_LABEL = 'WIRE KEY — INVERTED'
+export const LEGEND_ROWS = ['BLUE → WIRE B', 'RED → WIRE A', 'YELLOW → WIRE C']
 
-export const VOICE_2_LINE = 'IGNORE THE LEGEND. TRUST THE INSTRUCTION. CUT BLUE.'
+export const VOICE_2_LINE = 'IGNORE THE KEY. TRUST THE INSTRUCTION. CUT BLUE.'
+export const VOICE_2_HINT = 'Without the key: blue means WIRE A.'
 
 export const RECHECK_PROMPT = "TIME'S ALMOST UP."
 
 // Three physical wires. Positions are shuffled per playthrough (see Play.jsx)
-// but the id -> color -> meaning mapping below never changes.
+// but the id -> color -> label mapping below never changes. Labels (A/B/C)
+// give a non-color way to identify each wire for accessibility — the voice
+// lines and legend map color words to these labels so colorblind players can
+// still play without losing the label-vs-signifier mechanic.
 export const WIRES = [
-  { id: 'blue', label: 'WIRE A', color: '#3B82F6' },
-  { id: 'red', label: 'WIRE B', color: '#DC2626' },
-  { id: 'yellow', label: 'WIRE C', color: '#EAB308' },
+  { id: 'blue', label: 'WIRE A', shortLabel: 'A', color: '#3B82F6', pattern: 'stripe' },
+  { id: 'red', label: 'WIRE B', shortLabel: 'B', color: '#DC2626', pattern: 'solid' },
+  { id: 'yellow', label: 'WIRE C', shortLabel: 'C', color: '#EAB308', pattern: 'dotted' },
 ]
 
 // The legend is inverted: what Voice 1 calls "the blue wire" translates,

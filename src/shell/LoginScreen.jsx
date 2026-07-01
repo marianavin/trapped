@@ -1,52 +1,50 @@
 import { useState } from 'react'
 import PixelButton from '../components/PixelButton.jsx'
+import GlitchShell, { ScreenHeader } from '../components/GlitchShell.jsx'
+import WindowChrome from '../components/WindowChrome.jsx'
 import { useAuth } from '../lib/AuthContext.jsx'
 import { ALLOWED_EMAIL_DOMAIN } from '../lib/supabaseClient.js'
 
-// Real mode: Google SSO restricted to the org's Workspace domain (see
-// SUPABASE_SETUP.md for how the restriction is enforced both at the OAuth
-// request and again on the returned session).
-// Mock mode (no Supabase configured yet): a nickname field stands in for
-// login so the shell is fully playable before the backend exists.
 export default function LoginScreen() {
   const { isMock, authError, signInWithGoogle, signInMock } = useAuth()
   const [name, setName] = useState('')
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center gap-8 bg-l4bg text-l4text px-6 text-center">
-      <div>
-        <h1 className="font-pixel text-2xl sm:text-4xl tracking-widest">TRAPPED</h1>
-        <p className="font-mono text-sm sm:text-base text-l4text/80 mt-3">Your mind is the obstacle.</p>
-      </div>
+    <GlitchShell contentClassName="gap-8 px-6 py-10">
+      <ScreenHeader title="TRAPPED" subtitle="Your mind is the obstacle." />
 
       {isMock ? (
-        <div className="flex flex-col items-center gap-4 w-full max-w-xs">
-          <p className="font-pixel text-[9px] sm:text-[10px] text-l4street">
-            DEV MODE — GOOGLE SSO NOT CONNECTED YET
-          </p>
-          <label htmlFor="player-name" className="sr-only">
-            Your name
-          </label>
-          <input
-            id="player-name"
-            name="playerName"
-            autoComplete="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="YOUR NAME"
-            maxLength={24}
-            className="font-pixel text-[10px] w-full bg-black/30 rounded-lg neon-glow border-2 border-l4text text-l4text px-3 py-3 text-center placeholder:text-l4text/60 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
-            onKeyDown={(e) => e.key === 'Enter' && signInMock(name)}
-          />
-          <PixelButton full onClick={() => signInMock(name)}>
-            ENTER
-          </PixelButton>
-        </div>
+        <WindowChrome title="DEV MODE // AUTH" className="w-full max-w-xs">
+          <div className="flex flex-col items-center gap-4">
+            <p className="font-pixel text-[8px] sm:text-[9px] text-accent-cyan text-center">
+              GOOGLE SSO NOT CONNECTED
+            </p>
+            <label htmlFor="player-name" className="sr-only">
+              Your name
+            </label>
+            <input
+              id="player-name"
+              name="playerName"
+              autoComplete="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="YOUR NAME"
+              maxLength={24}
+              className="font-pixel text-[10px] w-full bg-black/40 rounded-sm neon-glow border-2 border-accent-cyan text-l4text px-3 py-3 text-center placeholder:text-l4text/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-cyan"
+              onKeyDown={(e) => e.key === 'Enter' && signInMock(name)}
+            />
+            <PixelButton full variant="primary" onClick={() => signInMock(name)}>
+              ENTER
+            </PixelButton>
+          </div>
+        </WindowChrome>
       ) : (
         <div className="flex flex-col items-center gap-4">
-          <PixelButton onClick={signInWithGoogle}>CONTINUE WITH GOOGLE</PixelButton>
+          <PixelButton variant="primary" onClick={signInWithGoogle}>
+            CONTINUE WITH GOOGLE
+          </PixelButton>
           {ALLOWED_EMAIL_DOMAIN && (
-            <p className="font-mono text-xs text-l4text/70">@{ALLOWED_EMAIL_DOMAIN} accounts only</p>
+            <p className="font-mono text-xs text-l4text/60">@{ALLOWED_EMAIL_DOMAIN} accounts only</p>
           )}
           {authError && (
             <p role="alert" className="font-mono text-xs text-caught">
@@ -55,6 +53,6 @@ export default function LoginScreen() {
           )}
         </div>
       )}
-    </div>
+    </GlitchShell>
   )
 }

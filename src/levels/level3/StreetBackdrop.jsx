@@ -20,7 +20,7 @@ export default function StreetBackdrop() {
       className="absolute inset-0 h-full w-full"
       aria-hidden="true"
     >
-      <rect x="0" y="0" width="480" height="270" fill="#12132B" />
+      <rect x="0" y="0" width="480" height="270" fill="#121225" />
 
       {/* distant skyline — blurred-perception buildings, low contrast on purpose */}
       <g opacity="0.35">
@@ -70,7 +70,7 @@ export default function StreetBackdrop() {
       ].map((b, bi) => (
         <g key={bi}>
           <rect x={b.x} y={170 - b.h} width={b.w} height={b.h} fill="#1B1D45" />
-          <rect x={b.x} y={170 - b.h} width={b.w} height="4" fill="#12132B" />
+          <rect x={b.x} y={170 - b.h} width={b.w} height="4" fill="#121225" />
           {Array.from({ length: Math.floor(b.w / 16) }).map((_, wi) =>
             Array.from({ length: Math.floor((b.h - 16) / 20) }).map((_, hi) => {
               const lit = (bi + wi + hi) % 5 === 0
@@ -81,7 +81,7 @@ export default function StreetBackdrop() {
                   y={170 - b.h + 12 + hi * 20}
                   width="8"
                   height="10"
-                  fill={lit ? '#2DE8FF' : '#FFFFFF'}
+                  fill={lit ? '#00F0FF' : '#FFFFFF'}
                   opacity={lit ? 0.9 : 0.2}
                 />
               )
@@ -100,7 +100,7 @@ export default function StreetBackdrop() {
 
       {/* streetlamps — stepped-square glow, no circle/blur */}
       {[80, 340].map((x, li) => (
-        <StreetLamp key={li} x={x} y={120} poleColor="#CFEFFF" glowColor="#2DE8FF" poleHeight={50} />
+        <StreetLamp key={li} x={x} y={120} poleColor="#CFEFFF" glowColor="#00F0FF" poleHeight={50} />
       ))}
     </svg>
   )

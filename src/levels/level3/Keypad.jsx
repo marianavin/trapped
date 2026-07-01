@@ -1,19 +1,31 @@
 import { motion } from 'framer-motion'
 import { CIRCLE_POSITIONS, CIRCLE_SIZE_PCT, BAKED_LAYOUT } from './keypadPositions.js'
+import { PHONE } from './phoneTheme.js'
 
-// Shared 3x4 keypad. `layout` is a length-12 array of digit strings; empty
-// strings render as blank cells. `overrides` lets a task style individual
-// keys (Stroop paints a key "hot" in the danger accent, etc.) without every
-// task re-implementing the pad.
-//
-//   overrides = { [index]: { className, digit, style } }
-//
-// `active` disables input when false. `pressedIndex` briefly highlights a
-// key so the player gets tactile feedback. `imageMode` is injected by
-// PhoneFrame — true when the real phone-frame.png loaded, in which case
-// keys are transparent hit-zones over the artwork (with a small opaque
-// relabel badge only where this task's digit differs from what's painted
-// on the image), false when falling back to a CSS-drawn pad.
+const KEY_BTN =
+  'font-pixel rounded-full border-2 flex items-center justify-center transition-all duration-200 shadow-none ' +
+  'hover:border-[#FF9A3C] hover:text-[#FFF5E0] hover:bg-[rgba(255,120,40,0.15)] ' +
+  'hover:shadow-[0_0_6px_#FF9A3C,0_0_14px_#FF9A3C88,inset_0_0_10px_rgba(255,120,40,0.18)] ' +
+  'active:border-[#FF9A3C] active:text-[#FFF5E0] active:bg-[rgba(255,120,40,0.2)] ' +
+  'active:shadow-[0_0_8px_#FF9A3C,0_0_18px_#FF9A3C,inset_0_0_12px_rgba(255,120,40,0.25)]'
+
+function keyStyle(pressed) {
+  if (pressed) {
+    return {
+      borderColor: PHONE.keypadRingHover,
+      color: PHONE.keypadTextHover,
+      background: PHONE.keypadFillHover,
+      boxShadow: PHONE.keypadGlowHover.replace('0.18)', '0.25)'),
+    }
+  }
+  return {
+    borderColor: PHONE.keypadRingNeutral,
+    color: PHONE.keypadTextNeutral,
+    background: PHONE.keypadFillNeutral,
+    boxShadow: 'none',
+  }
+}
+
 export default function Keypad({
   layout,
   onPress,
@@ -40,29 +52,22 @@ export default function Keypad({
               disabled={!active}
               onClick={() => active && onPress(label, i)}
               whileTap={{ scale: 0.9 }}
-              animate={pressed ? { scale: [1, 1.15, 1] } : { scale: 1 }}
+              animate={pressed ? { scale: [1, 1.12, 1] } : { scale: 1 }}
               transition={{ duration: 0.15 }}
-              className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 ${
-                active ? '' : 'opacity-50'
+              className={`absolute -translate-x-1/2 -translate-y-1/2 ${KEY_BTN} ${
+                active ? '' : 'opacity-50 pointer-events-none'
               } ${o.className || ''}`}
               style={{
                 left: `${pos.x}%`,
                 top: `${pos.y}%`,
                 width: `${CIRCLE_SIZE_PCT}%`,
                 paddingBottom: `${CIRCLE_SIZE_PCT}%`,
-                // borderColor as an inline style (not a border-* utility) so
-                // a task's override always wins unambiguously over this
-                // default, instead of depending on Tailwind's generated
-                // stylesheet order between two same-specificity utilities.
-                borderColor: 'transparent',
+                ...keyStyle(pressed),
                 ...o.style,
               }}
             >
               {needsRelabel && (
-                <span
-                  className="absolute inset-[8%] rounded-full flex items-center justify-center font-pixel text-sm sm:text-base text-l3-prompt"
-                  style={{ background: 'rgba(18,19,43,0.92)' }}
-                >
+                <span className="absolute inset-[8%] rounded-full flex items-center justify-center font-pixel text-sm sm:text-base">
                   {label}
                 </span>
               )}
@@ -78,10 +83,10 @@ export default function Keypad({
       ? 'h-14 w-14 text-lg'
       : size === 'lg'
         ? 'h-20 w-20 text-3xl'
-        : 'h-16 w-16 text-2xl sm:h-20 sm:w-20 sm:text-3xl'
+        : 'h-[4.25rem] w-[4.25rem] text-xl sm:h-[4.75rem] sm:w-[4.75rem] sm:text-2xl'
 
   return (
-    <div className="grid grid-cols-3 gap-2 select-none">
+    <div className="grid grid-cols-3 gap-x-4 gap-y-3 justify-items-center select-none mx-auto w-fit">
       {layout.map((digit, i) => {
         const o = overrides[i] || {}
         const label = o.digit ?? digit
@@ -93,17 +98,11 @@ export default function Keypad({
             type="button"
             disabled={!active}
             onClick={() => active && onPress(label, i)}
-            whileTap={{ scale: 0.92 }}
-            animate={pressed ? { scale: [1, 1.1, 1] } : { scale: 1 }}
+            whileTap={{ scale: 0.94 }}
+            animate={pressed ? { scale: [1, 1.08, 1] } : { scale: 1 }}
             transition={{ duration: 0.15 }}
-            className={[
-              cell,
-              'font-pixel rounded-full border-2 border-l3-face bg-l3-face text-white',
-              'flex items-center justify-center transition-colors duration-75',
-              active ? 'active:bg-white active:text-black' : 'opacity-60',
-              o.className || '',
-            ].join(' ')}
-            style={o.style}
+            className={[cell, KEY_BTN, active ? '' : 'opacity-50', o.className || ''].join(' ')}
+            style={{ ...keyStyle(pressed), ...o.style }}
           >
             {label}
           </motion.button>

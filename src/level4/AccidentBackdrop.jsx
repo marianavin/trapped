@@ -16,7 +16,7 @@ import { Building, Mound, PixelMoon, Starburst, StreetLamp } from '../components
 // Colors are the reference's actual crimson/magenta dusk, not the app's
 // navy `l4bg` — a deliberate one-off for this outdoor establishing shot,
 // same as l3-label was a one-off addition earlier. `accent-cyan`/
-// `accent-magenta` (#2DE8FF / #FF4477) are reused for signage so this stays
+// `accent-magenta` (#00F0FF / #FF00FF) are reused for signage so this stays
 // in the same family as the rest of the now-unified glitchwave palette.
 // NOTE: the driver's shirt truth-color (#FFD166 amber, in FlashScene.jsx)
 // is intentionally NOT reused anywhere in this backdrop, so it stays the
@@ -54,17 +54,17 @@ export default function AccidentBackdrop() {
       <Mound x={700} y={135} width={90} color="#6B4E7A" opacity={0.5} />
 
       {/* distant skyline, cyan/magenta signage mixed like the reference */}
-      <Building x={0} y={160} width={90} height={170} body="#1B1D45" bodyDark="#0B0C1F" litColor="#2DE8FF" dimColor="#3A2A44" seed={0} />
-      <Building x={95} y={190} width={60} height={140} body="#231F4A" bodyDark="#0B0C1F" litColor="#FF4477" dimColor="#3A2A44" seed={1} />
-      <Building x={160} y={130} width={70} height={200} body="#1B1D45" bodyDark="#0B0C1F" litColor="#2DE8FF" dimColor="#3A2A44" seed={2} />
-      <Building x={520} y={140} width={64} height={190} body="#231F4A" bodyDark="#0B0C1F" litColor="#FF4477" dimColor="#3A2A44" seed={1} />
-      <Building x={590} y={180} width={80} height={150} body="#1B1D45" bodyDark="#0B0C1F" litColor="#2DE8FF" dimColor="#3A2A44" seed={3} />
-      <Building x={680} y={160} width={70} height={170} body="#231F4A" bodyDark="#0B0C1F" litColor="#FF4477" dimColor="#3A2A44" seed={2} />
-      <Building x={755} y={200} width={45} height={130} body="#1B1D45" bodyDark="#0B0C1F" litColor="#2DE8FF" dimColor="#3A2A44" seed={0} />
+      <Building x={0} y={160} width={90} height={170} body="#1A1A3A" bodyDark="#0B0C1F" litColor="#00F0FF" dimColor="#3A2A44" seed={0} />
+      <Building x={95} y={190} width={60} height={140} body="#231F4A" bodyDark="#0B0C1F" litColor="#FF00FF" dimColor="#3A2A44" seed={1} />
+      <Building x={160} y={130} width={70} height={200} body="#1A1A3A" bodyDark="#0B0C1F" litColor="#00F0FF" dimColor="#3A2A44" seed={2} />
+      <Building x={520} y={140} width={64} height={190} body="#231F4A" bodyDark="#0B0C1F" litColor="#FF00FF" dimColor="#3A2A44" seed={1} />
+      <Building x={590} y={180} width={80} height={150} body="#1A1A3A" bodyDark="#0B0C1F" litColor="#00F0FF" dimColor="#3A2A44" seed={3} />
+      <Building x={680} y={160} width={70} height={170} body="#231F4A" bodyDark="#0B0C1F" litColor="#FF00FF" dimColor="#3A2A44" seed={2} />
+      <Building x={755} y={200} width={45} height={130} body="#1A1A3A" bodyDark="#0B0C1F" litColor="#00F0FF" dimColor="#3A2A44" seed={0} />
 
       {/* NEO CITY marquee, top of the near skyline */}
-      <rect x="520" y="150" width="94" height="26" fill="#0B0C1F" stroke="#2DE8FF" strokeWidth="2" />
-      <text x="567" y="167" textAnchor="middle" className="font-pixel" fontSize="9" fill="#2DE8FF">
+      <rect x="520" y="150" width="94" height="26" fill="#0B0C1F" stroke="#00F0FF" strokeWidth="2" />
+      <text x="567" y="167" textAnchor="middle" className="font-pixel" fontSize="9" fill="#00F0FF">
         NEO CITY
       </text>
 
@@ -118,13 +118,13 @@ export default function AccidentBackdrop() {
       })}
 
       {/* DISTRICT 7 ground signage, low-glow text near the left shoulder */}
-      <text x="30" y="345" className="font-pixel" fontSize="10" fill="#FF4477" opacity="0.85">
+      <text x="30" y="345" className="font-pixel" fontSize="10" fill="#FF00FF" opacity="0.85">
         DISTRICT 7
       </text>
 
       {/* foreground streetlamps flanking the wide part of the road */}
-      <StreetLamp x={90} y={330} poleColor="#EAF7FF" glowColor="#2DE8FF" poleHeight={90} />
-      <StreetLamp x={710} y={330} poleColor="#EAF7FF" glowColor="#2DE8FF" poleHeight={90} />
+      <StreetLamp x={90} y={330} poleColor="#EAF7FF" glowColor="#00F0FF" poleHeight={90} />
+      <StreetLamp x={710} y={330} poleColor="#EAF7FF" glowColor="#00F0FF" poleHeight={90} />
     </svg>
   )
 }

@@ -16,12 +16,12 @@ export default function PhoneHousing() {
       className="absolute inset-0 h-full w-full"
       aria-hidden="true"
     >
-      <rect x="0" y="0" width="300" height="420" fill="#12132B" />
+      <rect x="0" y="0" width="300" height="420" fill="#121225" />
 
       {/* booth back wall panel, subtly lighter than the base background */}
       <rect x="20" y="20" width="260" height="380" fill="#1B1D45" />
       {Array.from({ length: 6 }).map((_, i) => (
-        <rect key={i} x={20 + i * 44} y="20" width="2" height="380" fill="#12132B" opacity="0.6" />
+        <rect key={i} x={20 + i * 44} y="20" width="2" height="380" fill="#121225" opacity="0.6" />
       ))}
 
       {/* wall-mounted phone box, off to the side so it never collides with
@@ -34,7 +34,7 @@ export default function PhoneHousing() {
         <Bolt x={87} y={159} size={7} light="#4A5A8A" dark="#0A0A16" />
         {/* coin slot + small indicator, atmosphere only */}
         <rect x="48" y="80" width="24" height="6" fill="#0A0A16" />
-        <rect x="48" y="96" width="8" height="8" fill="#2DE8FF" opacity="0.7" />
+        <rect x="48" y="96" width="8" height="8" fill="#00F0FF" opacity="0.7" />
       </g>
 
       {/* handset dangling off-hook beside the box, cord swinging down —

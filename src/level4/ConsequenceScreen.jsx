@@ -20,7 +20,7 @@ export default function ConsequenceScreen({ onContinue }) {
         <p className="font-pixel text-sm sm:text-lg">{CONSEQUENCE.headline}</p>
         <p className="font-pixel text-xs sm:text-base text-caught">{CONSEQUENCE.sub}</p>
       </motion.div>
-      <PixelButton onClick={onContinue}>NEXT</PixelButton>
+      <PixelButton variant="primary" onClick={onContinue}>NEXT</PixelButton>
     </div>
   )
 }

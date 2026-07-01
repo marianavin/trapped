@@ -50,8 +50,8 @@ function AppShell() {
 
   if (status === 'loading') {
     return (
-      <div role="status" aria-live="polite" className="h-full w-full flex items-center justify-center bg-l4bg text-l4text">
-        <p className="font-pixel text-xs animate-pulse">LOADING…</p>
+      <div role="status" aria-live="polite" className="h-full w-full flex items-center justify-center bg-l4bg text-accent-cyan">
+        <p className="font-pixel text-xs animate-pulse glitch-shift">LOADING…</p>
       </div>
     )
   }
@@ -77,8 +77,8 @@ function AppShell() {
 
   if (!progressReady) {
     return (
-      <div role="status" aria-live="polite" className="h-full w-full flex items-center justify-center bg-l4bg text-l4text">
-        <p className="font-pixel text-xs animate-pulse">LOADING PROGRESS…</p>
+      <div role="status" aria-live="polite" className="h-full w-full flex items-center justify-center bg-l4bg text-accent-cyan">
+        <p className="font-pixel text-xs animate-pulse glitch-shift">LOADING PROGRESS…</p>
       </div>
     )
   }

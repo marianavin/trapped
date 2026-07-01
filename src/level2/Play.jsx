@@ -4,9 +4,11 @@ import { play, startSiren, stopSiren } from '../audio/sounds.js'
 import {
   TIMER_SECONDS,
   VOICE_1_LINE,
+  VOICE_1_HINT,
   LEGEND_LABEL,
   LEGEND_ROWS,
   VOICE_2_LINE,
+  VOICE_2_HINT,
   RECHECK_PROMPT,
   WIRES,
 } from '../data/level2.js'
@@ -95,19 +97,17 @@ export default function Play({ onDone }) {
   const ss = String(Math.max(secondsLeft, 0) % 60).padStart(2, '0')
 
   const message = stage === 'choose1' ? VOICE_1_LINE : stage === 'voice2' ? VOICE_2_LINE : RECHECK_PROMPT
+  const messageHint = stage === 'choose1' ? VOICE_1_HINT : stage === 'voice2' ? VOICE_2_HINT : null
 
   return (
     <div className="h-full w-full flex flex-col items-center justify-center bg-l2-bg text-l2-text px-4 py-6 gap-4">
-      <p role="status" aria-live="polite" className="sr-only">
-        {message}
-      </p>
-
       <BombPanel
         wires={wires}
         currentWireId={currentWireId}
         mm={mm}
         ss={ss}
         message={message}
+        messageHint={messageHint}
         legendLabel={LEGEND_LABEL}
         legendRows={LEGEND_ROWS}
         showLegend

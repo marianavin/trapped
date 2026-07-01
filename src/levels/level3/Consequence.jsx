@@ -16,7 +16,7 @@ export default function Consequence({ outcome, onDone }) {
     return () => clearTimeout(t)
   }, [outcome, onDone])
 
-  const colour = outcome === 'fail' ? 'text-accent-magenta' : 'text-l3-prompt'
+  const colour = outcome === 'fail' ? 'text-caught' : 'text-escaped'
 
   return (
     <div className={`h-full w-full flex flex-col items-center justify-center px-6 text-center bg-l3-bg`}>

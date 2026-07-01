@@ -89,7 +89,7 @@ export default function Task3MislabeledKey({ onDone }) {
     // the default transparent border regardless of Tailwind's class order.
     overrides[i] = {
       className: 'text-accent-magenta neon-glow animate-pulse',
-      style: { borderColor: '#FF4477' },
+      style: { borderColor: '#FF3131' },
     }
   })
 
