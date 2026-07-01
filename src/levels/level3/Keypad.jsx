@@ -34,6 +34,8 @@ export default function Keypad({
   pressedIndex = null,
   size = 'md',
   imageMode = false,
+  keyAnchorRef,
+  keyAnchorLabel,
 }) {
   if (imageMode) {
     return (
@@ -92,9 +94,11 @@ export default function Keypad({
         const label = o.digit ?? digit
         if (label === '') return <div key={i} className={cell} />
         const pressed = pressedIndex === i
+        const isAnchor = keyAnchorLabel != null && label === keyAnchorLabel
         return (
           <motion.button
             key={i}
+            ref={isAnchor ? keyAnchorRef : undefined}
             type="button"
             disabled={!active}
             onClick={() => active && onPress(label, i)}

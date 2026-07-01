@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import CRTOverlay from '../../components/CRTOverlay.jsx'
 import Setup from './Setup.jsx'
 import Reveal from './Reveal.jsx'
-import TrialTimer from './TrialTimer.jsx'
+import { LevelTimerContext } from './TrialTimer.jsx'
 import Task1Swap from './tasks/Task1Swap.jsx'
 import Task2FadingAddress from './tasks/Task2FadingAddress.jsx'
 import Task3MislabeledKey from './tasks/Task3MislabeledKey.jsx'
@@ -121,15 +121,16 @@ export default function Level3({ onComplete }) {
     const { Comp } = TASKS[state.index]
     return (
       <div className="relative h-full w-full overflow-hidden">
-        <div className="h-full overflow-y-auto gw-scrollbar">
-          <Comp
-            key={state.index}
-            timeRemainingMs={timeRemainingMs}
-            trial3Layout={state.index === 2 ? trial3Layout : undefined}
-            onDone={handleTaskDone}
-          />
-        </div>
-        <TrialTimer ms={timeRemainingMs} />
+        <LevelTimerContext.Provider value={timeRemainingMs}>
+          <div className="h-full overflow-y-auto gw-scrollbar">
+            <Comp
+              key={state.index}
+              timeRemainingMs={timeRemainingMs}
+              trial3Layout={state.index === 2 ? trial3Layout : undefined}
+              onDone={handleTaskDone}
+            />
+          </div>
+        </LevelTimerContext.Provider>
         <CRTOverlay />
       </div>
     )

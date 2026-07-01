@@ -21,11 +21,6 @@ export function WindowChromeTrail({ title, tone = 'cyan', style, className = '' 
           <span className="font-pixel text-[7px] sm:text-[8px] text-black tracking-wide truncate uppercase opacity-80">
             {title}
           </span>
-          <span className="font-mono text-[10px] leading-none text-black/50 flex items-center gap-1 shrink-0">
-            <span>_</span>
-            <span>□</span>
-            <span>×</span>
-          </span>
         </div>
       )}
       <div className="gw-panel-grid bg-l4bg/25 h-full min-h-0" />
@@ -57,11 +52,6 @@ export default function WindowChrome({
         >
           <span className="font-pixel text-[7px] sm:text-[8px] text-black tracking-wide truncate uppercase">
             {title}
-          </span>
-          <span className="font-mono text-[10px] leading-none text-black/70 flex items-center gap-1 shrink-0" aria-hidden="true">
-            <span>_</span>
-            <span>□</span>
-            <span>×</span>
           </span>
         </div>
       )}

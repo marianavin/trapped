@@ -12,6 +12,7 @@ export default {
         // Token names stay stable so existing components repaint for free.
         'accent-cyan': '#00F0FF',
         'accent-magenta': '#FF00FF',
+        'accent-purple': '#8899FF',
         'accent-red': '#FF3131',
 
         // Level 4 — The Witness

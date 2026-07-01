@@ -1,34 +1,42 @@
-import { useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
+import { useLayoutEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-// Trial 1 — points at the keypad cell labelled 9 (middle row, right column).
-// Portaled above CRT scanlines so no overlay lines draw on top of the bubble.
-export default function Trial1KeyboardHint({ anchorRef }) {
+// Trial 1 — speech bubble anchored to the keypad key labelled 9.
+export default function Trial1KeyboardHint({ anchorRef, containerRef }) {
   const [pos, setPos] = useState(null)
 
-  useEffect(() => {
-    const el = anchorRef?.current
-    if (!el) return
+  useLayoutEffect(() => {
+    const anchor = anchorRef?.current
+    const container = containerRef?.current
+    if (!anchor || !container) return
 
     const update = () => {
-      const r = el.getBoundingClientRect()
+      const a = anchor.getBoundingClientRect()
+      const c = container.getBoundingClientRect()
       setPos({
-        left: r.right + 12,
-        top: r.top + r.height * 0.57,
+        left: a.right - c.left + 12,
+        top: a.top - c.top + a.height / 2,
       })
     }
 
     update()
     window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
-  }, [anchorRef])
+
+    const ro = new ResizeObserver(update)
+    ro.observe(container)
+    ro.observe(anchor)
+
+    return () => {
+      window.removeEventListener('resize', update)
+      ro.disconnect()
+    }
+  }, [anchorRef, containerRef])
 
   if (!pos) return null
 
-  return createPortal(
+  return (
     <motion.div
-      className="pointer-events-none fixed z-[60] origin-left -translate-y-1/2"
+      className="pointer-events-none absolute z-20 origin-left -translate-y-1/2"
       style={{ left: pos.left, top: pos.top }}
       animate={{
         x: [0, 0.4, -0.4, 0.4, -0.4, 0.2, -0.2, 0],
@@ -47,7 +55,6 @@ export default function Trial1KeyboardHint({ anchorRef }) {
           Hurry up! <span className="font-bold">991</span>
         </div>
       </div>
-    </motion.div>,
-    document.body
+    </motion.div>
   )
 }

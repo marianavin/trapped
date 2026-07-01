@@ -1,9 +1,21 @@
 import { LEVELS, isUnlocked } from '../data/levels.js'
-import { PanelCard } from '../components/GameUI.jsx'
+import { PanelCard, panelAccentLabelClass } from '../components/GameUI.jsx'
 import { play } from '../audio/sounds.js'
+
+const ACCENT_BY_COLOR = {
+  '#8899FF': 'purple',
+  '#FF00FF': 'magenta',
+  '#00F0FF': 'cyan',
+}
+
+function levelAccentKey(level) {
+  return ACCENT_BY_COLOR[level.accent] ?? 'cyan'
+}
 
 function LevelCard({ level, result, locked, onPlay }) {
   const completed = Boolean(result)
+  const accentKey = levelAccentKey(level)
+  const accentLabel = panelAccentLabelClass(accentKey)
 
   const statusText = locked
     ? level.built
@@ -20,9 +32,19 @@ function LevelCard({ level, result, locked, onPlay }) {
   }
 
   return (
-    <PanelCard disabled={locked} onClick={handleClick} aria-label={`Level ${level.index}, ${level.title}, ${statusText}`}>
+    <PanelCard
+      disabled={locked}
+      accent={accentKey}
+      onClick={handleClick}
+      aria-label={`Level ${level.index}, ${level.title}, ${statusText}`}
+    >
       <div className="flex items-center justify-between">
-        <span className={`font-pixel text-[9px] sm:text-[10px] ${locked ? '' : 'text-accent-cyan'}`}>
+        <span
+          className={[
+            'font-pixel text-[9px] sm:text-[10px] inline-block px-1.5 py-0.5',
+            locked ? '' : accentLabel,
+          ].join(' ')}
+        >
           LEVEL {level.index}
         </span>
         {locked && (
@@ -30,7 +52,9 @@ function LevelCard({ level, result, locked, onPlay }) {
             {level.built ? 'LOCKED' : 'COMING SOON'}
           </span>
         )}
-        {!locked && completed && <span className="font-pixel text-[8px] sm:text-[9px] text-escaped">DONE</span>}
+        {!locked && completed && (
+          <span className="font-pixel text-[8px] sm:text-[9px] text-l4text/70">DONE</span>
+        )}
       </div>
 
       <h3 className="font-pixel text-xs sm:text-sm leading-snug">{level.title}</h3>

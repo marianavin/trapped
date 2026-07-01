@@ -7,7 +7,7 @@ const FOCUS_RING =
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-cyan'
 
 /** Hub / shell tab control */
-export function TabButton({ id, label, active, controls, onClick }) {
+export function TabButton({ id, label, active, controls, onClick, activeClassName = 'text-accent-cyan' }) {
   return (
     <button
       id={id}
@@ -16,11 +16,9 @@ export function TabButton({ id, label, active, controls, onClick }) {
       aria-controls={controls}
       onClick={onClick}
       className={[
-        'font-pixel text-[8px] sm:text-[9px] px-2 py-2 border-2 rounded-sm transition-all',
+        'font-pixel text-[8px] sm:text-[9px] px-2 py-2 rounded-sm transition-colors',
         FOCUS_RING,
-        active
-          ? 'text-accent-cyan border-accent-cyan bg-accent-cyan/10 neon-glow-cyan'
-          : 'text-l4text/60 border-transparent hover:text-accent-cyan hover:border-accent-cyan/40',
+        active ? activeClassName : 'text-l4text/60 hover:text-l4text/80',
       ].join(' ')}
     >
       {label}
@@ -29,8 +27,28 @@ export function TabButton({ id, label, active, controls, onClick }) {
 }
 
 /** Clickable card — level select, etc. */
-export function PanelCard({ children, disabled = false, accent = 'cyan', onClick, className = '', ...rest }) {
-  const accentClass = disabled ? '' : accent === 'caught' ? 'neon-border-caught' : 'neon-border-cyan'
+const PANEL_ACCENT = {
+  cyan: { border: 'neon-border-cyan', label: 'panel-label-cyan' },
+  magenta: { border: 'neon-border-magenta', label: 'panel-label-magenta' },
+  purple: { border: 'neon-border-purple', label: 'panel-label-purple' },
+  caught: { border: 'neon-border-caught', label: 'text-caught' },
+}
+
+export function PanelCard({
+  children,
+  disabled = false,
+  accent = 'cyan',
+  textAccentOnly = false,
+  onClick,
+  className = '',
+  ...rest
+}) {
+  const accentStyle = PANEL_ACCENT[accent] ?? PANEL_ACCENT.cyan
+  const borderClass = disabled
+    ? ''
+    : textAccentOnly
+      ? 'border-l4text/20'
+      : accentStyle.border
 
   return (
     <button
@@ -42,7 +60,7 @@ export function PanelCard({ children, disabled = false, accent = 'cyan', onClick
         FOCUS_RING,
         disabled
           ? 'bg-l4panel/50 text-l4text/60 border-l4text/20 cursor-not-allowed'
-          : `gw-panel-grid text-l4text cursor-pointer hover:brightness-110 active:scale-[0.98] ${accentClass}`,
+          : `gw-panel-grid text-l4text cursor-pointer hover:brightness-110 active:scale-[0.98] ${borderClass}`,
         className,
       ].join(' ')}
       {...rest}
@@ -50,6 +68,10 @@ export function PanelCard({ children, disabled = false, accent = 'cyan', onClick
       {children}
     </button>
   )
+}
+
+export function panelAccentLabelClass(accent = 'cyan') {
+  return (PANEL_ACCENT[accent] ?? PANEL_ACCENT.cyan).label
 }
 
 /** Non-interactive stat tile */
@@ -236,9 +258,9 @@ export function TextInput({ className = '', ...props }) {
   return (
     <input
       className={[
-        'font-pixel text-[10px] w-full bg-black/40 rounded-sm border-2 border-accent-cyan text-l4text px-3 py-3 text-center',
+        'font-pixel text-[10px] w-full bg-black/40 rounded-sm border-[1.5px] border-accent-cyan text-l4text px-3 py-3 text-center',
         'placeholder:text-l4text/50',
-        FOCUS_RING,
+        'focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-accent-cyan',
         className,
       ].join(' ')}
       {...props}

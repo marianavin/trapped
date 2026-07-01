@@ -50,6 +50,35 @@ body {
   box-shadow: 0 0 4px #00F0FF, 0 0 14px #00F0FF44;
 }
 
+.neon-border-magenta {
+  border-color: #FF00FF;
+  box-shadow: 0 0 4px #FF00FF, 0 0 14px #FF00FF44;
+}
+
+.neon-border-purple {
+  border-color: #8899FF;
+  box-shadow: 0 0 4px #8899FF, 0 0 14px #8899FF44;
+}
+
+/* Level label — same accent as card border, flat (no glow) */
+.panel-label-cyan {
+  color: #00F0FF;
+  border: 2px solid #00F0FF;
+  box-shadow: none;
+}
+
+.panel-label-magenta {
+  color: #FF00FF;
+  border: 2px solid #FF00FF;
+  box-shadow: none;
+}
+
+.panel-label-purple {
+  color: #8899FF;
+  border: 2px solid #8899FF;
+  box-shadow: none;
+}
+
 .neon-border-caught {
   border-color: #FF3131;
   box-shadow: 0 0 4px #FF3131, 0 0 14px #FF313144;
@@ -304,6 +333,19 @@ body {
 
 .phone-chassis-glow {
   animation: phoneChassisGlow 3.5s ease-in-out infinite;
+}
+
+@keyframes subtlePurplePulse {
+  0%, 100% {
+    box-shadow: 0 0 4px #4a3fa844, 0 0 10px #4a3fa822;
+  }
+  50% {
+    box-shadow: 0 0 7px #4a3fa866, 0 0 16px #4a3fa833;
+  }
+}
+
+.purple-glow-pulse {
+  animation: subtlePurplePulse 3.5s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
